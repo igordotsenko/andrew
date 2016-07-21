@@ -38,7 +38,7 @@ void Car::drive(const Point& destination){
     double fuelNeed = location.distance(destination) * fuelConsumption;
     double newFuelAmount = fuelAmount - fuelNeed;
     if ( newFuelAmount < 0 ) {
-        throw OutOfFuel();
+        throw OutOfFuelException();
     }
     fuelAmount = newFuelAmount;
     location = destination;
@@ -52,7 +52,7 @@ void Car::refill(double fuel){
     double newFuel = fuelAmount + fuel;
 
     if ( newFuel > fuelCapacity ) {
-        throw ToMuchFuel();
+        throw ToMuchFuelException();
     }
     fuelAmount = newFuel;
 }

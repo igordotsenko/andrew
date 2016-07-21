@@ -4,8 +4,8 @@
 #include <iostream>
 #include "Point.h"
 
-class OutOfFuel {};
-class ToMuchFuel {};
+class OutOfFuelException {};
+class ToMuchFuelException {};
 
 class Car {
     private:
