@@ -24,9 +24,9 @@ int Gun::getCapacity() const{
 
 bool Gun::ready() const{
     if ( amount == 0 ) {
-        return !(this->isReady);
-    } 
-    return this->isReady;
+        return !isReady;
+    }
+    return isReady;
 }
 
 const string& Gun::getModel() const{
@@ -47,11 +47,10 @@ void Gun::reload(){
 
 void Gun::shoot(){
     if ( amount == 0 ) {
-        isReady = false;
-        throw OutOfRounds();
+        throw OutOfRoundsException();
     }
     if ( !ready() ) {
-        throw NotReady();
+        throw NotReadyException();
     }
     amount -= 1;
     totalShots += 1;
