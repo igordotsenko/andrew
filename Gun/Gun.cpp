@@ -15,11 +15,11 @@ Gun::Gun(const string& model, int capacity) {
 Gun::~Gun(){}
 
 int Gun::getAmount() const {
-    return this->amount;    //получает количество "патронов" 
+    return this->amount;
 }
 
 int Gun::getCapacity() const{
-    return this->capacity;  //получает объем обоймы
+    return this->capacity;
 }
 
 bool Gun::ready() const{
@@ -30,20 +30,19 @@ bool Gun::ready() const{
 }
 
 const string& Gun::getModel() const{
-    return this->model;     //Получает название модели
+    return this->model;
 }
 
 int Gun::getTotalShots() const{
-    return this->totalShots;//Текущее количество выстрелов
+    return this->totalShots;
 }
 
 void Gun::prepare(){
     isReady = !isReady;
-    //Изначально Готовность=false, то есть пистолет не готов. При вызове функции готовность пистолета переводится в положительную, т.е. пистолет готов к выстрелу
 }
 
 void Gun::reload(){
-    amount = capacity; // Количество патронов равна нулю, по этому при вызове функции amount меняет значение на "объем обоймы".
+    amount = capacity;
 }
 
 void Gun::shoot(){
@@ -51,7 +50,7 @@ void Gun::shoot(){
         isReady = false;
         throw OutOfRounds();
     }
-    if ( !ready() ) {   // Если !готов - ловит ошибку Не готов.
+    if ( !ready() ) {
         throw NotReady();
     }
     amount -= 1;
