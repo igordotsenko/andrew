@@ -3,8 +3,8 @@
 
 #include <iostream>
 
-class OutOfRounds {};
-class NotReady {};
+class OutOfRoundsException {};
+class NotReadyException {};
 
 class Gun {
     private:
