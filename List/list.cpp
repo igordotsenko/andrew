@@ -167,39 +167,3 @@ ostream& operator<<(std::ostream& out, const List<T>& list){
     
     return out;
 }
-
-int main() {
-    List<float>* array = new List<float>;
-    float value, element;
-    int index;
-
-    cout << "Set size of array: ";
-    cin >> element;
-
-    cout << "Added  " << element << " elements: " << endl;
-    for ( int i = 0; i < element; i++ ) {
-        array->push_back(1.05*i);
-    }
-    cout << *array << endl;
-
-    cout << "Enter erase index: ";
-    cin >> index;
-    cout << "erase "<< index <<" index: " << endl;
-    array->erase(index);
-    cout << *array << endl;
-
-    cout << "Set value and insert index: ";
-    cin >> value >> index;
-    array->insert(value, index);
-    cout << *array << endl;
-
-    cout << "Find element: ";
-    cin >> element;
-    cout << "Index of element " << element << " is: " << array->find(element) << endl;
-
-    array->sort();
-    cout << "Array sorted: " << endl;
-    cout << *array << endl;
-
-    return 0;
-}
