@@ -64,4 +64,4 @@ ostream& operator<<(std::ostream& out, const Car& car) {
     out << "Consumption: " << car.getFuelConsumption() << endl;
     
     return out;
-}
+} 
