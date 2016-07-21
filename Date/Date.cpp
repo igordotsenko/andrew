@@ -4,26 +4,28 @@
 using namespace std;
 
 void Date::validate(int day, int month, int year) {
-    if ( day < 1 || day > 31 ) {
-        throw InvalidDate("Invalid Day!");
+    int daysInMonth[13] = {1, 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+
+    if ( day > daysInMonth[month] || day < daysInMonth[0]) {
+        throw InvalidDateException("Invalid Day!");
     }
     if ( month < 1 || month > 12 ) {
-        throw InvalidDate("Invalid Month!");
+        throw InvalidDateException("Invalid Month!");
     }
     if ( year < 0 ) {
-        throw InvalidDate("Invalid Year!");
+        throw InvalidDateException("Invalid Year!");
     }
     if ( month == 2 || month == 4 || month == 6 || month == 9 || month == 11 ) {
         if ( day == 31) {
-            throw InvalidDate("Invalid Month!");
+            throw InvalidDateException("Invalid Month!");
         }
     }
     if ( day == 30 && month == 2 ) {
-        throw InvalidDate("Invalid Month!");
+        throw InvalidDateException("Invalid Month!");
     }
     if ( year % 4 != 0 ) {
         if  ( day == 29 && month == 2 ) {
-            throw InvalidDate("Error, February has 28 days!");
+            throw InvalidDateException("Error, February has 28 days!");
         }
     }
 }

@@ -3,10 +3,10 @@
 
 #include <iostream>
 
-class InvalidDate {
+class InvalidDateException {
     public:
         std::string text;
-        InvalidDate(const std::string& text) : text(text) {}
+        InvalidDateException(const std::string& text) : text(text) {}
 };
 
 class Date {
