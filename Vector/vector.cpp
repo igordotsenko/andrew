@@ -69,14 +69,5 @@ Vector Vector::operator-(const Vector& other) const {
 }
 
 ostream& operator<<(ostream& out, const Vector& other) {
-<<<<<<< HEAD
-<<<<<<< HEAD
-    return out << "(" << other.getX() << ", " << other.getY() << ")";
-=======
     return out << '(' << other.getX() << ", " << other.getY() << ')';
->>>>>>> a19883fbcb1bc2fc61e9ea6086c3fc7080d25c3f
 }
-=======
-    return out << "(" << other.getX() << ", " << other.getY() << ")";
-}
->>>>>>> 1a638782dc9d3f953c9ced629e9b9b3b7cf91ac5
