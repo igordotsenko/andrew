@@ -73,12 +73,12 @@ void List<T>::erase(int index){
 }
 
 template <typename T>
-void List<T>::insert(T value, int index){     //вставить 
+void List<T>::insert(T value, int index){
     if ( current >= index && index >= 0 ) {
         push_back(value);
 
-        for ( int i = current; i > index; i-- ) {
-            array[i] = array[i - 1];
+        for ( int j = current; j > index; j-- ) {
+            array[j] = array[j - 1];
         }
         array[index] = value;
     }
@@ -86,7 +86,7 @@ void List<T>::insert(T value, int index){     //вставить
 
 template <typename T>
 T List<T>::find(T value) const{
-    for ( int i = 0; i < current; i++ ){
+    for ( int i = 0; i < current; i++ ) {
         if ( array[i] == value ){
             return i;
         }
@@ -116,7 +116,7 @@ void List<T>::push_back(T value){
 
 template <typename T>
 T List<T>::pop_back(){
-    if ( current == 0 ){
+    if ( current == 0 ) {
         throw ZeroLenException();
     }
     current -= 1;
@@ -148,19 +148,29 @@ T List<T>::operator[](int index) const{
 
 template <typename T>
 bool List<T>::operator==(const List<T>& other) const {
-    return current == other.current;
+    if ( current != other.size() ) {
+        return false;
+    }
+
+    for ( int i = 0; i < current; i++ ) {
+        if ( array[i] != other[i] ) {
+            return false;
+        }
+    }
+
+    return true;
 }
 
 template <typename T>
 bool List<T>::operator!=(const List<T>& other) const {
-    return current == other.current;
+    return current != other.current;
 }
 
 template <typename T>
 ostream& operator<<(std::ostream& out, const List<T>& list){
     T last = list.size() - 1;
 
-    for ( int i = 0; i < last; i++ ){
+    for ( int i = 0; i < last; i++ ) {
         out << list[i] << " ";
     }
     out << list[last];
