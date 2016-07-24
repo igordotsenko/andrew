@@ -23,10 +23,7 @@ int Gun::getCapacity() const{
 }
 
 bool Gun::ready() const{
-    if ( amount == 0 ) {
-        return !isReady;
-    }
-    return isReady;
+    return !isReady;
 }
 
 const string& Gun::getModel() const{
