@@ -3,23 +3,23 @@
 
 using namespace std;
 
-Paper::Paper(int maxSymbols): maxSymbols(maxSymbols), symbols(0), content(""){
+Paper::Paper(int maxSymbols): maxSymbols(maxSymbols), symbols(0), content("") {
 
 }
 
-Paper::~Paper(){
+Paper::~Paper() {
 
 }
 
-int Paper::getMaxSymbols() const{
+int Paper::getMaxSymbols() const {
     return this->maxSymbols;
 }
 
-int Paper::getSymbols() const{
+int Paper::getSymbols() const {
     return this->symbols;
 }
 
-void Paper::addContent(const string& message){
+void Paper::addContent(const string& message) {
     int total = content.length() + message.length();
 
     if ( total > maxSymbols ) {
@@ -31,6 +31,6 @@ void Paper::addContent(const string& message){
     symbols = total;
 }
 
-void Paper::show() const{
+void Paper::show() const {
     cout << content << endl;
 }
