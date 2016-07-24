@@ -34,22 +34,22 @@ class List {
 };
 
 template <typename T>
-List<T>::~List(){
+List<T>::~List() {
     free(array);
 }
 
 template <typename T>
-int List<T>::size() const{
+int List<T>::size() const {
     return current;
 }
 
 template <typename T>
-int List<T>::max_size() const{
+int List<T>::max_size() const {
     return capacity;
 }
 
 template <typename T>
-List<T>::List(int capacity, double multiplier) : capacity(capacity), current(0), multiplier(multiplier){
+List<T>::List(int capacity, double multiplier) : capacity(capacity), current(0), multiplier(multiplier) {
     array = (T*) malloc(capacity * sizeof(T));
 
     if ( array == NULL ){
@@ -58,7 +58,7 @@ List<T>::List(int capacity, double multiplier) : capacity(capacity), current(0),
 }
 
 template <typename T>
-void List<T>::erase(int index){
+void List<T>::erase(int index) {
     if ( current == 0 ) {
         throw ZeroLenException();
     }
@@ -73,7 +73,7 @@ void List<T>::erase(int index){
 }
 
 template <typename T>
-void List<T>::insert(T value, int index){
+void List<T>::insert(T value, int index) {
     if ( current >= index && index >= 0 ) {
         push_back(value);
 
@@ -85,7 +85,7 @@ void List<T>::insert(T value, int index){
 }
 
 template <typename T>
-T List<T>::find(T value) const{
+T List<T>::find(T value) const {
     for ( int i = 0; i < current; i++ ) {
         if ( array[i] == value ){
             return i;
@@ -95,7 +95,7 @@ T List<T>::find(T value) const{
 }
 
 template <typename T>
-void List<T>::push_back(T value){
+void List<T>::push_back(T value) {
     int newCurrent = current + 1;
 
     if ( newCurrent > capacity ){
@@ -115,7 +115,7 @@ void List<T>::push_back(T value){
 
 
 template <typename T>
-T List<T>::pop_back(){
+T List<T>::pop_back() {
     if ( current == 0 ) {
         throw ZeroLenException();
     }
@@ -125,7 +125,7 @@ T List<T>::pop_back(){
 }
 
 template <typename T>
-void List<T>::sort(){
+void List<T>::sort() {
     int last = this->current - 1;
     
     for ( int i = 0; i < last; i++ ) {
@@ -141,7 +141,7 @@ void List<T>::sort(){
 }
 
 template <typename T>
-T List<T>::operator[](int index) const{
+T List<T>::operator[](int index) const {
     return array[index];
 }
 
@@ -167,7 +167,7 @@ bool List<T>::operator!=(const List<T>& other) const {
 }
 
 template <typename T>
-ostream& operator<<(std::ostream& out, const List<T>& list){
+ostream& operator<<(std::ostream& out, const List<T>& list) {
     T last = list.size() - 1;
 
     for ( int i = 0; i < last; i++ ) {
