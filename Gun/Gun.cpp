@@ -18,43 +18,40 @@ int Gun::getAmount() const {
     return this->amount;
 }
 
-int Gun::getCapacity() const{
+int Gun::getCapacity() const {
     return this->capacity;
 }
 
-bool Gun::ready() const{
+bool Gun::ready() const {
     return !isReady;
 }
 
-const string& Gun::getModel() const{
+const string& Gun::getModel() const {
     return this->model;
 }
 
-int Gun::getTotalShots() const{
+int Gun::getTotalShots() const {
     return this->totalShots;
 }
 
-void Gun::prepare(){
+void Gun::prepare() {
     isReady = !isReady;
 }
 
-void Gun::reload(){
+void Gun::reload() {
     amount = capacity;
 }
 
-void Gun::shoot(){
+void Gun::shoot() {
     if ( amount == 0 ) {
         throw OutOfRoundsException();
-    }
-    if ( !ready() ) {
-        throw NotReadyException();
     }
     amount -= 1;
     totalShots += 1;
     cout << "Bang!" << endl;
 }
 
-ostream& operator<<(ostream& out, const Gun& gun){
+ostream& operator<<(ostream& out, const Gun& gun) {
     out << "Gun: " << gun.getModel() << endl;
     out << "capacity: " << gun.getCapacity() << endl;
     out << "preparedness: ";
