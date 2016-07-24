@@ -30,27 +30,28 @@ bool Complex::operator!=(const Complex& other) const {
 
 void Complex::operator+=(const Complex& other) {
     real += other.real;
-    imaginary += other.real;
+    imaginary += other.imaginary;
 }
 
 void Complex::operator-=(const Complex& other) {
     real -= other.real;
-    imaginary -= other.real;
+    imaginary -= other.imaginary;
 }
 
 Complex Complex::operator+(const Complex& other) const {
-    Complex result = *this;
+    Complex result;
 
-    result += other;
+    result.real = real + other.real;
+    result.imaginary = imaginary + other.imaginary;
 
     return result;
 }
 
-
 Complex Complex::operator-(const Complex& other) const {
-    Complex result = *this;
+    Complex result;
 
-    result -= other;
+    result.real = real - other.real;
+    result.imaginary = imaginary - other.imaginary;
 
     return result;
 }
