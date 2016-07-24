@@ -24,7 +24,7 @@ void Pen::write(Paper& paper, const string& message){
         throw OutOfInkException();
     }
     if ( inkAmount < message.length() ) {
-        paper.addContent(message.substr(0, inkAmount-1));
+        paper.addContent(message.substr(0, inkAmount));
         inkAmount = 0;
 
         return;

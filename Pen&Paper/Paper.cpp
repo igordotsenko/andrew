@@ -23,7 +23,7 @@ void Paper::addContent(const string& message) {
     int total = content.length() + message.length();
 
     if ( total > maxSymbols ) {
-        content += message.substr(0, maxSymbols - 1);
+        content += message.substr(0, maxSymbols);
         symbols = maxSymbols;
         throw OutOfSpaceException();
     }
