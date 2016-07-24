@@ -41,9 +41,8 @@ void Complex::operator-=(const Complex& other) {
 Complex Complex::operator+(const Complex& other) const {
     Complex result = *this;
 
-    result.real += other.real;
-    result.imaginary += other.imaginary;
-    
+    result += other;
+
     return result;
 }
 
@@ -51,25 +50,24 @@ Complex Complex::operator+(const Complex& other) const {
 Complex Complex::operator-(const Complex& other) const {
     Complex result = *this;
 
-    result.real -= other.real;
-    result.imaginary -= other.imaginary;
+    result -= other;
 
     return result;
 }
 
 Complex Complex::operator*(const Complex& other) const {
-    Complex result = *this;
+    Complex result;
 
-    result.real *= other.real;
-    result.imaginary *= other.imaginary;
+    result.real = real * other.getReal() - imaginary * other.getImaginary();
+    result.imaginary = real * other.getImaginary() + imaginary * other.getReal();
 
     return result;
-    }
+}
 
 std::ostream& operator<<(std::ostream& out, const Complex& complex) {
     if ( complex.getImaginary() < 0 ) {
         return out << complex.getReal() << complex.getImaginary();
     }
 
-    return out << complex.getReal() << '+' << complex.getImaginary();
+    return out << complex.getReal() << '+' << complex.getImaginary() << "i";
 }
