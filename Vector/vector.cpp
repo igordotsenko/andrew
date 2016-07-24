@@ -28,7 +28,7 @@ void Vector::setY(double value) {
     this->y = y;
 }
 
-double Vector::len(Vector& v) const{
+double Vector::len(Vector& v) const {
     return hypot(v.x, v.y);
 }
 
