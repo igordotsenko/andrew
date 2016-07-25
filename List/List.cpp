@@ -65,9 +65,9 @@ void List<T>::erase(int index) {
 
     if ( current > index && index > 0 ) {
         current -= 1;
-        
-        for ( int i = index; i < current; i++ ) {
-            array[i] = array[i + 1];
+
+        for ( int i = index, j = index + 1; i < current; i++, j++ ) {
+            array[i] = array[j];
         }
     }
 }
@@ -77,8 +77,8 @@ void List<T>::insert(T value, int index) {
     if ( current >= index && index >= 0 ) {
         push_back(value);
 
-        for ( int j = current; j > index; j-- ) {
-            array[j] = array[j - 1];
+        for ( int i = current - 1, j = current - 2; i > index; i--, j-- ) {
+            array[i] = array[j];
         }
         array[index] = value;
     }
