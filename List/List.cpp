@@ -65,7 +65,7 @@ void List<T>::erase(int index) {
 
     if ( current > index && index > 0 ) {
         current -= 1;
-
+        
         for ( int i = index; i < current; i++ ) {
             array[i] = array[i + 1];
         }
