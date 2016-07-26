@@ -163,7 +163,7 @@ bool List<T>::operator==(const List<T>& other) const {
 
 template <typename T>
 bool List<T>::operator!=(const List<T>& other) const {
-    return current != other.current;
+    return !operator==(other);
 }
 
 template <typename T>
