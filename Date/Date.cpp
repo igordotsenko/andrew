@@ -3,31 +3,23 @@
 
 using namespace std;
 
-void Date::validate(int day, int month, int year) {
-    int daysInMonth[12] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+#define FEBRUARY 1
+#define MONTH_AMOUNT 12
 
-    if ( day > daysInMonth[month] || day < 1 ) {
+void Date::validate(int day, int month, int year) {
+    int daysInMonth[MONTH_AMOUNT] = {31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31};
+    int indexMonth = month - 1;
+
+    if ( year % 400 == 0 || year % 4 == 0 && year % 100 != 0 ) {
+        daysInMonth[FEBRUARY] += 1;
+    }
+
+    if ( day > daysInMonth[indexMonth] || day < 1 ) {
         throw InvalidDateException("Invalid Day!");
     }
-    if ( month < 1 || month > 12 ) {
+
+    if ( month < 1 || month > MONTH_AMOUNT ) {
         throw InvalidDateException("Invalid Month!");
-    }
-    if ( year == 0 ) {
-        throw InvalidDateException("Invalid Year!");
-    }
-    if ( month == 4 || month == 6 || month == 9 || month == 11 ) {
-        if ( day > 30 ) {
-            throw InvalidDateException("Invalid Month!");
-        }
-    }
-    if ( month == 2 ) {
-        if ( year % 400 == 0 || year % 4 == 0 && year % 100 != 0 ) {
-            if ( day > 29 ) {
-                throw InvalidDateException("Error, February has 29 days!");
-            }
-        } else if ( day > 28 ) {
-            throw InvalidDateException("Error, February has 28 days!");
-        }
     }
 }
 

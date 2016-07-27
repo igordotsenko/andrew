@@ -16,7 +16,7 @@ int main(){
 
     Date* date = new Date(day, month, year);
 
-    cout << *date << endl;
+    cout << *date;
 
     delete (date);
 
