@@ -14,21 +14,22 @@ void Date::validate(int day, int month, int year) {
         daysInMonth[FEBRUARY] += 1;
     }
 
+    if ( month < 1 || month > MONTH_AMOUNT ) {
+        throw InvalidDateException("Invalid Month!");
+    }
+
     if ( day > daysInMonth[indexMonth] || day < 1 ) {
         throw InvalidDateException("Invalid Day!");
     }
 
-    if ( month < 1 || month > MONTH_AMOUNT ) {
-        throw InvalidDateException("Invalid Month!");
-    }
 }
 
 Date::Date(int day, int month, int year) {
+    validate(day, month, year);
+
     this->day = day;
     this->month = month;
     this->year = year;
-
-    validate(day, month, year);
 }
 
 Date::~Date(){}
