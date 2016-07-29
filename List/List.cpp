@@ -173,7 +173,7 @@ ostream& operator<<(std::ostream& out, const List<T>& list) {
     for ( int i = 0; i < last; i++ ) {
         out << list[i] << " ";
     }
-    out << list[last];
+    out << list[last] << endl;
     
     return out;
 }
