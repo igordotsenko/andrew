@@ -1,13 +1,12 @@
 #include <iostream>
-
 #include "Unit.h"
 
 using namespace std;
 
 void Unit::ensureIsAlive() {
-   if ( hitPoints == 0 ) {
-       throw UnitIsDeadException();
-   }
+	if ( hitPoints == 0 ) {
+		throw UnitIsDeadException();
+	}
 }
 
 Unit::Unit(const std::string& name, int hp, int dmg) {
@@ -40,32 +39,35 @@ void Unit::addHitPoints(int hp) {
 
 	if ( hitPointsLimit - hitPoints < hp ) {
 		hitPoints = hitPointsLimit;
-	} else {
-		hitPoints += hp;
+
+		return;
 	}
+	hitPoints += hp;
 }
 
 void Unit::takeDamage(int dmg) {
-	ensureIsAlive();
-
 	hitPoints -= dmg;
 	if ( hitPoints <= 0 ) {
 		hitPoints = 0;
-		throw UnitIsDeadException();
 	}
 }
 
 void Unit::attack(Unit& enemy) {
-	enemy.takeDamage(damage);
-	cout << getName() << " taked " << damage << " damage." << endl;
-
 	ensureIsAlive();
+	enemy.ensureIsAlive();
+
+	enemy.takeDamage(damage);
+	cout << getName() << " taked " << damage << " damage. " << endl;
 
 	enemy.counterAttack(*this);
 }
 
 void Unit::counterAttack(Unit& enemy) {
+	ensureIsAlive();
+	enemy.ensureIsAlive();
+
 	enemy.takeDamage(damage/2);
+
 	cout << getName() << " counterattacking " << enemy.getName() << " and taked " << damage/2 << " damage." << endl;
 }
 
