@@ -57,7 +57,6 @@ void Unit::takeDamage(int dmg) {
 void Unit::attack(Unit& enemy) {
 	ensureIsAlive();
 	enemy.ensureIsAlive();
-
 	enemy.takeDamage(damage);
 	cout << getName() << " taked " << damage << " damage." << endl;
 
