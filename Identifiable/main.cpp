@@ -4,10 +4,10 @@
 using namespace std;
 
 int main() {
-    Identifiable* obj1 = new Identifiable;
-    Identifiable* obj2 = new Identifiable;
-    Identifiable* obj3 = new Identifiable;
-    Identifiable* obj4 = new Identifiable;
+    Identifiable* obj1 = new Identifiable();
+    Identifiable* obj2 = new Identifiable();
+    Identifiable* obj3 = new Identifiable();
+    Identifiable* obj4 = new Identifiable();
 
     cout << "New object has id: " << obj1->getIdentifiable() << endl;
     cout << "New object has id: " << obj2->getIdentifiable() << endl;
