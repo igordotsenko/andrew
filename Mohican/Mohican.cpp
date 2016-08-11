@@ -11,29 +11,27 @@ Mohican::Mohican(string name) {
     if ( lastMohican == NULL ) {
         lastMohican = this;
         prev = NULL;
-        current = NULL;
     } else {
         prev = lastMohican;
-        lastMohican->current = this;
         lastMohican = this;
-        current = NULL;
     }
 }
 
 Mohican::~Mohican() {
-    if ( current == NULL ) {
+    if ( lastMohican != NULL ) {
         lastMohican = prev;
-        prev->current = NULL;
-    } else {
-        prev->current = current;
-        current->prev = prev;
     }
 }
 
 const Mohican& Mohican::getLastMohican() {
+    if ( lastMohican == NULL ) {
+        throw NoLastMohicanException();
+    }
+
     return *lastMohican;
 }
 
 const string& Mohican::getName() const {
     return name;
 }
+

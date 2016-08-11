@@ -5,11 +5,12 @@
 
 using namespace std;
 
+class NoLastMohicanException {};
+
 class Mohican {
     private:
         static Mohican* lastMohican;
         Mohican* prev;
-        Mohican* current;
         string name;
 
     public:
