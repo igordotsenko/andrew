@@ -8,13 +8,8 @@ Mohican* Mohican::lastMohican = NULL;
 Mohican::Mohican(string name) {
     this->name = name;
 
-    if ( lastMohican == NULL ) {
-        lastMohican = this;
-        prev = NULL;
-    } else {
-        prev = lastMohican;
-        lastMohican = this;
-    }
+    prev = lastMohican;
+    lastMohican = this;
 }
 
 Mohican::~Mohican() {
