@@ -13,9 +13,7 @@ Mohican::Mohican(string name) {
 }
 
 Mohican::~Mohican() {
-    if ( lastMohican != NULL ) {
-        lastMohican = prev;
-    }
+    lastMohican = prev;
 }
 
 const Mohican& Mohican::getLastMohican() {
@@ -29,4 +27,3 @@ const Mohican& Mohican::getLastMohican() {
 const string& Mohican::getName() const {
     return name;
 }
-
