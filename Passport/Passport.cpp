@@ -4,13 +4,13 @@
 #include "Passport.h"
 
 #define SIZE 3
-#define MAX_SERIAL 999999
+#define MAX_SERIAL 1000000
 #define FIRST_LETTER 0
 #define SECOND_LETTER 1
 
 using namespace std;
 
-char Passport::newSeries[] = {'A', 'A', 0};
+char Passport::newSeries[] = "AA";
 int Passport::newSerialNumber = 1;
 
 void Passport::validateSeries(string series) {
@@ -71,8 +71,9 @@ void Passport::seriesGeneration() {
     if ( newSeries[FIRST_LETTER] < 'Z' ) {
         newSeries[SECOND_LETTER] = 'A';
         newSeries[FIRST_LETTER] += 1;
-    return;
+        return;
     }
+    throw InvalidSerialException();
 }
 
 string Passport::getSeries() const {
