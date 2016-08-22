@@ -1,16 +1,19 @@
 #include <iostream>
 #include <iomanip>
+#include <cctype>
 #include "Passport.h"
 
 #define SIZE 3
 #define MAX_SERIAL 999999
+#define FIRST_LETTER 0
+#define SECOND_LETTER 1
 
 using namespace std;
 
-char Passport::newSeries[SIZE] = {'A', 'A', 0};
+char Passport::newSeries[] = {'A', 'A', 0};
 int Passport::newSerialNumber = 1;
 
-void Passport::validate(string series) {
+void Passport::validateSeries(string series) {
     int last = SIZE - 1;
 
     if ( series.size() > last ) {
@@ -21,13 +24,34 @@ void Passport::validate(string series) {
             throw InvalidSerialException();
         }
     }
+    if ( newSeries > series ) {
+        throw InvalidSerialException();
+    }
 }
 
-void Passport::validate(int serialNumber) {
+void Passport::validateSerialNumber(int serialNumber) {
     if ( serialNumber < 1 || serialNumber > MAX_SERIAL ) {
         throw InvalidSerialNumberException();
     }
 }
+
+void Passport::validate(string series, int serialNumber) {
+    Passport::validateSeries(series);
+    Passport::validateSerialNumber(serialNumber);
+    if ( newSeries == series && newSerialNumber > serialNumber ) {
+        throw InvalidSerialException();
+    }
+}
+
+Passport::Passport(string name, string surname, int bDay, int bMonth, int bYear) {
+    this->name = name;
+    this->surname = surname;
+    this->birthDate = Date(bDay, bMonth, bYear);
+
+    this->seriesGeneration();
+}
+
+Passport::~Passport() {}
 
 void Passport::seriesGeneration() {
     for ( int i = 0; i < SIZE; i++ ) {
@@ -37,28 +61,19 @@ void Passport::seriesGeneration() {
 
     if ( newSerialNumber < MAX_SERIAL ) {
         newSerialNumber += 1;
-    } else {
-        newSerialNumber = 1;
-        if ( newSeries[1] < 'Z' ) {
-            newSeries[1] += 1;
-        } else if ( newSeries[0] < 'Z' ) {
-            newSeries[1] = 'A';
-            newSeries[0] += 1;
-        } else {
-            throw InvalidSerialException();
-        }
+        return;
+    }
+    newSerialNumber = 1;
+    if ( newSeries[SECOND_LETTER] < 'Z' ) {
+        newSeries[SECOND_LETTER] += 1;
+        return;
+    }
+    if ( newSeries[FIRST_LETTER] < 'Z' ) {
+        newSeries[SECOND_LETTER] = 'A';
+        newSeries[FIRST_LETTER] += 1;
+    return;
     }
 }
-
-Passport::Passport(string name, string surname, int bDay, int bMonth, int bYear) {
-    this->name = name;
-    this->surname = surname;
-    this->date = Date(bDay, bMonth, bYear);
-
-    this->seriesGeneration();
-}
-
-Passport::~Passport() {}
 
 string Passport::getSeries() const {
     return series;
@@ -77,12 +92,19 @@ string Passport::getSurname() const {
 }
 
 Date Passport::getDate() const {
-    return date;
+    return birthDate;
 }
 
 void Passport::setSeries(string series) {
-    Passport::validate(series);
     int last = SIZE - 1;
+
+    for ( int i = 0; i < last; i++ ) {
+        if ( series[i] >= 'a' && series[i] <= 'z' ) {
+            series[i] = toupper(series[i]);
+        }
+    }
+
+    Passport::validateSeries(series);
 
     for ( int i = 0; i < last; i++ ) {
         newSeries[i] = series[i];
@@ -90,15 +112,22 @@ void Passport::setSeries(string series) {
 }
 
 void Passport::setSeries(int serialNumber) {
-    Passport::validate(serialNumber);
+    Passport::validateSerialNumber(serialNumber);
 
     newSerialNumber = serialNumber;
 }
 
 void Passport::setSeries(string series, int serialNumber) {
-    Passport::validate(series);
-    Passport::validate(serialNumber);
     int last = SIZE - 1;
+
+    for ( int i = 0; i < last; i++ ) {
+        if ( series[i] >= 'a' && series[i] <= 'z' ) {
+            series[i] = toupper(series[i]);
+        }
+    }
+
+
+    Passport::validate(series, serialNumber);
 
     for ( int i = 0; i < last; i++ ) {
         newSeries[i] = series[i];
