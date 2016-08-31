@@ -4,7 +4,7 @@
 #include "Passport.h"
 
 #define SIZE 3
-#define MAX_SERIAL 1000000
+#define MAX_SERIAL 999999
 #define FIRST_LETTER 0
 #define SECOND_LETTER 1
 
@@ -48,17 +48,17 @@ Passport::Passport(string name, string surname, int bDay, int bMonth, int bYear)
     this->surname = surname;
     this->birthDate = Date(bDay, bMonth, bYear);
 
-    this->seriesGeneration();
-}
-
-Passport::~Passport() {}
-
-void Passport::seriesGeneration() {
     for ( int i = 0; i < SIZE; i++ ) {
         this->series[i] = newSeries[i];
     }
     this->serialNumber = newSerialNumber;
 
+    seriesGeneration();
+}
+
+Passport::~Passport() {}
+
+void Passport::seriesGeneration() {
     if ( newSerialNumber < MAX_SERIAL ) {
         newSerialNumber += 1;
         return;
