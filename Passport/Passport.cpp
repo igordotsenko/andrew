@@ -13,6 +13,19 @@ using namespace std;
 char Passport::newSeries[] = "AA";
 int Passport::newSerialNumber = 1;
 
+Passport::Passport(string name, string surname, int bDay, int bMonth, int bYear) {
+    this->name = name;
+    this->surname = surname;
+    this->birthDate = Date(bDay, bMonth, bYear);
+
+    for ( int i = 0; i < SIZE; i++ ) {
+        this->series[i] = newSeries[i];
+    }
+    this->serialNumber = newSerialNumber;
+
+    seriesGeneration();
+}
+
 void Passport::validateSeries(string series) {
     int last = SIZE - 1;
 
@@ -20,7 +33,7 @@ void Passport::validateSeries(string series) {
         throw InvalidSerialException();
     }
     for ( int i = 0; i < last; i++ ) {
-        if ( series[i] < 'A' || series[i] > 'Z' ) {
+        if ( !isupper(series[i]) ) {
             throw InvalidSerialException();
         }
     }
@@ -38,23 +51,12 @@ void Passport::validateSerialNumber(int serialNumber) {
 void Passport::validate(string series, int serialNumber) {
     Passport::validateSeries(series);
     Passport::validateSerialNumber(serialNumber);
+    
     if ( newSeries == series && newSerialNumber > serialNumber ) {
         throw InvalidSerialException();
     }
 }
 
-Passport::Passport(string name, string surname, int bDay, int bMonth, int bYear) {
-    this->name = name;
-    this->surname = surname;
-    this->birthDate = Date(bDay, bMonth, bYear);
-
-    for ( int i = 0; i < SIZE; i++ ) {
-        this->series[i] = newSeries[i];
-    }
-    this->serialNumber = newSerialNumber;
-
-    seriesGeneration();
-}
 
 Passport::~Passport() {}
 
@@ -100,7 +102,7 @@ void Passport::setSeries(string series) {
     int last = SIZE - 1;
 
     for ( int i = 0; i < last; i++ ) {
-        if ( series[i] >= 'a' && series[i] <= 'z' ) {
+        if ( islower(series[i]) ) {
             series[i] = toupper(series[i]);
         }
     }
@@ -126,7 +128,6 @@ void Passport::setSeries(string series, int serialNumber) {
             series[i] = toupper(series[i]);
         }
     }
-
 
     Passport::validate(series, serialNumber);
 
