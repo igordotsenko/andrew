@@ -26,6 +26,8 @@ Passport::Passport(string name, string surname, int bDay, int bMonth, int bYear)
     seriesGeneration();
 }
 
+Passport::~Passport() {}
+
 void Passport::validateSeries(string series) {
     int last = SIZE - 1;
 
@@ -56,9 +58,6 @@ void Passport::validate(string series, int serialNumber) {
         throw InvalidSerialException();
     }
 }
-
-
-Passport::~Passport() {}
 
 void Passport::seriesGeneration() {
     if ( newSerialNumber < MAX_SERIAL ) {
@@ -124,7 +123,7 @@ void Passport::setSeries(string series, int serialNumber) {
     int last = SIZE - 1;
 
     for ( int i = 0; i < last; i++ ) {
-        if ( series[i] >= 'a' && series[i] <= 'z' ) {
+        if ( islower(series[i]) ) {
             series[i] = toupper(series[i]);
         }
     }
