@@ -3,41 +3,49 @@
 
 using namespace std;
 
-Arithmetic::Arithmetic(int first, int last, int diff): first(first), last(last), diff(diff), value(first), currentIndex(1) {
-
+Arithmetic::Arithmetic(int first, int last, int diff) {
+    this->first = first;
+    this->last = last;
+    this->diff = diff;
+    this->value = first;
+    this->currentIndex = 1;
 }
 
 Arithmetic::~Arithmetic() {}
 
 bool Arithmetic::over() {
-    return currentIndex > last;
+    return currentIndex > last || currentIndex < first;
 }
 
 void Arithmetic::next() {
+    currentIndex += 1;
     if ( over() ) {
         return;
     }
-    currentIndex += 1;
     value += diff;
 }
 
-bool Arithmetic::less() {
-    return currentIndex < first;
-}
-
 void Arithmetic::prev() {
-    if ( less() ) {
+    currentIndex -= 1;
+    if ( over() ) {
         return;
     }
-    currentIndex -= 1;
     value -= diff;
+}
+
+void Arithmetic::resetToFirst() {
+    currentIndex = first; 
+}
+
+void Arithmetic::resetToLast() {
+    currentIndex = last;
 }
 
 int Arithmetic::lastMember() {
     return value = first + diff * (last - 1);
 }
 
-int Arithmetic::summary() {
+int Arithmetic::sum() {
     return value = ((first + value) * last) / 2;
 }
 

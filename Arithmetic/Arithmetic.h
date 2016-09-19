@@ -6,6 +6,7 @@
 using namespace std;
 
 class InvalidIndexException {};
+class OutOfBoundException {};
 
 class Arithmetic {
     private:
@@ -14,6 +15,7 @@ class Arithmetic {
         int diff;
         int value;
         int currentIndex;
+        int lastIndex;
 
     public:
         Arithmetic(int first, int last, int diff);
@@ -21,11 +23,13 @@ class Arithmetic {
 
         bool over();
         void next();
-        bool less();
         void prev();
 
+        void resetToFirst();
+        void resetToLast();
+
         int lastMember();
-        int summary();
+        int sum();
 
         int getValueAtIndex(int idnex);
 
