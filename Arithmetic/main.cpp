@@ -4,23 +4,56 @@
 using namespace std;
 
 int main() {
-    Arithmetic seq(1, 20, 2);
+    int index;
+    int first, last, step;
+
+    cout << "Set first value: ";
+    cin >> first;
+    cout << "Set last number of last member: ";
+    cin >> last;
+    cout << "Set common difference: ";
+    cin >> step;
+    Arithmetic seq(first, last, step);
 
     for ( ; !seq.over(); seq++ ) {
-        cout << *seq << " ";
+        cout << *seq << " - " << seq.getIndex() << endl;
     }
+
     cout << endl;
+    cout << "Current value and last member: " << *seq << " - " << seq.getIndex() << endl;
+
+    seq.prev();
+    seq.prev();
+    seq.prev();
+    seq.prev();
+
+    cout << "Current value after prev()x4: " << *seq << " - " << seq.getIndex() << endl;
+
+    seq.next();
+    seq.next();
+
+    cout << "Current value after next()x2: " << *seq << " - " << seq.getIndex() << endl;
+
+    seq.resetToFirst();
+    cout << "Current value after reset to begin: " << *seq << " - " << seq.getIndex() << endl;
 
     seq.resetToLast();
 
+    cout << "Current value after reset to last: " << *seq << " - " << seq.getIndex() << endl;
+
+    cout << endl;
+
     for ( ; !seq.over(); seq-- ) {
-        cout << *seq << " " ;
+        cout << *seq << " - " << seq.getIndex() << endl;
     }
     cout << endl;
 
+    cout << "Last: " << seq.lastMember() << endl;
+    cout << "Summary: " << seq.sum() << endl;
+
     cout << "Enter Index: ";
     cin >> index;
-    cout << seq.getValueAtIndex(index) << endl;
+    cout << "Value " << seq.getValueAtIndex(index) << " at index - " << index << endl;
 
     return 0;
 }

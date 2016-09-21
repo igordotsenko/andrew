@@ -3,8 +3,7 @@
 
 #include <iostream>
 
-using namespace std;
-
+class invalidStepException{};
 class InvalidIndexException {};
 class OutOfBoundException {};
 
@@ -12,18 +11,17 @@ class Arithmetic {
     private:
         int first;
         int last;
-        int diff;
+        int step;
         int value;
         int currentIndex;
-        int lastIndex;
 
     public:
-        Arithmetic(int first, int last, int diff);
+        Arithmetic(int first, int last, int step);
         ~Arithmetic();
 
-        bool over();
         void next();
         void prev();
+        bool over();
 
         void resetToFirst();
         void resetToLast();
@@ -31,6 +29,7 @@ class Arithmetic {
         int lastMember();
         int sum();
 
+        int getIndex();
         int getValueAtIndex(int idnex);
 
         void operator++();

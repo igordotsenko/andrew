@@ -3,26 +3,26 @@
 
 using namespace std;
 
-Arithmetic::Arithmetic(int first, int last, int diff) {
+Arithmetic::Arithmetic(int first, int last, int step) {
     this->first = first;
     this->last = last;
-    this->diff = diff;
+    this->step = step;
     this->value = first;
     this->currentIndex = 1;
+
+    if ( step == 0 ) {
+        throw invalidStepException();
+    }
 }
 
 Arithmetic::~Arithmetic() {}
-
-bool Arithmetic::over() {
-    return currentIndex > last || currentIndex < first;
-}
 
 void Arithmetic::next() {
     currentIndex += 1;
     if ( over() ) {
         return;
     }
-    value += diff;
+    value += step;
 }
 
 void Arithmetic::prev() {
@@ -30,11 +30,15 @@ void Arithmetic::prev() {
     if ( over() ) {
         return;
     }
-    value -= diff;
+    value -= step;
+}
+
+bool Arithmetic::over() {
+    return currentIndex > last || currentIndex < 1;
 }
 
 void Arithmetic::resetToFirst() {
-    currentIndex = first; 
+    currentIndex = 1; 
 }
 
 void Arithmetic::resetToLast() {
@@ -42,21 +46,23 @@ void Arithmetic::resetToLast() {
 }
 
 int Arithmetic::lastMember() {
-    return value = first + diff * (last - 1);
+    return value = first + step * (last - 1);
 }
 
 int Arithmetic::sum() {
     return value = ((first + value) * last) / 2;
 }
 
-int Arithmetic::getValueAtIndex(int index) {
-    int newValue = first + diff * index - diff;
+int Arithmetic::getIndex() {
+    return currentIndex;
+}
 
+int Arithmetic::getValueAtIndex(int index) {
     if ( index < 1 || index > last ) {
          throw InvalidIndexException();
     }
 
-    return newValue;
+    return value = first + step * index - step;
 }
 
 void Arithmetic::operator++() {
@@ -76,5 +82,5 @@ void Arithmetic::operator--(int) {
 }
 
 int Arithmetic::operator*() {
-    return value;
+    return value = first + step * currentIndex - step;
 }
