@@ -6,13 +6,15 @@ using namespace std;
 Arithmetic::Arithmetic(int first, int last, int step) {
     this->first = first;
     this->last = last;
-    this->step = step;
-    this->value = first;
-    this->currentIndex = 1;
 
     if ( step == 0 ) {
         throw invalidStepException();
     }
+
+    this->step = step;
+    this->value = first;
+    this->currentIndex = 1;
+
 }
 
 Arithmetic::~Arithmetic() {}
@@ -43,6 +45,7 @@ void Arithmetic::resetToFirst() {
 
 void Arithmetic::resetToLast() {
     currentIndex = last;
+    value = last;
 }
 
 int Arithmetic::lastMember() {
@@ -58,11 +61,13 @@ int Arithmetic::getIndex() {
 }
 
 int Arithmetic::getValueAtIndex(int index) {
+    int newValue = first + step * index - step;
+
     if ( index < 1 || index > last ) {
          throw InvalidIndexException();
     }
 
-    return value = first + step * index - step;
+    return newValue;
 }
 
 void Arithmetic::operator++() {
@@ -82,5 +87,5 @@ void Arithmetic::operator--(int) {
 }
 
 int Arithmetic::operator*() {
-    return value = first + step * currentIndex - step;
+    return value;
 }
