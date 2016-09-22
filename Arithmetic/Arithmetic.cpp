@@ -1,3 +1,4 @@
+
 #include <iostream>
 #include "Arithmetic.h"
 
@@ -20,18 +21,18 @@ Arithmetic::Arithmetic(int first, int last, int step) {
 Arithmetic::~Arithmetic() {}
 
 void Arithmetic::next() {
-    currentIndex += 1;
     if ( over() ) {
-        return;
+        throw OutOfBoundException();
     }
+    currentIndex += 1;
     value += step;
 }
 
 void Arithmetic::prev() {
-    currentIndex -= 1;
     if ( over() ) {
-        return;
+        throw OutOfBoundException();
     }
+    currentIndex -= 1;
     value -= step;
 }
 
@@ -45,7 +46,7 @@ void Arithmetic::resetToFirst() {
 
 void Arithmetic::resetToLast() {
     currentIndex = last;
-    value = last;
+    value = lastMember();
 }
 
 int Arithmetic::lastMember() {
