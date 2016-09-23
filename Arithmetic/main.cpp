@@ -16,23 +16,25 @@ int main() {
     Arithmetic seq(first, last, step);
 
     for ( ; !seq.over(); seq++ ) {
-        cout << *seq << " - " << seq.getIndex() << endl;
+        cout << seq.getIndex() << " - " << *seq << endl;
     }
 
     cout << endl;
     cout << "Current value and last member: " << *seq << " - " << seq.getIndex() << endl;
 
+    seq.resetToLast();
+
     seq.prev();
     seq.prev();
     seq.prev();
     seq.prev();
 
-    cout << "Current value after prev()x4: " << *seq << " - " << seq.getIndex() << endl;
+    cout << "Current value after prev(): " << *seq << " - " << seq.getIndex() << endl;
 
     seq.next();
     seq.next();
 
-    cout << "Current value after next()x2: " << *seq << " - " << seq.getIndex() << endl;
+    cout << "Current value after next(): " << *seq << " - " << seq.getIndex() << endl;
 
     seq.resetToFirst();
     cout << "Current value after reset to begin: " << *seq << " - " << seq.getIndex() << endl;
@@ -44,7 +46,7 @@ int main() {
     cout << endl;
 
     for ( ; !seq.over(); seq-- ) {
-        cout << *seq << " - " << seq.getIndex() << endl;
+        cout << seq.getIndex() << " - " << *seq << endl;
     }
     cout << endl;
 

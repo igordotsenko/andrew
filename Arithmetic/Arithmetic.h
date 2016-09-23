@@ -3,7 +3,7 @@
 
 #include <iostream>
 
-class invalidStepException{};
+class InvalidStepException {};
 class InvalidIndexException {};
 class OutOfBoundException {};
 
@@ -12,7 +12,6 @@ class Arithmetic {
         int first;
         int last;
         int step;
-        int value;
         int currentIndex;
 
     public:
@@ -30,6 +29,7 @@ class Arithmetic {
         int sum();
 
         int getIndex();
+        int getValue();
         int getValueAtIndex(int idnex);
 
         void operator++();

@@ -1,21 +1,16 @@
-
 #include <iostream>
 #include "Arithmetic.h"
 
 using namespace std;
 
 Arithmetic::Arithmetic(int first, int last, int step) {
+    if ( step == 0 ) {
+        throw InvalidStepException();
+    }
     this->first = first;
     this->last = last;
-
-    if ( step == 0 ) {
-        throw invalidStepException();
-    }
-
     this->step = step;
-    this->value = first;
     this->currentIndex = 1;
-
 }
 
 Arithmetic::~Arithmetic() {}
@@ -25,7 +20,6 @@ void Arithmetic::next() {
         throw OutOfBoundException();
     }
     currentIndex += 1;
-    value += step;
 }
 
 void Arithmetic::prev() {
@@ -33,7 +27,6 @@ void Arithmetic::prev() {
         throw OutOfBoundException();
     }
     currentIndex -= 1;
-    value -= step;
 }
 
 bool Arithmetic::over() {
@@ -46,19 +39,26 @@ void Arithmetic::resetToFirst() {
 
 void Arithmetic::resetToLast() {
     currentIndex = last;
-    value = lastMember();
 }
 
 int Arithmetic::lastMember() {
-    return value = first + step * (last - 1);
+    int lastMember = first + step * (last - 1);
+
+    return lastMember;
 }
 
 int Arithmetic::sum() {
-    return value = ((first + value) * last) / 2;
+    int sum = ((first + lastMember()) / 2) * last;
+
+    return sum;
 }
 
 int Arithmetic::getIndex() {
     return currentIndex;
+}
+
+int Arithmetic::getValue() {
+    return first + step * (currentIndex - 1);
 }
 
 int Arithmetic::getValueAtIndex(int index) {
@@ -88,5 +88,5 @@ void Arithmetic::operator--(int) {
 }
 
 int Arithmetic::operator*() {
-    return value;
+    return getValue();
 }
