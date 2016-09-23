@@ -42,15 +42,11 @@ void Arithmetic::resetToLast() {
 }
 
 int Arithmetic::lastMember() {
-    int lastMember = first + step * (last - 1);
-
-    return lastMember;
+    return first + step * (last - 1);
 }
 
 int Arithmetic::sum() {
-    int sum = ((first + lastMember()) / 2) * last;
-
-    return sum;
+    return ((first + lastMember()) / 2) * last;
 }
 
 int Arithmetic::getIndex() {
@@ -62,13 +58,11 @@ int Arithmetic::getValue() {
 }
 
 int Arithmetic::getValueAtIndex(int index) {
-    int newValue = first + step * index - step;
-
     if ( index < 1 || index > last ) {
-         throw InvalidIndexException();
+        throw InvalidIndexException();
     }
 
-    return newValue;
+    return first + step * index - step;
 }
 
 void Arithmetic::operator++() {
