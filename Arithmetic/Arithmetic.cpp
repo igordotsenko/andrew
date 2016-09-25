@@ -15,17 +15,21 @@ Arithmetic::Arithmetic(int first, int last, int step) {
 
 Arithmetic::~Arithmetic() {}
 
-void Arithmetic::next() {
+void Arithmetic::ensureIsNotOver() {
     if ( over() ) {
         throw OutOfBoundException();
     }
+}
+
+void Arithmetic::next() {
+    ensureIsNotOver();
+
     currentIndex += 1;
 }
 
 void Arithmetic::prev() {
-    if ( over() ) {
-        throw OutOfBoundException();
-    }
+    ensureIsNotOver();
+
     currentIndex -= 1;
 }
 

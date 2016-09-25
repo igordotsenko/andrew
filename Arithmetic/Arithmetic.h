@@ -13,6 +13,7 @@ class Arithmetic {
         int last;
         int step;
         int currentIndex;
+        void ensureIsNotOver();
 
     public:
         Arithmetic(int first, int last, int step);
