@@ -41,7 +41,8 @@ public class Complex implements Cloneable{
     }
 
     public Complex mult(Complex other) {
-        return new Complex(real * other.real - imaginary * other.imaginary, real * other.imaginary + imaginary * other.real);
+        return new Complex(real * other.real - imaginary * other.imaginary,
+                             real * other.imaginary + imaginary * other.real);
     }
 
     public boolean equals(Complex other) {
@@ -53,9 +54,6 @@ public class Complex implements Cloneable{
     }
 
     public String toString() {
-        if ( imaginary < 0 ) {
-            return real + "" + imaginary + "i";
-        }
-        return real + " + " + imaginary + "i";
+        return imaginary < 0 ? real + "" + imaginary + "i" : real + " + " + imaginary + "i";
     }
 }
