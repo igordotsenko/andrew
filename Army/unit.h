@@ -11,7 +11,7 @@ class Unit {
     protected:
         string name;
         int healthPointLimit;
-        int currentHealthPoint;
+        int currentHP;
         int damage;
         virtual void ensureIsAlive();
 
@@ -21,13 +21,17 @@ class Unit {
 
         virtual void attack(Unit* victim);
         virtual void takeDamage(int damage);
-        // virtual void takeMagicDamage(int damage);
+        virtual void takeMagicDamage(int damage);
         virtual void counterAttack(Unit* victim);
+
+        virtual void setHPLimit(int newHPLimit);
+        virtual void setCurrentHP(int newCurrentHP);
+        virtual void setDamage(int damage);
 
         virtual const string& getName() const;
         virtual int getDamage() const;
-        virtual int getHealthtPointsLimit() const;
-        virtual int getCurrentHealthPoint() const;
+        virtual int getHPLimit() const;
+        virtual int getCurrentHP() const;
 };
 
 ostream& operator<<(ostream& out, const Unit& unit);
