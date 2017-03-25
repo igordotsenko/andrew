@@ -7,5 +7,6 @@ Rogue::Rogue(const string& name, int healthPoint, int damage) : Unit(name, healt
 Rogue::~Rogue() {}
 
 void Rogue::attack(Unit* victim) {
+    ensureIsAlive();
     victim->takeDamage(getDamage());
 }
