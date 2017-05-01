@@ -8,16 +8,18 @@ using namespace std;
 class UnitIsDeadException {};
 
 class Unit {
-    protected:
+    private:
         string name;
         int healthPointLimit;
         int currentHP;
         int damage;
+        
+    protected:
         virtual void ensureIsAlive();
 
     public:
         Unit(const string& name, int healthPoint, int damage);
-        ~Unit();
+        virtual ~Unit();
 
         virtual void attack(Unit* victim);
         virtual void takeDamage(int damage);
@@ -29,9 +31,11 @@ class Unit {
         virtual void setDamage(int damage);
 
         virtual const string& getName() const;
-        virtual int getDamage() const;
         virtual int getHPLimit() const;
         virtual int getCurrentHP() const;
+        virtual int getDamage() const;
+
+        virtual void heal(int healthPoint);
 };
 
 ostream& operator<<(ostream& out, const Unit& unit);

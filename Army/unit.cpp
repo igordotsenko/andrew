@@ -15,7 +15,7 @@ void Unit::attack(Unit* victim) {
     ensureIsAlive();
     victim->takeDamage(getDamage());
 
-    cout << "\t" << getName() << " hit for " << getDamage() << " damage." << endl;
+    cout << "\t" << getName() << " hit " << victim->getName() << " for " << getDamage() << " damage." << endl;
 
     victim->counterAttack(this);
 }
@@ -23,7 +23,7 @@ void Unit::attack(Unit* victim) {
 void Unit::takeDamage(int damage) {
     ensureIsAlive();
 
-    if ( getCurrentHP() <= 0 ) {
+    if ( getCurrentHP() < damage ) {
         setCurrentHP(0);
 
         return;
@@ -35,7 +35,7 @@ void Unit::takeDamage(int damage) {
 void Unit::takeMagicDamage(int damage) {
     ensureIsAlive();
     
-    if ( getCurrentHP() <= 0 ) {
+    if ( getCurrentHP() < damage ) {
         setCurrentHP(0);
 
         return;
@@ -48,7 +48,7 @@ void Unit::counterAttack(Unit* victim) {
     ensureIsAlive();
 
     victim->takeDamage(getDamage() / 2);
-    cout << "\t" << getName() << " is counter attacking and hit for " << getDamage() / 2 << " damage.\n" << endl;
+    cout << "\t" << getName() << " is counterattacking and hit " << victim->getName() << " for " << getDamage() / 2 << " damage.\n" << endl;
 }
 
 void Unit::setHPLimit(int newHPLimit) {
@@ -64,30 +64,44 @@ void Unit::setDamage(int newDamage) {
 }
 
 
-const string& Unit::getName() const{
+const string& Unit::getName() const {
     return name;
 }
 
-int Unit::getDamage() const{
+int Unit::getDamage() const {
     return damage;
 }
 
-int Unit::getCurrentHP() const{
+int Unit::getCurrentHP() const {
     return currentHP;
 }
 
-int Unit::getHPLimit() const{
+int Unit::getHPLimit() const {
     return healthPointLimit;
 }
 
+void Unit::heal(int healthPoint) {
+    ensureIsAlive();
+
+    int newCurrentHP = getCurrentHP() + healthPoint;
+
+    if ( newCurrentHP > getHPLimit() ) {
+        setCurrentHP(getHPLimit());
+
+        return;
+    }
+
+    setCurrentHP(newCurrentHP);
+}
+
 void Unit::ensureIsAlive() {
-    if ( getCurrentHP() <= 0 ) {
+    if ( getCurrentHP() == 0 ) {
         throw UnitIsDeadException();
     }
 }
 
 ostream& operator<<(ostream& out, const Unit& unit) {
-    out << unit.getName() << " : " << unit.getHPLimit() << "|" << unit.getCurrentHP()  << endl;
+    out << unit.getName() << "\nHP: " << unit.getHPLimit() << "|" << unit.getCurrentHP() << endl;
     out << "DMG: " << unit.getDamage() << "\n";
 
     return out;
