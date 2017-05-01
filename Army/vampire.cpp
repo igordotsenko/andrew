@@ -12,7 +12,7 @@ void Vampire::attack(Unit* victim) {
     victim->takeDamage(getDamage());
 
     vampirism(victim);
-    cout << "\t" << getName() << " hit for " << getDamage() << " damage and recovered " << victim->getCurrentHP() / 10 << " HP\n";
+    cout << "\n\t" << getName() << " hit " << victim->getName() << " for " << getDamage() << " damage and recovered " << victim->getCurrentHP() / 10 << " HP\n";
 
     victim->counterAttack(this);
 }
@@ -23,7 +23,7 @@ void Vampire::counterAttack(Unit* victim) {
     victim->takeDamage(getDamage() / 2);
     vampirism(victim);
 
-    cout << "\t" << getName() << " is counter attacking for " << getDamage()/2 << " damage and recovering " << getCurrentHP() / 10 << " HP\n" << endl;
+    cout << "\n\t" << getName() << " is counter attacking for " << victim->getName() << getDamage()/2 << " damage and recovering " << getCurrentHP() / 10 << " HP\n" << endl;
 }
 
 void Vampire::vampirism(Unit* victim) {
@@ -31,11 +31,5 @@ void Vampire::vampirism(Unit* victim) {
 
     int recoverHP = victim->getCurrentHP() / 10;
 
-    if ( getHPLimit() - getCurrentHP() < recoverHP ) {
-        setCurrentHP(getHPLimit());
-
-        return;
-    }
-
-    setCurrentHP(getCurrentHP() + recoverHP);
+    heal(recoverHP);
 }
