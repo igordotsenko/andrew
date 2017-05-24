@@ -10,7 +10,7 @@ WolfState::WolfState(Unit* currentStateUnit) : State(currentStateUnit) {
 
 WolfState::~WolfState() {}
 
-void WolfState::takeMagicDamage(int damage) {    
+void WolfState::takeMagicDamage(int damage) {
     int newHP = currentStateUnit->getCurrentHP();
     int newDamage = damage * 2;    
 
