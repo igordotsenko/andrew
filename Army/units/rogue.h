@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "unit.h"
+#include "../combat/rogueability.h"
 
 class Rogue : public Unit {
     public:

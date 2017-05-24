@@ -3,17 +3,12 @@
 
 #include <iostream>
 #include "unit.h"
+#include "../combat/vampireability.h"
 
 class Vampire: public Unit {
-    private:
-        void vampirism(Unit* victim);
-
     public:
         Vampire(const string& name, int healthPoint, int damage);
         virtual ~Vampire();
-
-        virtual void attack(Unit* victim);
-        virtual void counterAttack(Unit* victim);
 };
 
 

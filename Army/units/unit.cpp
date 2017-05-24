@@ -12,12 +12,9 @@ Unit::Unit(const string& name, int healthPoint, int damage) {
 Unit::~Unit() {}
 
 void Unit::attack(Unit* victim) {
+    ensureIsNotSelfAttack(victim);
     ensureIsAlive();
-    victim->takeDamage(getDamage());
-
-    cout << "\t" << getName() << " hit " << victim->getName() << " for " << getDamage() << " damage." << endl;
-
-    victim->counterAttack(this);
+    ability->attack(victim);
 }
 
 void Unit::takeDamage(int damage) {
@@ -35,20 +32,16 @@ void Unit::takeDamage(int damage) {
 void Unit::takeMagicDamage(int damage) {
     ensureIsAlive();
     
-    if ( getCurrentHP() < damage ) {
-        setCurrentHP(0);
+    ability->takeMagicDamage(damage);
+}
 
-        return;
-    }
-    
-    setCurrentHP(getCurrentHP() - damage);
+void Unit::changeState() {
+    ability->changeState();
 }
 
 void Unit::counterAttack(Unit* victim) {
     ensureIsAlive();
-
-    victim->takeDamage(getDamage() / 2);
-    cout << "\t" << getName() << " is counterattacking and hit " << victim->getName() << " for " << getDamage() / 2 << " damage.\n" << endl;
+    victim->ability->counterAttack(this);
 }
 
 void Unit::setHPLimit(int newHPLimit) {
@@ -63,6 +56,13 @@ void Unit::setDamage(int newDamage) {
     damage = newDamage;
 }
 
+void* Unit::setCurrentState(State* newCurrentState) {
+    normalState = newCurrentState;
+}
+
+void* Unit::setNextState(State* newNextState) {
+    wolfState = newNextState;
+}
 
 const string& Unit::getName() const {
     return name;
@@ -78,6 +78,18 @@ int Unit::getCurrentHP() const {
 
 int Unit::getHPLimit() const {
     return healthPointLimit;
+}
+
+State* Unit::getCurrentState() const {
+    return normalState;
+}
+
+State* Unit::getNextState() const {
+    return wolfState;
+}
+
+const int Unit::getUnitType() const {
+    return unitType;
 }
 
 void Unit::heal(int healthPoint) {
@@ -97,6 +109,12 @@ void Unit::heal(int healthPoint) {
 void Unit::ensureIsAlive() {
     if ( getCurrentHP() == 0 ) {
         throw UnitIsDeadException();
+    }
+}
+
+void Unit::ensureIsNotSelfAttack(Unit* victim) {
+    if ( this == victim ) {
+        throw IsSelfAttackException();
     }
 }
 

@@ -3,6 +3,7 @@
 
 #include <iostream>
 #include "unit.h"
+#include "../combat/defaultability.h"
 
 class Soldier: public Unit {
     public:
