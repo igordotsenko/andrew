@@ -16,13 +16,43 @@
 #include "../mystic/spellcaster.h"
 #include "../mystic/wizard.h"
     
-#include "../magicskill/spell.h"
-
+#include "../spellbooks/spellbooks.h"
 
 using namespace std;
 
 class ArmyTest : public CxxTest::TestSuite {
     public:
+
+        void testAlly() {
+            Soldier* soldier1 = new Soldier("Steve", 100, 10);
+            Soldier* soldier2 = new Soldier("Baki", 100, 10);
+
+            soldier2->setFriendly();
+
+            TS_ASSERT_EQUALS(soldier1->isAlly(), false);
+            TS_ASSERT_EQUALS(soldier2->isAlly(), true);
+
+            delete soldier1;
+            delete soldier2;
+        }
+
+        void testIsFriendlyException() {
+            Soldier* soldier1 = new Soldier("Steve", 100, 10);
+            Soldier* soldier2 = new Soldier("Baki", 100, 10);
+            Vampire* vampire = new Vampire("Count Dracula", 100, 10);
+            Werewolf* wolf = new Werewolf("Van Hellsing", 80, 15);
+
+            vampire->setFriendly();
+            wolf->setFriendly();
+
+            TS_ASSERT_THROWS(soldier1->attack(soldier2), IsFriendlyAttackException);
+            TS_ASSERT_THROWS(wolf->attack(vampire), IsFriendlyAttackException);
+
+            delete soldier1;
+            delete soldier2;
+            delete vampire;
+            delete wolf;
+        }
 
         void testType() {
             Soldier* soldier = new Soldier("Steve", 100, 10);
@@ -44,11 +74,12 @@ class ArmyTest : public CxxTest::TestSuite {
             delete wolf;
         }
 
-        void testException() {
+        void testUnitIsDeadException() {
             Soldier* soldier = new Soldier("Steve", 100, 10);
             Vampire* vampire = new Vampire("Count Dracula", 100, 10);
 
             soldier->setCurrentHP(0);
+            soldier->setFriendly();
 
             TS_ASSERT_THROWS(vampire->attack(soldier), UnitIsDeadException);
 
@@ -56,7 +87,7 @@ class ArmyTest : public CxxTest::TestSuite {
             delete soldier;
         }
 
-        void testSelfAttack() {
+        void testSelfAttackException() {
             Soldier* sold1 = new Soldier("Steve", 100, 10);
             
             TS_ASSERT_THROWS(sold1->attack(sold1), IsSelfAttackException);
@@ -104,6 +135,8 @@ class ArmyTest : public CxxTest::TestSuite {
             Soldier* soldier = new Soldier("Steve", 100, 10);
             Rogue* rogue = new Rogue("Robin", 105, 14);
 
+            rogue->setFriendly();
+
             rogue->attack(soldier);
 
             TS_ASSERT_EQUALS(rogue->getCurrentHP(), 105);    
@@ -112,19 +145,11 @@ class ArmyTest : public CxxTest::TestSuite {
             delete rogue;
         }
 
-        void testBerserk() {
-            Wizard* wizard = new Wizard("Marilyn", 100, 12, 100);
-            Berserk* berserk = new Berserk("T-900", 120, 15);
-
-            TS_ASSERT_EQUALS(berserk->getCurrentHP(), 120);
-
-            delete wizard;
-            delete berserk;
-        }
-
         void testVampire() {
             Soldier* soldier = new Soldier("Steve", 100, 18);
             Vampire* vampire = new Vampire("Count Dracula", 100, 12);
+
+            vampire->setFriendly();
 
             vampire->attack(soldier);
             TS_ASSERT_EQUALS(soldier->getCurrentHP(), 88);
@@ -141,6 +166,8 @@ class ArmyTest : public CxxTest::TestSuite {
         void testWerewolf() {
             Soldier* soldier = new Soldier("Steve", 100, 15);
             Werewolf* wolf = new Werewolf("Van Hellsing", 80, 15);
+
+            wolf->setFriendly();
 
             soldier->attack(wolf);
             TS_ASSERT_EQUALS(wolf->getCurrentHP(), 65);
@@ -163,6 +190,20 @@ class ArmyTest : public CxxTest::TestSuite {
         //     Soldier* soldier = new Soldier("Steve", 100, 10);
         //     Berserk* berserk = new Berserk("T-900", 120, 15);
         //     Wizard* wizard = new Wizard("Marilyn", 100, 12, 100);
+
+            
+            // wizard->attack(soldier);
+            // wizard->attack(berserk);
+
+            // TS_ASSERT_EQUALS(soldier->getCurrentHP(), 85);
+            // TS_ASSERT_EQUALS(berserk->getCurrentHP(), 120);
+            // TS_ASSERT_EQUALS(wizard->getCurrentHP(), 100);
+
+            /*
+            Exception for the case, when MP < spells consumtion
+            TS_ASSERT_THROWS();
+            */
+
 
         //     delete soldier;
         //     delete berserk;
