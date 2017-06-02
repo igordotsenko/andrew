@@ -21,5 +21,6 @@ void Ability::takeMagicDamage(int damage) {
     currentUnit->getCurrentState()->takeMagicDamage(damage);
 }
 
-void Ability::changeState() {
-}
+void Ability::castSpell(Unit* victim, Spellbooks* spell) {}
+
+void Ability::changeState() {}
