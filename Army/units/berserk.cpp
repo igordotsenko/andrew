@@ -2,7 +2,7 @@
 
 using namespace std;
 
-Berserk::Berserk(const string& name, int healthPoint, int damage) : Unit(name, healthPoint, damage) {
+Berserk::Berserk(const string& name, int healthPoint, int damage) : Unit(name, healthPoint, damage)  {
     ability = new BerserkAbility(this);
     unitType = berserkType;
 }

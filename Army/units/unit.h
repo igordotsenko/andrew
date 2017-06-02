@@ -8,15 +8,20 @@ using namespace std;
 
 class Ability;
 class State;
+
 class UnitIsDeadException {};
 class IsSelfAttackException {};
+class ManaIsOverException {};
+class IsVictimException {};
+class IsFriendlyAttackException {};
 
 enum UnitType {
     soldierType,
     rogueType,
     berserkType,
     vampireType,
-    werewolfType
+    werewolfType,
+    wizardType
 };
 
 class Unit {
@@ -27,6 +32,7 @@ class Unit {
         int damage;
         
     protected:
+        bool isFriendly;
         int unitType;
         State* normalState;
         State* wolfState;
@@ -34,6 +40,7 @@ class Unit {
 
         virtual void ensureIsAlive();
         virtual void ensureIsNotSelfAttack(Unit* victim);
+        virtual void ensureIsNotAlly(Unit* target);
 
     public:
         Unit(const string& name, int healthPoint, int damage);
@@ -48,14 +55,16 @@ class Unit {
         virtual void setHPLimit(int newHPLimit);
         virtual void setCurrentHP(int newCurrentHP);
         virtual void setDamage(int damage);
+        virtual void setFriendly();
 
-        virtual void* setCurrentState(State* newCurrentState);
-        virtual void* setNextState(State* newNextState);
+        virtual void setCurrentState(State* newCurrentState);
+        virtual void setNextState(State* newNextState);
 
         virtual const string& getName() const;
         virtual int getHPLimit() const;
         virtual int getCurrentHP() const;
         virtual int getDamage() const;
+        virtual bool isAlly() const;
 
         virtual State* getCurrentState() const;
         virtual State* getNextState() const;

@@ -7,12 +7,14 @@ Unit::Unit(const string& name, int healthPoint, int damage) {
     this->healthPointLimit = healthPoint;
     this->currentHP = healthPoint;
     this->damage = damage;
+    this->isFriendly = false;
 }
 
 Unit::~Unit() {}
 
 void Unit::attack(Unit* victim) {
     ensureIsNotSelfAttack(victim);
+    ensureIsNotAlly(victim);
     ensureIsAlive();
     ability->attack(victim);
 }
@@ -56,11 +58,15 @@ void Unit::setDamage(int newDamage) {
     damage = newDamage;
 }
 
-void* Unit::setCurrentState(State* newCurrentState) {
+void Unit::setFriendly() {
+    isFriendly = !isFriendly;
+}
+
+void Unit::setCurrentState(State* newCurrentState) {
     normalState = newCurrentState;
 }
 
-void* Unit::setNextState(State* newNextState) {
+void Unit::setNextState(State* newNextState) {
     wolfState = newNextState;
 }
 
@@ -78,6 +84,10 @@ int Unit::getCurrentHP() const {
 
 int Unit::getHPLimit() const {
     return healthPointLimit;
+}
+
+bool Unit::isAlly() const {
+    return isFriendly;
 }
 
 State* Unit::getCurrentState() const {
@@ -115,6 +125,12 @@ void Unit::ensureIsAlive() {
 void Unit::ensureIsNotSelfAttack(Unit* victim) {
     if ( this == victim ) {
         throw IsSelfAttackException();
+    }
+}
+
+void Unit::ensureIsNotAlly(Unit* target) {
+    if ( this->isAlly() == target->isAlly() ) {
+        throw IsFriendlyAttackException() ;
     }
 }
 
