@@ -3,8 +3,10 @@
 using namespace std;
 
 Berserk::Berserk(const string& name, int healthPoint, int damage) : Unit(name, healthPoint, damage)  {
-    ability = new BerserkAbility(this);
-    unitType = berserkType;
+    setAbility(new BerserkAbility(this));
+    setCurrentState(new HumanState(this));
+    setNextState(new HumanState(this));
+    setUnitType(berserk);
 }
 
 Berserk::~Berserk() {}

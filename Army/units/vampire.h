@@ -4,6 +4,7 @@
 #include <iostream>
 #include "unit.h"
 #include "../combat/vampireability.h"
+#include "../state/humanstate.h"
 
 class Vampire: public Unit {
     public:

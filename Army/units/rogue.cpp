@@ -3,13 +3,10 @@
 using namespace std;
 
 Rogue::Rogue(const string& name, int healthPoint, int damage) : Unit(name, healthPoint, damage)  {
-    ability = new RogueAbility(this);
-    unitType = rogueType;
+    setAbility(new RogueAbility(this));
+    setCurrentState(new HumanState(this));
+    setNextState(new HumanState(this));
+    setUnitType(rogue);
 }
 
 Rogue::~Rogue() {}
-
-void Rogue::attack(Unit* victim) {
-    ensureIsAlive();
-    ability->attack(victim);
-}

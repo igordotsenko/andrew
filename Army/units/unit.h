@@ -16,12 +16,12 @@ class IsVictimException {};
 class IsFriendlyAttackException {};
 
 enum UnitType {
-    soldierType,
-    rogueType,
-    berserkType,
-    vampireType,
-    werewolfType,
-    wizardType
+    soldier,
+    rogue,
+    berserk,
+    vampire,
+    werewolf,
+    wizard
 };
 
 class Unit {
@@ -30,21 +30,20 @@ class Unit {
         int healthPointLimit;
         int currentHP;
         int damage;
+        int unitType;
+        bool isFriendly;
+        State* normalState;
+        State* alternativeState;
+        Ability* ability;
         
     protected:
-        bool isFriendly;
-        int unitType;
-        State* normalState;
-        State* wolfState;
-        Ability* ability;
-
         virtual void ensureIsAlive();
         virtual void ensureIsNotSelfAttack(Unit* victim);
         virtual void ensureIsNotAlly(Unit* target);
 
     public:
         Unit(const string& name, int healthPoint, int damage);
-        virtual ~Unit();
+        virtual ~Unit() = 0;
 
         virtual void attack(Unit* victim);
         virtual void takeDamage(int damage);
@@ -57,14 +56,20 @@ class Unit {
         virtual void setDamage(int damage);
         virtual void setFriendly();
 
+        virtual void setAbility(Ability* newAbility);
+
         virtual void setCurrentState(State* newCurrentState);
         virtual void setNextState(State* newNextState);
+
+        virtual void setUnitType(int newUnitType);
 
         virtual const string& getName() const;
         virtual int getHPLimit() const;
         virtual int getCurrentHP() const;
         virtual int getDamage() const;
         virtual bool isAlly() const;
+
+        virtual Ability* getAbility() const;
 
         virtual State* getCurrentState() const;
         virtual State* getNextState() const;

@@ -4,13 +4,12 @@
 #include <iostream>
 #include "unit.h"
 #include "../combat/rogueability.h"
+#include "../state/humanstate.h"
 
 class Rogue : public Unit {
     public:
         Rogue(const string& name, int healthPoint, int damage);
         virtual ~Rogue();
-
-        virtual void attack(Unit* victim);
 };
 
 
