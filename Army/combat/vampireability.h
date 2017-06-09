@@ -12,8 +12,6 @@ class VampireAbility: public Ability {
 		VampireAbility(Unit* currentUnit);
 		~VampireAbility();
 
-		virtual void attack(Unit* victim);
-		virtual void counterAttack(Unit* victim);
-};
+		virtual void attack(Unit* victim);};
 
 #endif //VAMPIREABILITY_H

@@ -12,7 +12,7 @@ void Ability::attack(Unit* victim) {
 void Ability::counterAttack(Unit* victim) {
     currentUnit->takeDamage(victim->getDamage() / 2);
     
-    if ( victim->getUnitType() == vampireType ) {
+    if ( victim->getUnitType() == vampire ) {
         victim->heal(currentUnit->getCurrentHP() / 10);
     }
 }
@@ -23,4 +23,22 @@ void Ability::takeMagicDamage(int damage) {
 
 void Ability::castSpell(Unit* victim, Spellbooks* spell) {}
 
-void Ability::changeState() {}
+void Ability::changeState() {
+    State* currentState = currentUnit->getCurrentState();
+    State* nextState = currentUnit->getNextState();
+    State* tmp = currentState;
+
+    currentUnit->setCurrentState(nextState);
+    currentUnit->setNextState(tmp);
+    currentState = nextState;
+
+    int newCurrentHP = (getHealthMultiplier() * (double)currentState->getHPLimit());
+
+    currentUnit->setHPLimit(currentState->getHPLimit());
+    currentUnit->setCurrentHP(newCurrentHP); 
+    currentUnit->setDamage(currentState->getDamage());
+}
+
+double Ability::getHealthMultiplier() const {
+    return (double)currentUnit->getCurrentHP() / (double)currentUnit->getHPLimit();
+}

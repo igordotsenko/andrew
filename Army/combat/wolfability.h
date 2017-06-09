@@ -9,10 +9,6 @@ class WolfAbility: public Ability {
     public:
         WolfAbility(Unit* currentUnit);
         virtual ~WolfAbility();
-
-        virtual void changeState();
-
-        double getHealthMultiplier() const;
 };
 
 #endif //WOLFABILITY_H

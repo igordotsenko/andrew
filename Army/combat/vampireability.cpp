@@ -13,12 +13,8 @@ void VampireAbility::attack(Unit* victim) {
     victim->counterAttack(currentUnit);
 }
 
-void VampireAbility::counterAttack(Unit* victim) {
-    currentUnit->takeDamage(victim->getDamage() / 2);
-    vampirism(victim);
-}
-
 void VampireAbility::vampirism(Unit* victim) {
     int recoverHP = victim->getCurrentHP() / 10;
+    victim->takeDamage(recoverHP);
     currentUnit->heal(recoverHP);
 }
