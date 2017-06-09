@@ -16,7 +16,7 @@ void Spellcaster::castSpell(Unit* victim) {
     ensureManaIsNotOver();
     
     /*
-        this part in process...
+        this part in progress...
     ability->castSpell(victim, currentSpell); 
     currentMP -= currentSpell->getManaConsumption();
     */
@@ -29,10 +29,6 @@ int Spellcaster::getMPLimit() const {
 
 int Spellcaster::getCurrentMP() const {
     return currentMP;
-}
-
-bool Spellcaster::isBattleMage() const {
-    return battleMage;
 }
 
 void Spellcaster::setMPLimit(int newMPLimit) {

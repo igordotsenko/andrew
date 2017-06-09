@@ -17,7 +17,6 @@ class Spellcaster: public Unit {
         Spellbooks* currentSpell;
         
     protected:
-        bool battleMage;
         virtual void ensureManaIsNotOver();
 
     public:
@@ -28,8 +27,7 @@ class Spellcaster: public Unit {
 
         virtual int getMPLimit() const;
         virtual int getCurrentMP() const;
-        virtual bool isBattleMage() const;
-
+        
         virtual void setMPLimit(int newMPLimit);
         virtual void setCurrentMP(int newCurrentMP);
 };
