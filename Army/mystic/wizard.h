@@ -3,6 +3,7 @@
 
 #include "spellcaster.h"
 #include "../combat/wizardability.h"
+#include "../state/humanstate.h"
 
 using namespace std;
 
