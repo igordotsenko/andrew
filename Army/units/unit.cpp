@@ -7,7 +7,6 @@ Unit::Unit(const string& name, int healthPoint, int damage) {
     this->healthPointLimit = healthPoint;
     this->currentHP = healthPoint;
     this->damage = damage;
-    this->isFriendly = false;
 }
 
 Unit::~Unit() {
@@ -18,9 +17,8 @@ Unit::~Unit() {
 
 void Unit::attack(Unit* victim) {
     ensureIsNotSelfAttack(victim);
-    ensureIsNotAlly(victim);
     ensureIsAlive();
-    ability->attack(victim);
+    getAbility()->attack(victim);
 }
 
 void Unit::takeDamage(int damage) {
@@ -38,16 +36,16 @@ void Unit::takeDamage(int damage) {
 void Unit::takeMagicDamage(int damage) {
     ensureIsAlive();
     
-    ability->takeMagicDamage(damage);
+    getAbility()->takeMagicDamage(damage);
 }
 
 void Unit::changeState() {
-    ability->changeState();
+    getAbility()->changeState();
 }
 
 void Unit::counterAttack(Unit* victim) {
     ensureIsAlive();
-    victim->ability->counterAttack(this);
+    victim->getAbility()->counterAttack(this);
 }
 
 void Unit::setHPLimit(int newHPLimit) {
@@ -60,10 +58,6 @@ void Unit::setCurrentHP(int newCurrentHP) {
 
 void Unit::setDamage(int newDamage) {
     damage = newDamage;
-}
-
-void Unit::setFriendly() {
-    isFriendly = !isFriendly;
 }
 
 void Unit::setAbility(Ability* newAbility) {
@@ -96,10 +90,6 @@ int Unit::getCurrentHP() const {
 
 int Unit::getHPLimit() const {
     return healthPointLimit;
-}
-
-bool Unit::isAlly() const {
-    return isFriendly;
 }
 
 Ability* Unit::getAbility() const {
@@ -141,12 +131,6 @@ void Unit::ensureIsAlive() {
 void Unit::ensureIsNotSelfAttack(Unit* victim) {
     if ( this == victim ) {
         throw IsSelfAttackException();
-    }
-}
-
-void Unit::ensureIsNotAlly(Unit* target) {
-    if ( this->isAlly() == target->isAlly() ) {
-        throw IsFriendlyAttackException() ;
     }
 }
 

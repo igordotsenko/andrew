@@ -11,7 +11,6 @@ class State;
 
 class UnitIsDeadException {};
 class IsSelfAttackException {};
-class ManaIsOverException {};
 class IsVictimException {};
 class IsFriendlyAttackException {};
 
@@ -21,7 +20,9 @@ enum UnitType {
     berserk,
     vampire,
     werewolf,
-    wizard
+    wizard,
+    healer,
+    priest
 };
 
 class Unit {
@@ -31,7 +32,6 @@ class Unit {
         int currentHP;
         int damage;
         int unitType;
-        bool isFriendly;
         State* normalState;
         State* alternativeState;
         Ability* ability;
@@ -39,7 +39,6 @@ class Unit {
     protected:
         virtual void ensureIsAlive();
         virtual void ensureIsNotSelfAttack(Unit* victim);
-        virtual void ensureIsNotAlly(Unit* target);
 
     public:
         Unit(const string& name, int healthPoint, int damage);
@@ -54,7 +53,6 @@ class Unit {
         virtual void setHPLimit(int newHPLimit);
         virtual void setCurrentHP(int newCurrentHP);
         virtual void setDamage(int damage);
-        virtual void setFriendly();
 
         virtual void setAbility(Ability* newAbility);
 
@@ -67,7 +65,6 @@ class Unit {
         virtual int getHPLimit() const;
         virtual int getCurrentHP() const;
         virtual int getDamage() const;
-        virtual bool isAlly() const;
 
         virtual Ability* getAbility() const;
 
