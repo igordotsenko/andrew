@@ -9,13 +9,13 @@ State::State(Unit* currentStateUnit) {
 State::~State() {}
 
 void State::takeMagicDamage(int damage) {
-    if ( currentHP <= 0 ) {
+    if ( currentHP < damage ) {
         currentStateUnit->setCurrentHP(0);
 
         return;
     }
     
-    currentStateUnit->setCurrentHP(currentHP - damage);
+    currentStateUnit->setCurrentHP(currentStateUnit->getCurrentHP()-damage);
 }
 
 int State::getHPLimit() const {
