@@ -5,23 +5,32 @@ using namespace std;
 Spellcaster::Spellcaster(const string& name, int healthPoint, int damage, int manaPoint) : Unit(name, healthPoint, damage) {
     this->MPLimits = manaPoint;
     this->currentMP = manaPoint;
+    learnSpell(new Fireball);
+    learnSpell(new Heal);
 }
 
-Spellcaster::~Spellcaster() {}
+Spellcaster::~Spellcaster() {
+    cout << spellbook.size() << endl;
+    spellbook.clear();
+    cout << spellbook.size() << endl;
+}
 
 void Spellcaster::castSpell(Unit* victim) {
     ensureIsAlive();
     ensureIsNotSelfAttack(victim);
-    ensureIsNotAlly(victim);
     ensureManaIsNotOver();
     
-    /*
-        this part in progress...
-    ability->castSpell(victim, currentSpell); 
-    currentMP -= currentSpell->getManaConsumption();
-    */
+    getAbility()->castSpell(victim, currentSpell); 
+    currentMP -= getCurrentSpell()->getManaConsumption();
 }
 
+void Spellcaster::learnSpell(Spell* newSpell) {
+    spellbook[newSpell->getSpellsName()] = newSpell;
+}
+
+Spell* Spellcaster::getCurrentSpell() const {
+    return currentSpell;
+}
 
 int Spellcaster::getMPLimit() const {
     return MPLimits;
@@ -36,16 +45,20 @@ void Spellcaster::setMPLimit(int newMPLimit) {
 }
 
 void Spellcaster::setCurrentMP(int newCurrentMP) {
-    MPLimits = newCurrentMP;
+    currentMP = newCurrentMP;
+}
+
+void Spellcaster::setCurrentSpell(const string& newCurrentSpell) {
+    currentSpell = spellbook[newCurrentSpell];
 }
 
 void Spellcaster::ensureManaIsNotOver() {
-    if ( currentMP < currentSpell->getManaConsumption() ) {
+    if ( getCurrentMP() < getCurrentSpell()->getManaConsumption() ) {
         throw ManaIsOverException();
     }
 }
 
-ostream& operator<<(std::ostream& out, const Spellcaster& spellcaster) {
+ostream& operator<<(ostream& out, const Spellcaster& spellcaster) {
     out << spellcaster.getName() << "\nHP: " << spellcaster.getHPLimit() << "|" << spellcaster.getCurrentHP() << endl;
     if ( spellcaster.getHPLimit() == 0 ) {
         return out;
