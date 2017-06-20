@@ -8,6 +8,7 @@ class DefaultAbility: public Ability {
     public:
         DefaultAbility(Unit* currentUnit);
         virtual ~DefaultAbility();
+
 };
 
 #endif //DEFAULTABILITY_H
