@@ -10,9 +10,7 @@ Spellcaster::Spellcaster(const string& name, int healthPoint, int damage, int ma
 }
 
 Spellcaster::~Spellcaster() {
-    cout << spellbook.size() << endl;
     spellbook.clear();
-    cout << spellbook.size() << endl;
 }
 
 void Spellcaster::castSpell(Unit* victim) {
