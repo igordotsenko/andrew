@@ -17,10 +17,13 @@
 #include "../mystic/wizard.h"
 #include "../mystic/healer.h"
 #include "../mystic/priest.h"
+#include "../mystic/warlock.h"
+#include "../units/demon.h"
     
 #include "../spells/spell.h"
 #include "../spells/fireball.h"
 #include "../spells/heal.h"
+#include "../spells/summon.h"
 
 using namespace std;
 
@@ -272,8 +275,35 @@ class ArmyTest : public CxxTest::TestSuite {
             delete priest;
         }
 
+        void testWarlock() {
+            Soldier* soldier = new Soldier("Steve", 100, 10);
+            Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
+
+            warlock->setCurrentSpell("Heal");
+
+            TS_ASSERT_THROWS(warlock->summonDemon(), IsNotSummonSpellsException)            
+
+            warlock->setCurrentSpell("Summon");
+            warlock->summonDemon();
+
+            TS_ASSERT_THROWS(warlock->summonDemon(), DemonIsAlreadySummonedException);
+
+            warlock->getDemon()->attack(soldier);
+
+            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 80);
+            TS_ASSERT_EQUALS(warlock->getDemon()->getCurrentHP(), 115);
+
+            TS_ASSERT_EQUALS(warlock->getCurrentMP(), 85);
+            TS_ASSERT_THROWS(warlock->getDemon()->attack(warlock->getDemon()), IsSelfAttackException);
+            TS_ASSERT_THROWS(warlock->getDemon()->attack(warlock), MasterAttackedException);
+
+            delete soldier;
+            delete warlock;
+        }
+
         void testSpellbooks() {
             Wizard* wizard = new Wizard("Marilyn", 100, 12, 100);
+            Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
 
             TS_ASSERT_EQUALS(wizard->getCurrentSpell()->getSpellsName(), "Fireball");
             TS_ASSERT_EQUALS(wizard->getCurrentSpell()->getManaConsumption(), 8);
@@ -286,6 +316,12 @@ class ArmyTest : public CxxTest::TestSuite {
             TS_ASSERT_EQUALS(wizard->getCurrentSpell()->getHitPoints(), 10);
             TS_ASSERT_EQUALS(wizard->getCurrentSpell()->getSpellsType(), 1);
 
+            TS_ASSERT_EQUALS(warlock->getCurrentSpell()->getSpellsName(), "Summon");
+            TS_ASSERT_EQUALS(warlock->getCurrentSpell()->getManaConsumption(), 15);
+            TS_ASSERT_EQUALS(warlock->getCurrentSpell()->getHitPoints(), 0);
+            TS_ASSERT_EQUALS(warlock->getCurrentSpell()->getSpellsType(), 2);
+
             delete wizard;
+            delete warlock;
         }
 };

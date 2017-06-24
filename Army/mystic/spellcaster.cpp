@@ -17,7 +17,7 @@ void Spellcaster::castSpell(Unit* victim) {
     ensureIsAlive();
     ensureIsNotSelfAttack(victim);
     ensureManaIsNotOver();
-    
+
     getAbility()->castSpell(victim, currentSpell); 
     currentMP -= getCurrentSpell()->getManaConsumption();
 }

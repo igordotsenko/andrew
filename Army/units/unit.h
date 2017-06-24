@@ -22,7 +22,8 @@ enum UnitType {
     werewolf,
     wizard,
     healer,
-    priest
+    priest,
+    warlock
 };
 
 class Unit {
