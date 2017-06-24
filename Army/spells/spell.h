@@ -10,7 +10,8 @@ class Ability;
 
 enum SpellsType {
     battleSpell,
-    healSpell
+    healSpell,
+    summonSpell
 };
     
 class Spell {
