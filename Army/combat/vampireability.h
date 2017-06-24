@@ -10,7 +10,7 @@ class VampireAbility: public Ability {
 
 	public:
 		VampireAbility(Unit* currentUnit);
-		~VampireAbility();
+		virtual ~VampireAbility();
 
 		virtual void attack(Unit* victim);};
 
