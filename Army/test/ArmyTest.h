@@ -11,7 +11,7 @@
 #include "../state/wolfstate.h"
 #include "../state/humanstate.h"
 
-#include "../combat/ability.h"
+#include "../ability/ability.h"
 
 #include "../mystic/spellcaster.h"
 #include "../mystic/wizard.h"
@@ -19,11 +19,15 @@
 #include "../mystic/priest.h"
 #include "../mystic/warlock.h"
 #include "../units/demon.h"
+#include "../mystic/necromancer.h"
     
 #include "../spells/spell.h"
 #include "../spells/fireball.h"
 #include "../spells/heal.h"
 #include "../spells/summon.h"
+
+#include "../observer/observer.h"
+#include "../observer/observable.h"
 
 using namespace std;
 
@@ -37,6 +41,10 @@ class ArmyTest : public CxxTest::TestSuite {
             Vampire* vampire = new Vampire("Count Dracula", 100, 10);
             Werewolf* wolf = new Werewolf("Van Hellsing", 80, 15);
             Wizard* wizard = new Wizard("Marilyn", 80, 10, 120);
+            Healer* healer = new Healer("Manson", 100, 12, 100);
+            Priest* priest = new Priest("Francis", 100, 12, 100);
+            Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
+            Necromancer* necro = new Necromancer("Necros", 80, 5, 120);
 
             TS_ASSERT_EQUALS(soldier->getUnitType(), 0);
             TS_ASSERT_EQUALS(rogue->getUnitType(), 1);
@@ -44,6 +52,10 @@ class ArmyTest : public CxxTest::TestSuite {
             TS_ASSERT_EQUALS(vampire->getUnitType(), 3);
             TS_ASSERT_EQUALS(wolf->getUnitType(), 4);
             TS_ASSERT_EQUALS(wizard->getUnitType(), 5);
+            TS_ASSERT_EQUALS(healer->getUnitType(), 6);
+            TS_ASSERT_EQUALS(priest->getUnitType(), 7);
+            TS_ASSERT_EQUALS(warlock->getUnitType(), 8);
+            TS_ASSERT_EQUALS(necro->getUnitType(), 9);
 
             delete soldier;
             delete rogue;
@@ -51,6 +63,10 @@ class ArmyTest : public CxxTest::TestSuite {
             delete vampire;
             delete wolf;
             delete wizard;
+            delete healer;
+            delete priest;
+            delete warlock;
+            delete necro;
         }
 
         void testUnitIsDeadException() {
@@ -300,6 +316,105 @@ class ArmyTest : public CxxTest::TestSuite {
             delete soldier;
             delete warlock;
         }
+
+        void testAttackAndNotify() {
+            Necromancer* necro = new Necromancer("Necros", 90, 12, 120);
+            Soldier* soldier = new Soldier("Steve", 100, 10);
+            
+            necro->setCurrentHP(30);
+            soldier->setCurrentHP(15);
+
+            necro->attack(soldier);
+            soldier->attack(necro);
+
+            TS_ASSERT_EQUALS(necro->getCurrentHP(), 24);
+
+            delete soldier;
+            delete necro;
+        }
+
+        void testCastSpellAndNotify() {
+            Necromancer* necro = new Necromancer("Necros", 90, 12, 120);
+            Soldier* soldier = new Soldier("Steve", 12, 10);
+            
+            necro->setCurrentHP(50);
+
+            necro->castSpell(soldier);
+
+            TS_ASSERT_EQUALS(necro->getCurrentHP(), 59);
+
+            delete soldier;
+            delete necro;
+        }
+
+        void testCheckObservers() {
+            Soldier* soldier = new Soldier("Steve", 100, 10);
+            Rogue* rogue = new Rogue("Robin", 105, 14);
+            Berserk* berserk = new Berserk("T-900", 120, 15);
+            Wizard* wizard = new Wizard("Marilyn", 80, 10, 120);
+            Healer* healer = new Healer("Manson", 100, 12, 100);
+
+            Necromancer* necro1 = new Necromancer("Necros1", 80, 5, 120);
+            Necromancer* necro2 = new Necromancer("Necros2", 80, 5, 120);
+
+            necro1->castSpell(soldier);
+            necro1->castSpell(rogue);
+            necro1->castSpell(berserk);
+            necro1->castSpell(wizard);
+            necro1->castSpell(healer);
+            necro2->castSpell(soldier);
+            necro2->castSpell(rogue);
+            necro2->castSpell(berserk);
+            necro2->castSpell(wizard);
+
+            TS_ASSERT_EQUALS(soldier->getObservers().size(), 2);
+            TS_ASSERT_EQUALS(rogue->getObservers().size(), 2);
+            TS_ASSERT_EQUALS(berserk->getObservers().size(), 0);
+            TS_ASSERT_EQUALS(wizard->getObservers().size(), 2);
+            TS_ASSERT_EQUALS(healer->getObservers().size(), 1);
+
+            delete soldier;
+            delete rogue;
+            delete berserk;
+            delete wizard;
+            delete healer;
+            delete necro1;
+            delete necro2;
+        }
+
+        void testCheckObservables() {
+            Soldier* soldier = new Soldier("Steve", 100, 10);
+            Rogue* rogue = new Rogue("Robin", 105, 14);
+            Berserk* berserk = new Berserk("T-900", 120, 15);
+            Vampire* vampire = new Vampire("Count Dracula", 100, 10);
+            Werewolf* wolf = new Werewolf("Van Hellsing", 80, 15);
+            Wizard* wizard = new Wizard("Marilyn", 80, 10, 120);
+            Healer* healer = new Healer("Manson", 100, 12, 100);
+            Priest* priest = new Priest("Francis", 100, 12, 100);
+            Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
+            Necromancer* necro = new Necromancer("Necros", 80, 5, 120);
+
+            necro->castSpell(soldier);
+            necro->castSpell(rogue);
+            necro->castSpell(berserk);
+            necro->castSpell(wolf);
+            necro->castSpell(wizard);
+            necro->castSpell(healer);
+
+            TS_ASSERT_EQUALS(necro->getObservables().size(), 5);
+
+            delete soldier;
+            delete rogue;
+            delete berserk;
+            delete vampire;
+            delete wolf;
+            delete wizard;
+            delete healer;
+            delete priest;
+            delete warlock;
+            delete necro;
+        }
+
 
         void testSpellbooks() {
             Wizard* wizard = new Wizard("Marilyn", 100, 12, 100);
