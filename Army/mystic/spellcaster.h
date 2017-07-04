@@ -5,7 +5,7 @@
 #include <map>
 #include "../units/unit.h"
 #include "../state/state.h"
-#include "../combat/ability.h"
+#include "../ability/ability.h"
 #include "../spells/spell.h"
 #include "../spells/fireball.h"
 #include "../spells/heal.h"

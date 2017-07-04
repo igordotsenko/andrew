@@ -2,7 +2,7 @@
 #define HEALER_H
 
 #include "spellcaster.h"
-#include "../combat/healerability.h"
+#include "../ability/healerability.h"
 #include "../state/humanstate.h"
 
 using namespace std;

@@ -14,8 +14,8 @@ Spellcaster::~Spellcaster() {
 }
 
 void Spellcaster::castSpell(Unit* victim) {
-    ensureIsAlive();
     ensureIsNotSelfAttack(victim);
+    ensureIsAlive();
     ensureManaIsNotOver();
 
     getAbility()->castSpell(victim, currentSpell); 

@@ -2,7 +2,7 @@
 #define PRIEST_H
 
 #include "spellcaster.h"
-#include "../combat/priestability.h"
+#include "../ability/priestability.h"
 #include "../state/humanstate.h"
 
 using namespace std;

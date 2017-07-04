@@ -3,7 +3,7 @@
 
 #include "spellcaster.h"
 #include "../spells/summon.h"
-#include "../combat/warlockability.h"
+#include "../ability/warlockability.h"
 #include "../state/state.h"
 
 class IsNotSummonSpellsException{};

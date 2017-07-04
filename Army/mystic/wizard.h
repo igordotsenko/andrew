@@ -2,7 +2,7 @@
 #define WIZARD_H
 
 #include "spellcaster.h"
-#include "../combat/wizardability.h"
+#include "../ability/wizardability.h"
 #include "../state/humanstate.h"
 
 using namespace std;
