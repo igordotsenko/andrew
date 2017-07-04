@@ -24,9 +24,11 @@ void Unit::attack(Unit* victim) {
 void Unit::takeDamage(int damage) {
     ensureIsAlive();
 
-    if ( getCurrentHP() < damage ) {
+    if ( getCurrentHP() <= damage ) {
         setCurrentHP(0);
-
+        notifyObservers();
+        notifyObservable();
+        
         return;
     }
     
@@ -107,6 +109,28 @@ State* Unit::getNextState() const {
 const int Unit::getUnitType() const {
     return unitType;
 }
+
+const set<Observer*>& Unit::getObservers() const {
+    return observers;
+}
+
+const set<Observable*>& Unit::getObservables() const {
+    return observables;
+}
+
+void Unit::notifyObservers() {
+    for ( set<Observer*>::iterator it = observers.begin(); it != observers.end(); it++ ) {
+        ((Unit*)(*it))->heal(((Unit*)(*it))->getHPLimit()/10);
+        (*it)->removeObservable(this);
+    }
+}
+
+void Unit::notifyObservable() {
+    for ( set<Observable*>::iterator it = observables.begin(); it != observables.end(); it++ ) {
+        (*it)->removeObserver(this);
+    }
+}
+
 
 void Unit::heal(int healthPoint) {
     ensureIsAlive();

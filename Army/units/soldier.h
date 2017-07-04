@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "unit.h"
-#include "../combat/defaultability.h"
+#include "../ability/defaultability.h"
 #include "../state/humanstate.h"
 
 class Soldier: public Unit {

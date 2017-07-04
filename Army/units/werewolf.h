@@ -6,7 +6,7 @@
 #include "../state/state.h"
 #include "../state/wolfstate.h"
 #include "../state/humanstate.h"
-#include "../combat/wolfability.h"
+#include "../ability/wolfability.h"
 
 class Werewolf: public Unit {
     public:

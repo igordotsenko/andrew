@@ -1,9 +1,8 @@
 #ifndef VAMPIRE_H
 #define VAMPIRE_H
 
-#include <iostream>
 #include "unit.h"
-#include "../combat/vampireability.h"
+#include "../ability/vampireability.h"
 #include "../state/humanstate.h"
 
 class Vampire: public Unit {

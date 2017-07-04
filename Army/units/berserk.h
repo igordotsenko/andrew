@@ -3,7 +3,7 @@
 
 #include <iostream>
 #include "unit.h"
-#include "../combat/berserkability.h"
+#include "../ability/berserkability.h"
 #include "../state/humanstate.h"
 
 class Berserk : public Unit {
