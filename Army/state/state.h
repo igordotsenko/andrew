@@ -3,10 +3,14 @@
 
 #include <iostream>
 #include "../units/unit.h"
+#include "../observer/observer.h"
+#include "../observer/observable.h"
 
 using namespace std;
 
 class Unit;
+class Observer;
+class Observable;
 
 class State {
     protected:
@@ -24,6 +28,7 @@ class State {
         
         virtual void takeMagicDamage(int damage);
 
+        virtual int getCurrentHP() const;
         virtual int getHPLimit() const;
         virtual int getDamage() const;
 };
