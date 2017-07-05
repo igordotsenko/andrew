@@ -95,8 +95,29 @@ class ArmyTest : public CxxTest::TestSuite {
             TS_ASSERT_EQUALS(soldier->getHPLimit(), 100);
             TS_ASSERT_EQUALS(soldier->getCurrentHP(), 100);
             TS_ASSERT_EQUALS(soldier->getDamage(), 10);
+            TS_ASSERT_EQUALS(soldier->getIsDead(), false);
 
             delete soldier;
+        }
+
+        void testIsDead() {
+            Soldier* soldier = new Soldier("Steve", 100, 10);
+            Berserk* berserk = new Berserk("T-900", 120, 15);
+            Vampire* vampire = new Vampire("Count Dracula", 100, 10);
+            Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
+            Necromancer* necro = new Necromancer("Necros", 80, 5, 120);
+
+            TS_ASSERT_EQUALS(soldier->getIsDead(), false);
+            TS_ASSERT_EQUALS(berserk->getIsDead(), false);
+            TS_ASSERT_EQUALS(vampire->getIsDead(), true);
+            TS_ASSERT_EQUALS(warlock->getIsDead(), false);
+            TS_ASSERT_EQUALS(necro->getIsDead(), true);
+
+            delete soldier;
+            delete berserk;
+            delete vampire;
+            delete warlock;
+            delete necro;
         }
 
         void testSetters() {
@@ -176,26 +197,18 @@ class ArmyTest : public CxxTest::TestSuite {
         void testWizard() {
             Soldier* soldier = new Soldier("Steve", 100, 10);
             Berserk* berserk = new Berserk("T-900", 120, 15);
-            Werewolf* wolf = new Werewolf("Van Hellsing", 80, 15);
             Wizard* wizard = new Wizard("Marilyn", 100, 12, 100);
 
             wizard->castSpell(soldier);
             wizard->castSpell(soldier);
             wizard->castSpell(soldier);
             wizard->castSpell(berserk);
-            wizard->castSpell(wolf);
 
             TS_ASSERT_EQUALS(soldier->getCurrentHP(), 64);
             TS_ASSERT_EQUALS(berserk->getCurrentHP(), 120);
-            TS_ASSERT_EQUALS(wolf->getCurrentHP(), 68);
 
             TS_ASSERT_EQUALS(wizard->getCurrentHP(), 100);
-            TS_ASSERT_EQUALS(wizard->getCurrentMP(), 60);
-
-            wolf->changeState();
-            wizard->castSpell(wolf);
-
-            TS_ASSERT_EQUALS(wolf->getCurrentHP(), 112);
+            TS_ASSERT_EQUALS(wizard->getCurrentMP(), 68);
 
             wizard->setCurrentSpell("Heal");
 
@@ -205,13 +218,9 @@ class ArmyTest : public CxxTest::TestSuite {
             wizard->castSpell(soldier);
             wizard->castSpell(soldier);
             wizard->castSpell(berserk);
-            wizard->castSpell(wolf);
 
             TS_ASSERT_EQUALS(soldier->getCurrentHP(), 79);
             TS_ASSERT_EQUALS(berserk->getCurrentHP(), 105);
-            TS_ASSERT_EQUALS(wolf->getCurrentHP(), 117);
-
-            TS_ASSERT_EQUALS(wizard->getCurrentMP(), 22);
 
             wizard->setCurrentMP(1);
 
@@ -219,6 +228,23 @@ class ArmyTest : public CxxTest::TestSuite {
 
             delete soldier;
             delete berserk;
+            delete wizard;
+        }
+
+        void testWizardVSWerewolf() {
+            Wizard* wizard = new Wizard("Marilyn", 100, 12, 100);
+            Werewolf* wolf = new Werewolf("Van Hellsing", 80, 15);
+
+            wizard->castSpell(wolf);
+
+            TS_ASSERT_EQUALS(wolf->getCurrentHP(), 68);
+
+            wolf->changeState();
+
+            wizard->castSpell(wolf);
+
+            TS_ASSERT_EQUALS(wolf->getCurrentHP(), 112);
+
             delete wolf;
             delete wizard;
         }
@@ -291,30 +317,73 @@ class ArmyTest : public CxxTest::TestSuite {
             delete priest;
         }
 
+        void testPriestAttack() {
+            Soldier* soldier = new Soldier("Steve", 100, 10);
+            Priest* priest = new Priest("Francis", 100, 12, 100);
+            Vampire* vampire = new Vampire("Count Dracula", 100, 12);
+            Necromancer* necro = new Necromancer("Necros", 90, 12, 120);
+
+            priest->setCurrentSpell("Fireball");
+
+            priest->castSpell(vampire);
+            priest->castSpell(necro);
+            priest->castSpell(soldier);
+
+            TS_ASSERT_EQUALS(vampire->getCurrentHP(), 76);
+            TS_ASSERT_EQUALS(necro->getCurrentHP(), 66);
+            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 94);
+
+            delete soldier;
+            delete priest;
+            delete vampire;
+            delete necro;
+        }
+
         void testWarlock() {
             Soldier* soldier = new Soldier("Steve", 100, 10);
+            Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
+
+            warlock->summonDemon();
+
+            warlock->getDemon()->attack(soldier);
+
+            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 80);
+            TS_ASSERT_EQUALS(warlock->getDemon()->getCurrentHP(), 115);
+            TS_ASSERT_EQUALS(warlock->getCurrentMP(), 85);
+
+            delete soldier;
+            delete warlock;
+        }
+
+        void testWarlocksSummonIsAlreadyException() {
+            Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
+
+            warlock->summonDemon();
+
+            TS_ASSERT_THROWS(warlock->summonDemon(), DemonIsAlreadySummonedException);
+
+            delete warlock; 
+        }
+
+        void testWarlocksSummonsException() {
+            Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
+
+            warlock->summonDemon();
+
+            TS_ASSERT_THROWS(warlock->getDemon()->attack(warlock->getDemon()), IsSelfAttackException);
+            TS_ASSERT_THROWS(warlock->getDemon()->attack(warlock), MasterAttackedException);
+
+            delete warlock; 
+        }
+
+        void testWarlocksSummonSpellException() {
             Warlock* warlock = new Warlock("Warlock", 70, 4, 100);
 
             warlock->setCurrentSpell("Heal");
 
             TS_ASSERT_THROWS(warlock->summonDemon(), IsNotSummonSpellsException)            
 
-            warlock->setCurrentSpell("Summon");
-            warlock->summonDemon();
-
-            TS_ASSERT_THROWS(warlock->summonDemon(), DemonIsAlreadySummonedException);
-
-            warlock->getDemon()->attack(soldier);
-
-            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 80);
-            TS_ASSERT_EQUALS(warlock->getDemon()->getCurrentHP(), 115);
-
-            TS_ASSERT_EQUALS(warlock->getCurrentMP(), 85);
-            TS_ASSERT_THROWS(warlock->getDemon()->attack(warlock->getDemon()), IsSelfAttackException);
-            TS_ASSERT_THROWS(warlock->getDemon()->attack(warlock), MasterAttackedException);
-
-            delete soldier;
-            delete warlock;
+            delete warlock; 
         }
 
         void testAttackAndNotify() {
