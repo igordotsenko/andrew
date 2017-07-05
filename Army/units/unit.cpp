@@ -7,6 +7,7 @@ Unit::Unit(const string& name, int healthPoint, int damage) {
     this->healthPointLimit = healthPoint;
     this->currentHP = healthPoint;
     this->damage = damage;
+    this->isDead = false;
 }
 
 Unit::~Unit() {
@@ -78,6 +79,10 @@ void Unit::setUnitType(int newUnitType) {
     unitType = newUnitType;
 }
 
+void Unit::setIsDead() {
+    isDead = !isDead;
+}
+
 const string& Unit::getName() const {
     return name;
 }
@@ -92,6 +97,10 @@ int Unit::getCurrentHP() const {
 
 int Unit::getHPLimit() const {
     return healthPointLimit;
+}
+
+bool Unit::getIsDead() const {
+    return isDead;
 }
 
 Ability* Unit::getAbility() const {

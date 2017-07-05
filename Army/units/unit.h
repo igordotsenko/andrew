@@ -36,6 +36,7 @@ class Unit: public Observer, public Observable {
         int currentHP;
         int damage;
         int unitType;
+        bool isDead;
         State* normalState;
         State* alternativeState;
         Ability* ability;
@@ -57,6 +58,7 @@ class Unit: public Observer, public Observable {
         virtual void setHPLimit(int newHPLimit);
         virtual void setCurrentHP(int newCurrentHP);
         virtual void setDamage(int damage);
+        virtual void setIsDead();
 
         virtual void setAbility(Ability* newAbility);
 
@@ -69,6 +71,7 @@ class Unit: public Observer, public Observable {
         virtual int getHPLimit() const;
         virtual int getCurrentHP() const;
         virtual int getDamage() const;
+        virtual bool getIsDead() const;
 
         virtual Ability* getAbility() const;
 

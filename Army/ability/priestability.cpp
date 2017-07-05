@@ -6,6 +6,11 @@ PriestAbility::~PriestAbility() {}
 
 void PriestAbility::castSpell(Unit* victim, Spell* spell) {
     if ( spell->getSpellsType() == battleSpell ) {
+        if ( victim->getIsDead() ) {
+        victim->takeMagicDamage(spell->getHitPoints()*2);
+
+        return;
+        }
         victim->takeMagicDamage(spell->getHitPoints()/2);
         
         return;

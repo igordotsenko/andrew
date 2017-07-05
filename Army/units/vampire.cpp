@@ -7,6 +7,7 @@ Vampire::Vampire(const string& name, int healthPoint, int damage) : Unit(name, h
     setCurrentState(new HumanState(this));
     setNextState(new HumanState(this));
     setUnitType(vampire);
+    setIsDead();
 }
 
 Vampire::~Vampire() {}
