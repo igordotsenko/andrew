@@ -12,7 +12,12 @@ class Unit;
 class Observer;
 class Observable;
 
+class IsNotVampireTypeException {};
+
 class State {
+    private:
+        void ensureIsVampireType();
+
     protected:
         Unit* currentStateUnit;
         string name;
@@ -27,6 +32,7 @@ class State {
         virtual ~State() = 0;
         
         virtual void takeMagicDamage(int damage);
+        virtual void vampirism(Unit* victim);
 
         virtual int getCurrentHP() const;
         virtual int getHPLimit() const;

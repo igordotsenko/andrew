@@ -12,7 +12,7 @@ void PriestAbility::castSpell(Unit* victim, Spell* spell) {
         return;
         }
         victim->takeMagicDamage(spell->getHitPoints()/2);
-        
+
         return;
     }
     if ( spell->getSpellsType() == healSpell ) {

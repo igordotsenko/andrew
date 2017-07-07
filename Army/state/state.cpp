@@ -1,7 +1,5 @@
 #include "state.h"
 
-using namespace std;
-
 State::State(Unit* currentStateUnit) {
     this->currentStateUnit = currentStateUnit;
 }
@@ -20,6 +18,20 @@ void State::takeMagicDamage(int damage) {
     currentStateUnit->setCurrentHP(currentStateUnit->getCurrentHP()-damage);
 }
 
+void State::vampirism(Unit* victim) {
+        ensureIsVampireType();
+
+        int recoverHP = victim->getCurrentHP() / 10;
+        victim->takeDamage(recoverHP);
+        currentStateUnit->heal(recoverHP);
+}
+
+void State::ensureIsVampireType() {
+    if ( currentStateUnit->getUnitType() != vampire ) {
+        throw IsNotVampireTypeException();
+    }
+}
+
 int State::getHPLimit() const {
     return healthPointsLimit;
 }
@@ -27,7 +39,6 @@ int State::getHPLimit() const {
 int State::getCurrentHP() const {
     return currentHP;
 }
-
 
 int State::getDamage() const {
     return damage;
