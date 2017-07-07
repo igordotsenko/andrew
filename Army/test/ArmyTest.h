@@ -166,11 +166,38 @@ class ArmyTest : public CxxTest::TestSuite {
             TS_ASSERT_EQUALS(vampire->getCurrentHP(), 91);
             
             soldier->attack(vampire);
+            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 67);
             TS_ASSERT_EQUALS(vampire->getCurrentHP(), 80);
-            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 74);
 
             delete soldier;
             delete vampire;
+        }
+
+        void testVampireState() {
+            Vampire* vampire = new Vampire("Count Dracula", 100, 12);
+            Soldier* soldier = new Soldier("Steve", 100, 18);
+
+            vampire->changeState();
+
+            soldier->attack(vampire);
+
+            TS_ASSERT_EQUALS(vampire->getCurrentHP(), 50);
+            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 66);
+
+            delete vampire;
+            delete soldier;
+
+        }
+
+        void testVampireStateException() {
+            Vampire* vampire = new Vampire("Count Dracula", 100, 12);
+            Soldier* soldier = new Soldier("Steve", 100, 18);
+
+            vampire->changeState();
+            TS_ASSERT_THROWS(soldier->getCurrentState()->vampirism(vampire), IsNotVampireTypeException);
+
+            delete vampire;
+            delete soldier;
         }
 
         void testWerewolf() {
