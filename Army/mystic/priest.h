@@ -2,6 +2,7 @@
 #define PRIEST_H
 
 #include "spellcaster.h"
+#include "../spells/blessed.h"
 #include "../ability/priestability.h"
 #include "../state/humanstate.h"
 

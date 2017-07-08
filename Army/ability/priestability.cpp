@@ -20,4 +20,17 @@ void PriestAbility::castSpell(Unit* victim, Spell* spell) {
 
         return;
     }
+    if ( spell->getSpellsType() == blessedSpell ) {
+        ensureIsNotInfected(victim);
+        victim->setNextState(new AngelState(victim));
+
+        return;
+    }
+}
+
+void PriestAbility::ensureIsNotInfected(Unit* victim) {
+    if ( victim->getUnitType() == werewolf || victim->getUnitType() == vampire ) {
+        throw IsInfectedUnitsException();
+    }
+
 }

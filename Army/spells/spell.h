@@ -2,6 +2,7 @@
 #define SPELL_H 
 
 #include "../units/unit.h"
+#include "../ability/ability.h"
 
 using namespace std;
 
@@ -11,7 +12,8 @@ class Ability;
 enum SpellsType {
     battleSpell,
     healSpell,
-    summonSpell
+    summonSpell,
+    blessedSpell
 };
     
 class Spell {

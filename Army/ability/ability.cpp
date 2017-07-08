@@ -17,6 +17,10 @@ void Ability::counterAttack(Unit* victim) {
     }
 }
 
+void Ability::takeDamage(int damage) {
+    currentUnit->getCurrentState()->takeDamage(damage);
+}
+
 void Ability::takeMagicDamage(int damage) {
     currentUnit->getCurrentState()->takeMagicDamage(damage);
 }

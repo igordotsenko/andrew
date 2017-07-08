@@ -366,6 +366,49 @@ class ArmyTest : public CxxTest::TestSuite {
             delete necro;
         }
 
+        void testPriestBlessed() {
+            Soldier* soldier = new Soldier("Steve", 100, 10);
+            Priest* priest = new Priest("Francis", 100, 12, 100);
+
+            priest->setCurrentSpell("Blessed");
+
+            TS_ASSERT_EQUALS(soldier->getHPLimit(), 100);
+            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 100);
+            TS_ASSERT_EQUALS(soldier->getCurrentState()->getStateName(), "Human");
+
+            priest->castSpell(soldier);
+            soldier->setCurrentHP(5);
+
+            priest->setCurrentSpell("Fireball");
+            priest->castSpell(soldier);
+
+            TS_ASSERT_EQUALS(soldier->getHPLimit(), 200);
+            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 200);
+            TS_ASSERT_EQUALS(soldier->getCurrentState()->getStateName(), "Angel");
+
+            priest->castSpell(soldier);
+
+            TS_ASSERT_EQUALS(soldier->getCurrentHP(), 197);
+
+            delete soldier;
+            delete priest;            
+        }
+
+        void testPriestBlessedException() {
+            Priest* priest = new Priest("Francis", 100, 12, 100);
+            Vampire* vampire = new Vampire("Count Dracula", 100, 10);
+            Werewolf* wolf = new Werewolf("Van Hellsing", 80, 15);
+
+            priest->setCurrentSpell("Blessed");
+            
+            TS_ASSERT_THROWS(priest->castSpell(vampire), IsInfectedUnitsException);
+            TS_ASSERT_THROWS(priest->castSpell(wolf), IsInfectedUnitsException);
+
+            delete priest;
+            delete wolf;
+            delete vampire;
+        }
+
         void testWarlock() {
             Soldier* soldier = new Soldier("Steve", 100, 10);
             Warlock* warlock = new Warlock("Warlock", 70, 4, 100);

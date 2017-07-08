@@ -1,6 +1,7 @@
 #include "batstate.h"
 
 BatState::BatState(Unit* currentStateUnit) : State(currentStateUnit) {
+    this->name = "Bat";
     this->healthPointsLimit = currentStateUnit->getHPLimit() / 2;
     this->currentHP = currentStateUnit->getCurrentHP() / 2;
     this->damage = currentStateUnit->getDamage() * 2;

@@ -4,6 +4,7 @@
 #include "unit.h"
 #include "../ability/vampireability.h"
 #include "../state/humanstate.h"
+#include "../state/batstate.h"
 
 class Vampire: public Unit {
     public:

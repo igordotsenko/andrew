@@ -16,6 +16,7 @@ class IsNotVampireTypeException {};
 
 class State {
     private:
+        void ensureIsAngelState();
         void ensureIsVampireType();
 
     protected:
@@ -31,9 +32,11 @@ class State {
         State(Unit* currentStateUnit);
         virtual ~State() = 0;
         
+        virtual void takeDamage(int damage);
         virtual void takeMagicDamage(int damage);
         virtual void vampirism(Unit* victim);
 
+        virtual const string& getStateName() const;
         virtual int getCurrentHP() const;
         virtual int getHPLimit() const;
         virtual int getDamage() const;

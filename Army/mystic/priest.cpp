@@ -6,6 +6,7 @@ Priest::Priest(const string& name, int healthPoint, int damage, int manaPoint) :
     setAbility(new PriestAbility(this));
     setUnitType(priest);
     setCurrentSpell("Heal");
+    learnSpell(new Blessed);
     setCurrentState(new HumanState(this));
     setNextState(new HumanState(this));
 }

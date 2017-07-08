@@ -25,7 +25,10 @@ void Unit::attack(Unit* victim) {
 void Unit::takeDamage(int damage) {
     ensureIsAlive();
 
+    getAbility()->takeDamage(damage);
+/*
     if ( getCurrentHP() <= damage ) {
+        
         setCurrentHP(0);
         notifyObservers();
         notifyObservable();
@@ -34,6 +37,7 @@ void Unit::takeDamage(int damage) {
     }
     
     setCurrentHP(getCurrentHP() - damage);
+*/
 }
 
 void Unit::takeMagicDamage(int damage) {
@@ -148,7 +152,7 @@ void Unit::heal(int healthPoint) {
 
     if ( newCurrentHP > getHPLimit() ) {
         setCurrentHP(getHPLimit());
-
+        
         return;
     }
 
@@ -170,6 +174,7 @@ void Unit::ensureIsNotSelfAttack(Unit* victim) {
 ostream& operator<<(ostream& out, const Unit& unit) {
     out << unit.getName() << "\nHP: " << unit.getHPLimit() << "|" << unit.getCurrentHP() << endl;
     out << "DMG: " << unit.getDamage() << "\n";
+    out << unit.getCurrentState()->getStateName() << endl;
 
     return out;
 }

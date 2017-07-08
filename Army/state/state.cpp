@@ -6,16 +6,35 @@ State::State(Unit* currentStateUnit) {
 
 State::~State() {}
 
+void State::takeDamage(int damage) {
+
+    if ( currentStateUnit->getCurrentHP() <= damage ) {
+
+        currentStateUnit->setCurrentHP(0);
+        currentStateUnit->notifyObservers();
+        currentStateUnit->notifyObservable();
+        
+        ensureIsAngelState();
+
+        return;
+    }
+    
+    currentStateUnit->setCurrentHP(currentStateUnit->getCurrentHP() - damage);
+}
+
 void State::takeMagicDamage(int damage) {
     if ( currentStateUnit->getCurrentHP() <= damage ) {
+
         currentStateUnit->setCurrentHP(0);
         currentStateUnit->notifyObservers();
         currentStateUnit->notifyObservable();
 
+        ensureIsAngelState();
+
         return;
     }
 
-    currentStateUnit->setCurrentHP(currentStateUnit->getCurrentHP()-damage);
+    currentStateUnit->setCurrentHP(currentStateUnit->getCurrentHP() - damage);
 }
 
 void State::vampirism(Unit* victim) {
@@ -30,6 +49,19 @@ void State::ensureIsVampireType() {
     if ( currentStateUnit->getUnitType() != vampire ) {
         throw IsNotVampireTypeException();
     }
+}
+
+void State::ensureIsAngelState() {
+    if ( currentStateUnit->getNextState()->getStateName() == "Angel" ) {
+        currentStateUnit->changeState();
+        currentStateUnit->setCurrentHP(currentStateUnit->getHPLimit());
+
+        return;
+    }
+}
+
+const string& State::getStateName() const {
+    return name;
 }
 
 int State::getHPLimit() const {

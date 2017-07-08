@@ -3,6 +3,7 @@
 using namespace std;
 
 WolfState::WolfState(Unit* currentStateUnit) : State(currentStateUnit) {
+    this->name = "Werewolf";
     this->healthPointsLimit = currentStateUnit->getHPLimit() * 2;
     this->currentHP = currentStateUnit->getCurrentHP() * 2;
     this->damage = currentStateUnit->getDamage() * 2;
