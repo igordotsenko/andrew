@@ -26,18 +26,6 @@ void Unit::takeDamage(int damage) {
     ensureIsAlive();
 
     getAbility()->takeDamage(damage);
-/*
-    if ( getCurrentHP() <= damage ) {
-        
-        setCurrentHP(0);
-        notifyObservers();
-        notifyObservable();
-        
-        return;
-    }
-    
-    setCurrentHP(getCurrentHP() - damage);
-*/
 }
 
 void Unit::takeMagicDamage(int damage) {
