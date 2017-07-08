@@ -16,6 +16,7 @@ class IsNotVampireTypeException {};
 
 class State {
     private:
+        void kill();
         void ensureIsAngelState();
         void ensureIsVampireType();
 

@@ -9,11 +9,7 @@ State::~State() {}
 void State::takeDamage(int damage) {
 
     if ( currentStateUnit->getCurrentHP() <= damage ) {
-
-        currentStateUnit->setCurrentHP(0);
-        currentStateUnit->notifyObservers();
-        currentStateUnit->notifyObservable();
-        
+        kill();
         ensureIsAngelState();
 
         return;
@@ -24,17 +20,19 @@ void State::takeDamage(int damage) {
 
 void State::takeMagicDamage(int damage) {
     if ( currentStateUnit->getCurrentHP() <= damage ) {
-
-        currentStateUnit->setCurrentHP(0);
-        currentStateUnit->notifyObservers();
-        currentStateUnit->notifyObservable();
-
+        kill();
         ensureIsAngelState();
 
         return;
     }
 
     currentStateUnit->setCurrentHP(currentStateUnit->getCurrentHP() - damage);
+}
+
+void State::kill() {
+        currentStateUnit->setCurrentHP(0);
+        currentStateUnit->notifyObservers();
+        currentStateUnit->notifyObservable();
 }
 
 void State::vampirism(Unit* victim) {
@@ -54,6 +52,7 @@ void State::ensureIsVampireType() {
 void State::ensureIsAngelState() {
     if ( currentStateUnit->getNextState()->getStateName() == "Angel" ) {
         currentStateUnit->changeState();
+
         currentStateUnit->setCurrentHP(currentStateUnit->getHPLimit());
 
         return;

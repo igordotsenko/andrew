@@ -375,9 +375,10 @@ class ArmyTest : public CxxTest::TestSuite {
             TS_ASSERT_EQUALS(soldier->getHPLimit(), 100);
             TS_ASSERT_EQUALS(soldier->getCurrentHP(), 100);
             TS_ASSERT_EQUALS(soldier->getCurrentState()->getStateName(), "Human");
+            TS_ASSERT_EQUALS(soldier->getNextState()->getStateName(), "Human");
 
             priest->castSpell(soldier);
-            soldier->setCurrentHP(5);
+            soldier->setCurrentHP(2);
 
             priest->setCurrentSpell("Fireball");
             priest->castSpell(soldier);
@@ -385,10 +386,13 @@ class ArmyTest : public CxxTest::TestSuite {
             TS_ASSERT_EQUALS(soldier->getHPLimit(), 200);
             TS_ASSERT_EQUALS(soldier->getCurrentHP(), 200);
             TS_ASSERT_EQUALS(soldier->getCurrentState()->getStateName(), "Angel");
+            TS_ASSERT_EQUALS(soldier->getNextState()->getStateName(), "Human");
 
             priest->castSpell(soldier);
-
             TS_ASSERT_EQUALS(soldier->getCurrentHP(), 197);
+            soldier->setCurrentHP(2);
+            priest->castSpell(soldier);
+            TS_ASSERT_THROWS(priest->castSpell(soldier), UnitIsDeadException);
 
             delete soldier;
             delete priest;            

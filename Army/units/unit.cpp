@@ -162,7 +162,7 @@ void Unit::ensureIsNotSelfAttack(Unit* victim) {
 ostream& operator<<(ostream& out, const Unit& unit) {
     out << unit.getName() << "\nHP: " << unit.getHPLimit() << "|" << unit.getCurrentHP() << endl;
     out << "DMG: " << unit.getDamage() << "\n";
-    out << unit.getCurrentState()->getStateName() << endl;
+    out << "States: " << "[" << unit.getCurrentState()->getStateName() << "|" <<unit.getNextState()->getStateName() << "]" << endl;
 
     return out;
 }
