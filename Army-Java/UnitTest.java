@@ -277,7 +277,7 @@ public class UnitTest {
     }
 
     @Test
-    public void warlockTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummontException {
+    public void warlockTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Soldier soldier = new Soldier("Steve", 100, 18);
 
@@ -309,7 +309,7 @@ public class UnitTest {
 
     @Test ( expected = MasterAttackedException.class )
     public void masterAttackedExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException,
-            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummontException {
+            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.summonDemon();
@@ -319,7 +319,7 @@ public class UnitTest {
 
     @Test ( expected = IsSelfAttackException.class )
     public void selfAttackExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException,
-            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummontException {
+            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.summonDemon();
@@ -327,8 +327,8 @@ public class UnitTest {
         warlock.getDemon().attack(warlock.getDemon());
     }
 
-    @Test ( expected = DemonIsNotSummontException.class )
-    public void demonIsNotSummonedExceptionTest() throws DemonIsNotSummontException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    @Test ( expected = DemonIsNotSummonedException.class )
+    public void demonIsNotSummonedExceptionTest() throws DemonIsNotSummonedException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Soldier soldier = new Soldier("Steve", 100, 18);
 

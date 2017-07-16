@@ -2,7 +2,7 @@ package com.gymfox.Army.Spellcasters;
 
 import com.gymfox.Army.Ability.WarlockAbility;
 import com.gymfox.Army.Exception.DemonIsAlreadySummonedException;
-import com.gymfox.Army.Exception.DemonIsNotSummontException;
+import com.gymfox.Army.Exception.DemonIsNotSummonedException;
 import com.gymfox.Army.Exception.IsNotSummonSpellsException;
 import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Spells.Summon;
@@ -53,13 +53,13 @@ public class Warlock extends Spellcaster {
         }
     }
 
-    private void ensureIsSummoned() throws DemonIsNotSummontException {
+    private void ensureIsSummoned() throws DemonIsNotSummonedException {
         if ( demon == null ) {
-            throw new DemonIsNotSummontException();
+            throw new DemonIsNotSummonedException();
         }
     }
 
-    public Demon getDemon() throws DemonIsNotSummontException {
+    public Demon getDemon() throws DemonIsNotSummonedException {
         ensureIsSummoned();
 
         return demon;
