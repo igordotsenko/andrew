@@ -4,9 +4,15 @@ import com.gymfox.Army.Ability.Ability;
 import com.gymfox.Army.Exception.IsSelfAttackException;
 import com.gymfox.Army.Exception.MasterAttackedException;
 import com.gymfox.Army.Exception.UnitIsDeadException;
+import com.gymfox.Army.Observer.Observable;
+import com.gymfox.Army.Observer.Observer;
 import com.gymfox.Army.State.State;
 
-public abstract class Unit {
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
+
+public abstract class Unit implements Observable, Observer {
 
     public enum UnitType {
         SOLDIER,
@@ -30,6 +36,8 @@ public abstract class Unit {
     private Ability ability;
     private State currentState;
     private State nextState;
+    private Set<Unit> observables = new HashSet<>();
+    private Set<Unit> observers = new HashSet<>();
 
     public Unit(String name, int healthPointLimit, int damage) {
         this.name = name;
@@ -92,6 +100,19 @@ public abstract class Unit {
         getAbility().changeState();
     }
 
+    public void notifyObservers() throws UnitIsDeadException {
+        for ( Unit observer: observers ) {
+            observer.removeObservable(this);
+            observer.heal(observer.getDamage());
+        }
+    }
+
+    public void notifyObservable() {
+        for ( Unit observable: observables ) {
+            observable.removeObserver(this);
+        }
+    }
+
     public String toString() {
         StringBuffer out = new StringBuffer();
 
@@ -99,7 +120,47 @@ public abstract class Unit {
         out.append("HP: " + getHealthPointLimit() + " | " + getCurrentHP() + "\n");
         out.append("DMG: " + getDamage() + "\n");
 
+        if ( !observables.isEmpty() ) {
+            out.append("Observable: [ ");
+
+            for ( Unit observable : observables ) {
+                out.append(observable.getName()+ " ");
+            }
+
+            out.append("]\n");
+        }
+
+        if ( !observers.isEmpty() ) {
+            out.append("Observers: [ ");
+
+            for ( Unit observer : observers ) {
+                out.append(observer.getName() + " ");
+            }
+            out.append("]\n");
+        }
+
         return out.toString();
+    }
+
+    @Override
+    public void addObservable(Unit observable) {
+        observables.add(observable);
+        observable.addObserver(this);
+    }
+
+    @Override
+    public void addObserver(Unit observer) {
+        observers.add(observer);
+    }
+
+    @Override
+    public void removeObservable(Unit observable) {
+        observables.remove(observable);
+    }
+
+    @Override
+    public void removeObserver(Unit observer) {
+        observers.remove(observer);
     }
 
     public String getName() {
@@ -136,6 +197,14 @@ public abstract class Unit {
 
     public State getNextState() {
         return nextState;
+    }
+
+    public Set<Unit> getObservables() {
+        return observables;
+    }
+
+    public Set<Unit> getObservers() {
+        return observers;
     }
 
     public void setName(String newName) {
