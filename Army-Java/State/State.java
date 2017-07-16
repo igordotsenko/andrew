@@ -1,5 +1,6 @@
 package com.gymfox.Army.State;
 
+import com.gymfox.Army.Exception.UnitIsDeadException;
 import com.gymfox.Army.Units.Unit;
 
 public abstract class State {
@@ -14,17 +15,19 @@ public abstract class State {
         this.damage = currentUnitState.getDamage();
     }
 
-    public void takeDamage(int damage) {
+    public void takeDamage(int damage) throws UnitIsDeadException {
         tryKill(damage);
     }
 
-    public void takeMagicDamage(int damage) {
+    public void takeMagicDamage(int damage) throws UnitIsDeadException {
         tryKill(damage);
     }
 
-    public void tryKill(int damage) {
+    public void tryKill(int damage) throws UnitIsDeadException {
         if ( currentUnitState.getCurrentHP() <= damage ) {
             currentUnitState.setCurrentHP(0);
+            currentUnitState.notifyObservers();
+            currentUnitState.notifyObservable();
 
             return;
         }
