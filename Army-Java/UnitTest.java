@@ -232,6 +232,9 @@ public class UnitTest {
         soldier.attack(vamp);
         Assert.assertEquals(80, vamp.getCurrentHP());
         Assert.assertEquals(67, soldier.getCurrentHP());
+
+        System.out.println(vamp);
+        System.out.println(soldier);
     }
 
     @Test
@@ -332,6 +335,90 @@ public class UnitTest {
         warlock.getDemon().attack(soldier);
     }
 
+    @Test
+    public void addObservableTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException, ManaIsOverException {
+        Soldier soldier = new Soldier("Steve", 100, 12);
+        Rogue rogue = new Rogue("Robin", 100, 8);
+        Berserk berserk = new Berserk("Viking", 120, 20);
+        Vampire vamp = new Vampire("Count Dracula", 100, 12);
+        Werewolf wolf = new Werewolf("Van Hellsing", 80, 10);
+        Wizard wizard = new Wizard("Marylin", 90, 5, 120);
+        Healer healer = new Healer("Manson", 60, 4, 100);
+        Priest priest = new Priest("Francis", 90, 10, 120);
+        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
+        Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
+
+        necro.castSpell(soldier);
+        necro.castSpell(rogue);
+        necro.castSpell(berserk);
+        necro.castSpell(vamp);
+        necro.castSpell(wolf);
+        necro.castSpell(wizard);
+        necro.castSpell(healer);
+        necro.castSpell(priest);
+        necro.castSpell(warlock);
+
+        Assert.assertEquals(8, necro.getObservables().size());
+
+        soldier.setCurrentHP(8);
+        soldier.attack(necro);
+        soldier.attack(necro);
+
+        Assert.assertEquals(7, necro.getObservables().size());
+        Assert.assertEquals(36, necro.getCurrentHP());
+    }
+
+    @Test
+    public void addObserversTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException,
+            ManaIsOverException {
+        Soldier soldier = new Soldier("Steve", 100, 12);
+        Rogue rogue = new Rogue("Robin", 100, 8);
+        Berserk berserk = new Berserk("Viking", 120, 20);
+        Vampire vamp = new Vampire("Count Dracula", 100, 12);
+        Werewolf wolf = new Werewolf("Van Hellsing", 80, 10);
+        Wizard wizard = new Wizard("Marylin", 90, 5, 120);
+        Healer healer = new Healer("Manson", 60, 4, 100);
+        Priest priest = new Priest("Francis", 90, 10, 120);
+        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
+        Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
+        Necromancer necro1 = new Necromancer("Shreck", 50, 10, 120);
+
+        necro.castSpell(soldier);
+        necro.castSpell(rogue);
+        necro.castSpell(berserk);
+        necro.castSpell(vamp);
+        necro.castSpell(wolf);
+        necro.castSpell(wizard);
+        necro.castSpell(healer);
+        necro.castSpell(priest);
+        necro.castSpell(warlock);
+        necro.castSpell(necro1);
+
+        Assert.assertEquals(1, soldier.getObservers().size());
+        Assert.assertEquals(1, rogue.getObservers().size());
+        Assert.assertEquals(0, berserk.getObservers().size());
+        Assert.assertEquals(1, vamp.getObservers().size());
+        Assert.assertEquals(1, wolf.getObservers().size());
+        Assert.assertEquals(1, wizard.getObservers().size());
+        Assert.assertEquals(1, healer.getObservers().size());
+        Assert.assertEquals(1, priest.getObservers().size());
+        Assert.assertEquals(1, warlock.getObservers().size());
+        Assert.assertEquals(1, necro1.getObservers().size());
+
+        necro.setCurrentHP(5);
+        necro.attack(berserk);
+
+        Assert.assertEquals(0, soldier.getObservers().size());
+        Assert.assertEquals(0, rogue.getObservers().size());
+        Assert.assertEquals(0, berserk.getObservers().size());
+        Assert.assertEquals(0, vamp.getObservers().size());
+        Assert.assertEquals(0, wolf.getObservers().size());
+        Assert.assertEquals(0, wizard.getObservers().size());
+        Assert.assertEquals(0, healer.getObservers().size());
+        Assert.assertEquals(0, priest.getObservers().size());
+        Assert.assertEquals(0, warlock.getObservers().size());
+        Assert.assertEquals(0, necro1.getObservers().size());
+    }
 
     @Test
     public void spellbooksGetters() {
