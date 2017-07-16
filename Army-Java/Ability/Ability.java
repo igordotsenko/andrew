@@ -23,16 +23,17 @@ public abstract class Ability {
 
         if ( currentUnit.getUnitType() == Unit.UnitType.VAMPIRE ) {
             int recoverHP = victim.getCurrentHP() / 10;
+
             currentUnit.heal(recoverHP);
             victim.takeDamage(recoverHP);
         }
     }
 
-    public void takeDamage(int damage) {
+    public void takeDamage(int damage) throws UnitIsDeadException {
         currentUnit.getCurrentState().takeDamage(damage);
     }
 
-    public void takeMagicDamage(int damage) {
+    public void takeMagicDamage(int damage) throws UnitIsDeadException {
         currentUnit.getCurrentState().takeMagicDamage(damage);
     }
 
