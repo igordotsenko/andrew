@@ -141,9 +141,6 @@ public class UnitTest {
 
         soldier.attack(rogue);
         soldier.attack(rogue);
-
-        System.out.println(soldier);
-        System.out.println(rogue);
     }
 
     @Test ( expected = IsSelfAttackException.class )
@@ -232,9 +229,6 @@ public class UnitTest {
         soldier.attack(vamp);
         Assert.assertEquals(80, vamp.getCurrentHP());
         Assert.assertEquals(67, soldier.getCurrentHP());
-
-        System.out.println(vamp);
-        System.out.println(soldier);
     }
 
     @Test
