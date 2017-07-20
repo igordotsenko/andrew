@@ -363,6 +363,18 @@ public class UnitTest {
     }
 
     @Test
+    public void addBerserkToObservableList() throws UnitIsDeadException, IsSelfAttackException,
+            MasterAttackedException {
+        Berserk berserk = new Berserk("Viking", 120, 20);
+        Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
+
+        necro.attack(berserk);
+
+        Assert.assertEquals(1, berserk.getObservers().size());
+        Assert.assertEquals(1, necro.getObservables().size());
+    }
+
+    @Test
     public void addObserversTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException,
             ManaIsOverException {
         Soldier soldier = new Soldier("Steve", 100, 12);
