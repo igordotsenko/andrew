@@ -4,6 +4,7 @@ import com.gymfox.Army.Ability.WarlockAbility;
 import com.gymfox.Army.Exception.DemonIsAlreadySummonedException;
 import com.gymfox.Army.Exception.DemonIsNotSummonedException;
 import com.gymfox.Army.Exception.IsNotSummonSpellsException;
+import com.gymfox.Army.Exception.UnitIsDeadException;
 import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Spells.Summon;
 import com.gymfox.Army.State.HumanState;
@@ -33,11 +34,11 @@ public class Warlock extends Spellcaster {
         return demon;
     }
 
-    public void removeDemon() {
+    public void removeDemon() throws UnitIsDeadException {
         if ( demon == null ) {
             return;
         }
-
+        demon.notifyObservers();
         demon = null;
     }
 

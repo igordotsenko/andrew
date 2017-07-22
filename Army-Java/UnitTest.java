@@ -375,6 +375,14 @@ public class UnitTest {
     }
 
     @Test
+    public void testGetClass() {
+        Soldier soldier = new Soldier("Steve", 100, 12);
+
+        Assert.assertEquals("Soldier", soldier.getClassName());
+
+    }
+
+    @Test
     public void addObserversTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException,
             ManaIsOverException {
         Soldier soldier = new Soldier("Steve", 100, 12);
@@ -424,6 +432,21 @@ public class UnitTest {
         Assert.assertEquals(0, priest.getObservers().size());
         Assert.assertEquals(0, warlock.getObservers().size());
         Assert.assertEquals(0, necro1.getObservers().size());
+    }
+
+    @Test
+    public void addSlaveToObservableList() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, DemonIsNotSummonedException, IsSelfAttackException, ManaIsOverException, UnitIsDeadException {
+        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
+        Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
+
+        warlock.summonDemon();
+        necro.castSpell(warlock.getDemon());
+
+        Assert.assertEquals(1, necro.getObservables().size());
+
+        warlock.removeDemon();
+
+        Assert.assertEquals(0, necro.getObservables().size());
     }
 
     @Test
