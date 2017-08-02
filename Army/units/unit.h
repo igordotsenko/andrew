@@ -38,7 +38,7 @@ class Unit: public Observer, public Observable {
         int unitType;
         bool isDead;
         State* normalState;
-        State* alternativeState;
+        State* nextState;
         Ability* ability;
         
     protected:

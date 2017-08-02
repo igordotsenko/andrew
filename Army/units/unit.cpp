@@ -13,7 +13,7 @@ Unit::Unit(const string& name, int healthPoint, int damage) {
 Unit::~Unit() {
     delete ability;
     delete normalState;
-    delete alternativeState;
+    delete nextState;
 }
 
 void Unit::attack(Unit* victim) {
@@ -25,15 +25,7 @@ void Unit::attack(Unit* victim) {
 void Unit::takeDamage(int damage) {
     ensureIsAlive();
 
-    if ( getCurrentHP() <= damage ) {
-        setCurrentHP(0);
-        notifyObservers();
-        notifyObservable();
-        
-        return;
-    }
-    
-    setCurrentHP(getCurrentHP() - damage);
+    getAbility()->takeDamage(damage);
 }
 
 void Unit::takeMagicDamage(int damage) {
@@ -72,7 +64,7 @@ void Unit::setCurrentState(State* newCurrentState) {
 }
 
 void Unit::setNextState(State* newNextState) {
-    alternativeState = newNextState;
+    nextState = newNextState;
 }
 
 void Unit::setUnitType(int newUnitType) {
@@ -112,7 +104,7 @@ State* Unit::getCurrentState() const {
 }
 
 State* Unit::getNextState() const {
-    return alternativeState;
+    return nextState;
 }
 
 const int Unit::getUnitType() const {
@@ -148,7 +140,7 @@ void Unit::heal(int healthPoint) {
 
     if ( newCurrentHP > getHPLimit() ) {
         setCurrentHP(getHPLimit());
-
+        
         return;
     }
 
@@ -170,6 +162,7 @@ void Unit::ensureIsNotSelfAttack(Unit* victim) {
 ostream& operator<<(ostream& out, const Unit& unit) {
     out << unit.getName() << "\nHP: " << unit.getHPLimit() << "|" << unit.getCurrentHP() << endl;
     out << "DMG: " << unit.getDamage() << "\n";
+    out << "States: " << "[" << unit.getCurrentState()->getStateName() << "|" <<unit.getNextState()->getStateName() << "]" << endl;
 
     return out;
 }
