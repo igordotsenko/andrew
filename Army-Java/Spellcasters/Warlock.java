@@ -1,10 +1,7 @@
 package com.gymfox.Army.Spellcasters;
 
 import com.gymfox.Army.Ability.WarlockAbility;
-import com.gymfox.Army.Exception.DemonIsAlreadySummonedException;
-import com.gymfox.Army.Exception.DemonIsNotSummonedException;
-import com.gymfox.Army.Exception.IsNotSummonSpellsException;
-import com.gymfox.Army.Exception.UnitIsDeadException;
+import com.gymfox.Army.Exception.*;
 import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Spells.Summon;
 import com.gymfox.Army.State.HumanState;
@@ -23,8 +20,9 @@ public class Warlock extends Spellcaster {
         setCurrentSpell("Summon");
     }
 
-    public Demon summonDemon() throws IsNotSummonSpellsException, DemonIsAlreadySummonedException {
+    public Demon summonDemon() throws IsNotSummonSpellsException, DemonIsAlreadySummonedException, ManaIsOverException {
         ensureIsSummonSpell(getCurrentSpell());
+        ensureManaIsNotOver();
         ensureIsNotSummoned();
 
         demon = new Demon(this);

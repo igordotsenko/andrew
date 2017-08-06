@@ -271,7 +271,7 @@ public class UnitTest {
     }
 
     @Test
-    public void warlockTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException {
+    public void warlockTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException, ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Soldier soldier = new Soldier("Steve", 100, 18);
 
@@ -285,7 +285,7 @@ public class UnitTest {
 
     @Test ( expected = DemonIsAlreadySummonedException.class )
     public void demonIsAlreadySummonedExceptionTest() throws DemonIsAlreadySummonedException,
-            IsNotSummonSpellsException {
+            IsNotSummonSpellsException, ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.summonDemon();
@@ -293,7 +293,7 @@ public class UnitTest {
     }
 
     @Test ( expected = IsNotSummonSpellsException.class )
-    public void isNotSummonSpellsExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException {
+    public void isNotSummonSpellsExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.setCurrentSpell("Fireball");
@@ -303,7 +303,7 @@ public class UnitTest {
 
     @Test ( expected = MasterAttackedException.class )
     public void masterAttackedExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException,
-            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException {
+            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException, ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.summonDemon();
@@ -313,13 +313,26 @@ public class UnitTest {
 
     @Test ( expected = IsSelfAttackException.class )
     public void selfAttackExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException,
-            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException {
+            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException, ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.summonDemon();
 
         warlock.getDemon().attack(warlock.getDemon());
     }
+
+    @Test ( expected = ManaIsOverException.class )
+    public void manaIsOverExceptionTest() throws IsSelfAttackException, ManaIsOverException, UnitIsDeadException, DemonIsAlreadySummonedException, IsNotSummonSpellsException {
+        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
+        Wizard wizard = new Wizard("Marylin", 90, 5, 120);
+
+        wizard.setCurrentMP(5);
+        warlock.setCurrentMP(5);
+
+        warlock.summonDemon();
+        wizard.castSpell(warlock);
+    }
+
 
     @Test ( expected = DemonIsNotSummonedException.class )
     public void demonIsNotSummonedExceptionTest() throws DemonIsNotSummonedException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
