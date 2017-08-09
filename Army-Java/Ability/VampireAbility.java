@@ -17,6 +17,18 @@ public class VampireAbility extends Ability {
         victim.counterAttack(getCurrentUnit());
     }
 
+    @Override
+    public void counterAttack(Unit victim) throws UnitIsDeadException {
+        victim.takeDamage(getCurrentUnit().getDamage() / 2);
+        
+        if ( getCurrentUnit().getUnitType() == Unit.UnitType.VAMPIRE ) {
+            int recoverHP = victim.getCurrentHP() / 10;
+
+            getCurrentUnit().heal(recoverHP);
+            victim.takeDamage(recoverHP);
+        }
+    }
+
     public void vampirism(Unit victim) throws UnitIsDeadException {
         int recoverHP = victim.getCurrentHP() / 10;
 

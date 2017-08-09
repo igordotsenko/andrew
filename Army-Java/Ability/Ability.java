@@ -19,14 +19,7 @@ public abstract class Ability {
     }
 
     public void counterAttack(Unit victim) throws UnitIsDeadException {
-        victim.takeDamage(currentUnit.getDamage() / 2);
-
-        if ( currentUnit.getUnitType() == Unit.UnitType.VAMPIRE ) {
-            int recoverHP = victim.getCurrentHP() / 10;
-
-            currentUnit.heal(recoverHP);
-            victim.takeDamage(recoverHP);
-        }
+        victim.takeDamage(getCurrentUnit().getDamage() / 2);
     }
 
     public void takeDamage(int damage) throws UnitIsDeadException {
