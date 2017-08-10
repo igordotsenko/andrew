@@ -1,6 +1,5 @@
 package com.gymfox.Army.Ability;
 
-import com.gymfox.Army.Exception.*;
 import com.gymfox.Army.Units.Unit;
 
 public class VampireAbility extends Ability {
@@ -9,7 +8,7 @@ public class VampireAbility extends Ability {
     }
 
     @Override
-    public void attack(Unit victim) throws UnitIsDeadException, IsSelfAttackException {
+    public void attack(Unit victim) throws Unit.UnitIsDeadException, Unit.IsSelfAttackException {
         victim.takeDamage(getCurrentUnit().getDamage());
 
         vampirism(victim);
@@ -18,18 +17,16 @@ public class VampireAbility extends Ability {
     }
 
     @Override
-    public void counterAttack(Unit victim) throws UnitIsDeadException {
+    public void counterAttack(Unit victim) throws Unit.UnitIsDeadException {
         victim.takeDamage(getCurrentUnit().getDamage() / 2);
-        
-        if ( getCurrentUnit().getUnitType() == Unit.UnitType.VAMPIRE ) {
-            int recoverHP = victim.getCurrentHP() / 10;
 
-            getCurrentUnit().heal(recoverHP);
-            victim.takeDamage(recoverHP);
-        }
+        int recoverHP = victim.getCurrentHP() / 10;
+
+        getCurrentUnit().heal(recoverHP);
+        victim.takeDamage(recoverHP);
     }
 
-    public void vampirism(Unit victim) throws UnitIsDeadException {
+    public void vampirism(Unit victim) throws Unit.UnitIsDeadException {
         int recoverHP = victim.getCurrentHP() / 10;
 
         victim.takeDamage(recoverHP);

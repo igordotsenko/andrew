@@ -1,13 +1,15 @@
 package com.gymfox.Army.Spellcasters;
 
-import com.gymfox.Army.Exception.*;
 import com.gymfox.Army.Spells.*;
 import com.gymfox.Army.Units.Unit;
 
 import java.util.HashMap;
 import java.util.Map;
 
-public abstract class Spellcaster extends Unit{
+public abstract class Spellcaster extends Unit {
+
+    public static class ManaIsOverException extends Exception{};
+
     private int manaPointLimits;
     private int currentMP;
     private Spell currentSpell;
@@ -21,7 +23,7 @@ public abstract class Spellcaster extends Unit{
         this.learnSpell(new Heal());
     }
 
-    public void castSpell(Unit victim) throws IsSelfAttackException, UnitIsDeadException, ManaIsOverException {
+    public void castSpell(Unit victim) throws Unit.IsSelfAttackException, Unit.UnitIsDeadException, ManaIsOverException {
         ensureIsNotSelfAttack(victim);
         ensureIsAlive();
         ensureManaIsNotOver();
@@ -50,10 +52,6 @@ public abstract class Spellcaster extends Unit{
 
     public Spell getCurrentSpell() {
         return currentSpell;
-    }
-
-    public void setManaPointLimits(int newManaPointLimits) {
-        this.manaPointLimits = newManaPointLimits;
     }
 
     public void setCurrentMP(int newCurrentMP) {

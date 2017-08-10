@@ -1,41 +1,26 @@
 package com.gymfox.Army.Units;
 
 import com.gymfox.Army.Ability.Ability;
-import com.gymfox.Army.Exception.IsSelfAttackException;
-import com.gymfox.Army.Exception.MasterAttackedException;
-import com.gymfox.Army.Exception.UnitIsDeadException;
 import com.gymfox.Army.Observer.Observable;
 import com.gymfox.Army.Observer.Observer;
-import com.gymfox.Army.State.State;
 
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 public abstract class Unit implements Observable, Observer {
 
-    public enum UnitType {
-        SOLDIER,
-        ROGUE,
-        BERSERK,
-        VAMPIRE,
-        WEREWOLF,
-        WIZARD,
-        HEALER,
-        PRIEST,
-        WARLOCK,
-        NECROMANCER
-    }
+    public static class UnitIsDeadException extends Exception{};
+    public static class IsSelfAttackException extends Exception{};
 
     private String name;
     private int healthPointLimit;
     private int currentHP;
     private int damage;
-    private boolean isDead = false;
-    private UnitType unitType;
-    private Ability ability;
-    private State currentState;
-    private State nextState;
+
+    protected boolean isDead = false;
+    protected Ability ability;
+    protected boolean immunityToMagic = false;
+
     private Set<Unit> observables = new HashSet<>();
     private Set<Unit> observers = new HashSet<>();
 
@@ -46,7 +31,8 @@ public abstract class Unit implements Observable, Observer {
         this.damage = damage;
     }
 
-    public void attack(Unit victim) throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    public void attack(Unit victim) throws IsSelfAttackException, UnitIsDeadException, Demon.MasterAttackedException,
+            Demon.MasterAttackedException {
         ensureIsNotSelfAttack(victim);
         ensureIsAlive();
 
@@ -62,7 +48,15 @@ public abstract class Unit implements Observable, Observer {
 
     public void takeDamage(int damage) throws UnitIsDeadException {
         ensureIsAlive();
-        getAbility().takeDamage(damage);
+        if ( getCurrentHP() <= damage ) {
+            setCurrentHP(0);
+            notifyObservers();
+            notifyObservable();
+
+            return;
+        }
+
+        setCurrentHP(getCurrentHP() - damage);
     }
 
     public void takeMagicDamage(int damage) throws UnitIsDeadException {
@@ -84,6 +78,10 @@ public abstract class Unit implements Observable, Observer {
         setCurrentHP(newHealthPoint);
     }
 
+    public void changeState() {
+        getAbility().changeState();
+    }
+
     protected void ensureIsAlive() throws UnitIsDeadException {
         if ( getCurrentHP() == 0 ) {
             throw new UnitIsDeadException();
@@ -96,23 +94,7 @@ public abstract class Unit implements Observable, Observer {
         }
     }
 
-    public void changeState() {
-        getAbility().changeState();
-    }
-
-    public void notifyObservers() throws UnitIsDeadException {
-        for ( Unit observer: observers ) {
-            observer.removeObservable(this);
-            observer.heal(observer.getDamage());
-        }
-    }
-
-    public void notifyObservable() {
-        for ( Unit observable: observables ) {
-            observable.removeObserver(this);
-        }
-    }
-
+    @Override
     public String toString() {
         StringBuffer out = new StringBuffer();
 
@@ -163,6 +145,21 @@ public abstract class Unit implements Observable, Observer {
         observers.remove(observer);
     }
 
+    @Override
+    public void notifyObservable() {
+        for ( Unit observable: observables ) {
+            observable.removeObserver(this);
+        }
+    }
+
+    @Override
+    public void notifyObservers() throws UnitIsDeadException {
+        for ( Unit observer: observers ) {
+            observer.removeObservable(this);
+            observer.heal(observer.getDamage());
+        }
+    }
+
     public String getName() {
         return name;
     }
@@ -187,16 +184,8 @@ public abstract class Unit implements Observable, Observer {
         return ability;
     }
 
-    public UnitType getUnitType() {
-        return unitType;
-    }
-
-    public State getCurrentState() {
-        return currentState;
-    }
-
-    public State getNextState() {
-        return nextState;
+    public boolean getImmunityToMagic() {
+        return immunityToMagic;
     }
 
     public Set<Unit> getObservables() {
@@ -227,19 +216,7 @@ public abstract class Unit implements Observable, Observer {
         isDead = !isDead;
     }
 
-    public void setUnitType(UnitType newUnitType) {
-        this.unitType = newUnitType;
-    }
-
     public void setAbility(Ability newAbility) {
         this.ability = newAbility;
-    }
-
-    public void setCurrentState(State newCurrentState) {
-        this.currentState = newCurrentState;
-    }
-
-    public void setNextState(State newNextState) {
-        this.nextState = newNextState;
     }
 }

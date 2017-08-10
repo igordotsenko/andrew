@@ -1,11 +1,10 @@
 package com.gymfox.Army.Units;
 
-import com.gymfox.Army.Exception.IsSelfAttackException;
-import com.gymfox.Army.Exception.MasterAttackedException;
-import com.gymfox.Army.Exception.UnitIsDeadException;
 import com.gymfox.Army.Spellcasters.Warlock;
 
 public class Demon extends Soldier {
+    public static class MasterAttackedException extends Exception{};
+
     private Warlock master;
 
     public Demon(Warlock master) {
@@ -20,7 +19,7 @@ public class Demon extends Soldier {
     }
 
     @Override
-    public void attack(Unit victim) throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    public void attack(Unit victim) throws Unit.UnitIsDeadException, Unit.IsSelfAttackException, MasterAttackedException {
         ensureIsNotMaster(victim);
 
         super.attack(victim);

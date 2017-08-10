@@ -1,6 +1,5 @@
 package com.gymfox.Army.State;
 
-import com.gymfox.Army.Exception.UnitIsDeadException;
 import com.gymfox.Army.Units.Unit;
 
 public class WolfState extends State {
@@ -12,10 +11,9 @@ public class WolfState extends State {
     }
 
     @Override
-    public void takeMagicDamage(int damage) throws UnitIsDeadException {
+    public void takeMagicDamage(int damage) throws Unit.UnitIsDeadException {
         int newDamage = damage * 2;
 
         tryKill(newDamage);
-        currentUnitState.setCurrentHP(currentUnitState.getCurrentHP() - newDamage);
     }
 }

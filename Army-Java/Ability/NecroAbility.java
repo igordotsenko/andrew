@@ -1,6 +1,5 @@
 package com.gymfox.Army.Ability;
 
-import com.gymfox.Army.Exception.UnitIsDeadException;
 import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Units.Unit;
 
@@ -9,7 +8,7 @@ public class NecroAbility extends Ability {
         super(currentUnit);
     }
 
-    public void castSpell(Unit victim, Spell currentSpell) throws UnitIsDeadException {
+    public void castSpell(Unit victim, Spell currentSpell) throws Unit.UnitIsDeadException {
         if ( currentSpell.getSpellsType() == Spell.SpellsType.BATTLESPELL ) {
             victim.takeMagicDamage(currentSpell.getHitPoints());
 

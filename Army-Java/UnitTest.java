@@ -1,16 +1,16 @@
-package com.gymfox.Army.Units;
+package com.gymfox.Army;
 
-import com.gymfox.Army.Exception.*;
 import com.gymfox.Army.Spellcasters.*;
+import com.gymfox.Army.Units.*;
 import junit.framework.Assert;
 import org.junit.Test;
 
-import static com.gymfox.Army.Spells.Spell.SpellsType.*;
-import static com.gymfox.Army.Units.Unit.UnitType.*;
+import static com.gymfox.Army.Spells.Spell.SpellsType.BATTLESPELL;
+import static com.gymfox.Army.Spells.Spell.SpellsType.HEALSPELL;
 
 public class UnitTest {
     @Test
-    public void allUnitsSettersTest() {
+    public void allUnitsGettersTest() {
         Soldier soldier = new Soldier("Steve", 100, 12);
         Rogue rogue = new Rogue("Robin", 100, 8);
         Berserk berserk = new Berserk("Viking", 120, 20);
@@ -27,45 +27,32 @@ public class UnitTest {
         Assert.assertEquals(100, soldier.getCurrentHP());
         Assert.assertEquals(12, soldier.getDamage());
         Assert.assertEquals(false, soldier.getIsDead());
-        Assert.assertEquals(SOLDIER, soldier.getUnitType());
-        Assert.assertEquals("Human", soldier.getCurrentState().getStateName());
-        Assert.assertEquals("Human", soldier.getNextState().getStateName());
 
         Assert.assertEquals("Robin", rogue.getName());
         Assert.assertEquals(100, rogue.getHealthPointLimit());
         Assert.assertEquals(100, rogue.getCurrentHP());
         Assert.assertEquals(8, rogue.getDamage());
         Assert.assertEquals(false, rogue.getIsDead());
-        Assert.assertEquals(ROGUE, rogue.getUnitType());
-        Assert.assertEquals("Human", rogue.getCurrentState().getStateName());
-        Assert.assertEquals("Human", rogue.getNextState().getStateName());
 
         Assert.assertEquals("Viking", berserk.getName());
         Assert.assertEquals(120, berserk.getHealthPointLimit());
         Assert.assertEquals(120, berserk.getCurrentHP());
         Assert.assertEquals(20, berserk.getDamage());
         Assert.assertEquals(false, berserk.getIsDead());
-        Assert.assertEquals(BERSERK, berserk.getUnitType());
-        Assert.assertEquals("Human", berserk.getCurrentState().getStateName());
-        Assert.assertEquals("Human", berserk.getNextState().getStateName());
 
         Assert.assertEquals("Count Dracula", vamp.getName());
         Assert.assertEquals(100, vamp.getHealthPointLimit());
         Assert.assertEquals(100, vamp.getCurrentHP());
         Assert.assertEquals(12, vamp.getDamage());
         Assert.assertEquals(true, vamp.getIsDead());
-        Assert.assertEquals(VAMPIRE, vamp.getUnitType());
-        Assert.assertEquals("Human", vamp.getCurrentState().getStateName());
-        Assert.assertEquals("Human", vamp.getNextState().getStateName());
 
         Assert.assertEquals("Van Hellsing", wolf.getName());
         Assert.assertEquals(80, wolf.getHealthPointLimit());
         Assert.assertEquals(80, wolf.getCurrentHP());
         Assert.assertEquals(10, wolf.getDamage());
         Assert.assertEquals(false, wolf.getIsDead());
-        Assert.assertEquals(WEREWOLF, wolf.getUnitType());
-        Assert.assertEquals("Human", wolf.getCurrentState().getStateName());
-        Assert.assertEquals("Wolf", wolf.getNextState().getStateName());
+        Assert.assertEquals("Human", wolf.getAbility().getCurrentState().getStateName());
+        Assert.assertEquals("Wolf", wolf.getAbility().getNextState().getStateName());
 
         wolf.changeState();
 
@@ -74,68 +61,53 @@ public class UnitTest {
         Assert.assertEquals(160, wolf.getCurrentHP());
         Assert.assertEquals(20, wolf.getDamage());
         Assert.assertEquals(false, wolf.getIsDead());
-        Assert.assertEquals(WEREWOLF, wolf.getUnitType());
-        Assert.assertEquals("Wolf", wolf.getCurrentState().getStateName());
-        Assert.assertEquals("Human", wolf.getNextState().getStateName());
+        Assert.assertEquals("Wolf", wolf.getAbility().getCurrentState().getStateName());
+        Assert.assertEquals("Human", wolf.getAbility().getNextState().getStateName());
 
         Assert.assertEquals("Marylin", wizard.getName());
         Assert.assertEquals(90, wizard.getHealthPointLimit());
         Assert.assertEquals(90, wizard.getCurrentHP());
-        Assert.assertEquals(5, wizard.getDamage());;
+        Assert.assertEquals(5, wizard.getDamage());
         Assert.assertEquals(120, wizard.getManaPointLimits());
         Assert.assertEquals(120, wizard.getCurrentMP());
         Assert.assertEquals(false, wizard.getIsDead());
-        Assert.assertEquals(WIZARD, wizard.getUnitType());
-        Assert.assertEquals("Human", wizard.getCurrentState().getStateName());
-        Assert.assertEquals("Human", wizard.getNextState().getStateName());
 
         Assert.assertEquals("Manson", healer.getName());
         Assert.assertEquals(60, healer.getHealthPointLimit());
         Assert.assertEquals(60, healer.getCurrentHP());
-        Assert.assertEquals(4, healer.getDamage());;
+        Assert.assertEquals(4, healer.getDamage());
         Assert.assertEquals(100, healer.getManaPointLimits());
         Assert.assertEquals(100, healer.getCurrentMP());
         Assert.assertEquals(false, healer.getIsDead());
-        Assert.assertEquals(HEALER, healer.getUnitType());
-        Assert.assertEquals("Human", healer.getCurrentState().getStateName());
-        Assert.assertEquals("Human", healer.getNextState().getStateName());
 
         Assert.assertEquals("Francis", priest.getName());
         Assert.assertEquals(90, priest.getHealthPointLimit());
         Assert.assertEquals(90, priest.getCurrentHP());
-        Assert.assertEquals(10, priest.getDamage());;
+        Assert.assertEquals(10, priest.getDamage());
         Assert.assertEquals(120, priest.getManaPointLimits());
         Assert.assertEquals(120, priest.getCurrentMP());
         Assert.assertEquals(false, priest.getIsDead());
-        Assert.assertEquals(PRIEST, priest.getUnitType());
-        Assert.assertEquals("Human", priest.getCurrentState().getStateName());
-        Assert.assertEquals("Human", priest.getNextState().getStateName());
 
         Assert.assertEquals("Warlock", warlock.getName());
         Assert.assertEquals(90, warlock.getHealthPointLimit());
         Assert.assertEquals(90, warlock.getCurrentHP());
-        Assert.assertEquals(8, warlock.getDamage());;
+        Assert.assertEquals(8, warlock.getDamage());
         Assert.assertEquals(120, warlock.getManaPointLimits());
         Assert.assertEquals(120, warlock.getCurrentMP());
         Assert.assertEquals(false, warlock.getIsDead());
-        Assert.assertEquals(WARLOCK, warlock.getUnitType());
-        Assert.assertEquals("Human", warlock.getCurrentState().getStateName());
-        Assert.assertEquals("Human", warlock.getNextState().getStateName());
 
         Assert.assertEquals("Freddy", necro.getName());
         Assert.assertEquals(50, necro.getHealthPointLimit());
         Assert.assertEquals(50, necro.getCurrentHP());
-        Assert.assertEquals(10, necro.getDamage());;
+        Assert.assertEquals(10, necro.getDamage());
         Assert.assertEquals(100, necro.getManaPointLimits());
         Assert.assertEquals(100, necro.getCurrentMP());
         Assert.assertEquals(true, necro.getIsDead());
-        Assert.assertEquals(NECROMANCER, necro.getUnitType());
-        Assert.assertEquals("Human", necro.getCurrentState().getStateName());
-        Assert.assertEquals("Human", necro.getNextState().getStateName());
     }
 
-    @Test ( expected = UnitIsDeadException.class )
-    public void unitIsDeadExceptionTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    @Test ( expected = Unit.UnitIsDeadException.class )
+    public void unitIsDeadExceptionTest() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException,
+            Demon.MasterAttackedException {
         Soldier soldier = new Soldier("Steve", 100, 12);
         Rogue rogue = new Rogue("Robin", 10, 8);
 
@@ -143,15 +115,17 @@ public class UnitTest {
         soldier.attack(rogue);
     }
 
-    @Test ( expected = IsSelfAttackException.class )
-    public void isSelfAttackExceptionTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    @Test ( expected = Unit.IsSelfAttackException.class )
+    public void isSelfAttackExceptionTest() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException,
+            Demon.MasterAttackedException {
         Soldier soldier = new Soldier("Steve", 100, 12);
 
         soldier.attack(soldier);
     }
 
-    @Test ( expected = ManaIsOverException.class)
-    public void ManaIsOverExceptionTest() throws IsSelfAttackException, ManaIsOverException, UnitIsDeadException {
+    @Test ( expected = Spellcaster.ManaIsOverException.class)
+    public void manaIsOverExceptionTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+            .UnitIsDeadException {
         Wizard wizard = new Wizard("Marylin", 90, 5, 120);
         Healer healer = new Healer("Manson", 60, 4, 100);
         Priest priest = new Priest("Francis", 90, 10, 120);
@@ -165,8 +139,23 @@ public class UnitTest {
         priest.castSpell(wizard);
     }
 
+    @Test ( expected = Spellcaster.ManaIsOverException.class )
+    public void manaIsOverExceptionForWarlockTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException,
+            Unit
+            .UnitIsDeadException, Warlock.DemonIsAlreadySummonedException, Warlock.IsNotSummonSpellsException {
+        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
+        Wizard wizard = new Wizard("Marylin", 90, 5, 120);
+
+        wizard.setCurrentMP(5);
+        warlock.setCurrentMP(5);
+
+        warlock.summonDemon();
+        wizard.castSpell(warlock);
+    }
+
     @Test
-    public void soldierTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    public void soldierTest() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException, Demon
+            .MasterAttackedException {
         Soldier soldier1 = new Soldier("Steve", 100, 12);
         Soldier soldier2 = new Soldier("Baki", 100, 14);
 
@@ -182,7 +171,7 @@ public class UnitTest {
     }
 
     @Test
-    public void rogueTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    public void rogueTest() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException, Demon.MasterAttackedException {
         Rogue rogue = new Rogue("Robin", 100, 8);
         Soldier soldier = new Soldier("Steve", 100, 12);
 
@@ -193,7 +182,8 @@ public class UnitTest {
     }
 
     @Test
-    public void berserkAndWizardTest() throws IsSelfAttackException, ManaIsOverException, UnitIsDeadException {
+    public void berserkAndWizardTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+            .UnitIsDeadException {
         Berserk berserk = new Berserk("Viking", 120, 20);
         Wizard wizard = new Wizard("Marylin", 90,5,120);
 
@@ -203,7 +193,19 @@ public class UnitTest {
     }
 
     @Test
-    public void wizardHealTest() throws IsSelfAttackException, ManaIsOverException, UnitIsDeadException {
+    public void wizardAttackTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+            .UnitIsDeadException {
+        Wizard wizard = new Wizard("Marylin", 90,5,120);
+        Soldier soldier = new Soldier("Steve", 100, 18);
+
+        wizard.castSpell(soldier);
+
+        Assert.assertEquals(88, soldier.getCurrentHP());
+    }
+
+    @Test
+    public void wizardHealTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+            .UnitIsDeadException {
         Wizard wizard = new Wizard("Marylin", 90,5,120);
         Soldier soldier = new Soldier("Steve", 100, 18);
 
@@ -217,7 +219,8 @@ public class UnitTest {
     }
 
     @Test
-    public void vampireTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    public void vampireTest() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException,
+            Demon.MasterAttackedException {
         Soldier soldier = new Soldier("Steve", 100, 18);
         Vampire vamp = new Vampire("Count Dracula", 100, 12);
 
@@ -232,7 +235,23 @@ public class UnitTest {
     }
 
     @Test
-    public void healerTest() throws IsSelfAttackException, ManaIsOverException, UnitIsDeadException {
+    public void werewolfTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+            .UnitIsDeadException {
+        Werewolf wolf = new Werewolf("Van Hellsing", 80, 10);
+        Wizard wizard = new Wizard("Marylin", 90, 5, 120);
+
+        wizard.castSpell(wolf);
+        Assert.assertEquals(68, wolf.getCurrentHP());
+
+        wolf.changeState();
+
+        wizard.castSpell(wolf);
+        Assert.assertEquals(112, wolf.getCurrentHP());
+    }
+
+    @Test
+    public void healerTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+            .UnitIsDeadException {
         Healer healer = new Healer("Manson", 60, 4, 100);
         Soldier soldier = new Soldier("Steve", 100, 18);
 
@@ -245,7 +264,8 @@ public class UnitTest {
     }
 
     @Test
-    public void priestTest() throws IsSelfAttackException, ManaIsOverException, UnitIsDeadException {
+    public void priestTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+            .UnitIsDeadException {
         Priest priest = new Priest("Francis", 90, 10, 120);
         Soldier soldier = new Soldier("Steve", 100, 18);
         Vampire vamp = new Vampire("Count Dracula", 100, 12);
@@ -260,7 +280,7 @@ public class UnitTest {
     }
 
     @Test
-    public void healTest() throws UnitIsDeadException {
+    public void healTest() throws Unit.UnitIsDeadException {
         Soldier soldier = new Soldier("Steve", 100, 18);
 
         soldier.setCurrentHP(88);
@@ -271,7 +291,10 @@ public class UnitTest {
     }
 
     @Test
-    public void warlockTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException, ManaIsOverException {
+    public void warlockTest() throws Warlock.DemonIsAlreadySummonedException, Warlock.IsNotSummonSpellsException, Unit
+            .UnitIsDeadException, Unit.IsSelfAttackException, Demon.MasterAttackedException,
+            Warlock.DemonIsNotSummonedException,
+            Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Soldier soldier = new Soldier("Steve", 100, 18);
 
@@ -283,17 +306,19 @@ public class UnitTest {
         Assert.assertEquals(91, warlock.getDemon().getCurrentHP());
     }
 
-    @Test ( expected = DemonIsAlreadySummonedException.class )
-    public void demonIsAlreadySummonedExceptionTest() throws DemonIsAlreadySummonedException,
-            IsNotSummonSpellsException, ManaIsOverException {
+    @Test ( expected = Warlock.DemonIsAlreadySummonedException.class )
+    public void demonIsAlreadySummonedExceptionTest() throws Warlock.DemonIsAlreadySummonedException,
+            Warlock.IsNotSummonSpellsException, Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.summonDemon();
         warlock.summonDemon();
     }
 
-    @Test ( expected = IsNotSummonSpellsException.class )
-    public void isNotSummonSpellsExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, ManaIsOverException {
+    @Test ( expected = Warlock.IsNotSummonSpellsException.class )
+    public void isNotSummonSpellsExceptionTest() throws Warlock.DemonIsAlreadySummonedException,
+            Warlock.IsNotSummonSpellsException,
+            Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.setCurrentSpell("Fireball");
@@ -301,9 +326,11 @@ public class UnitTest {
         warlock.summonDemon();
     }
 
-    @Test ( expected = MasterAttackedException.class )
-    public void masterAttackedExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException,
-            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException, ManaIsOverException {
+    @Test ( expected = Demon.MasterAttackedException.class )
+    public void masterAttackedExceptionTest() throws Warlock.DemonIsAlreadySummonedException,
+            Warlock.IsNotSummonSpellsException,
+            Unit.UnitIsDeadException, Unit.IsSelfAttackException, Demon.MasterAttackedException,
+            Warlock.DemonIsNotSummonedException, Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.summonDemon();
@@ -311,9 +338,11 @@ public class UnitTest {
         warlock.getDemon().attack(warlock);
     }
 
-    @Test ( expected = IsSelfAttackException.class )
-    public void selfAttackExceptionTest() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException,
-            UnitIsDeadException, IsSelfAttackException, MasterAttackedException, DemonIsNotSummonedException, ManaIsOverException {
+    @Test ( expected = Unit.IsSelfAttackException.class )
+    public void selfAttackExceptionTest() throws Warlock.DemonIsAlreadySummonedException, Warlock
+            .IsNotSummonSpellsException,
+            Unit.UnitIsDeadException, Unit.IsSelfAttackException, Demon.MasterAttackedException,
+            Warlock.DemonIsNotSummonedException, Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
         warlock.summonDemon();
@@ -321,21 +350,10 @@ public class UnitTest {
         warlock.getDemon().attack(warlock.getDemon());
     }
 
-    @Test ( expected = ManaIsOverException.class )
-    public void manaIsOverExceptionTest() throws IsSelfAttackException, ManaIsOverException, UnitIsDeadException, DemonIsAlreadySummonedException, IsNotSummonSpellsException {
-        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
-        Wizard wizard = new Wizard("Marylin", 90, 5, 120);
-
-        wizard.setCurrentMP(5);
-        warlock.setCurrentMP(5);
-
-        warlock.summonDemon();
-        wizard.castSpell(warlock);
-    }
-
-
-    @Test ( expected = DemonIsNotSummonedException.class )
-    public void demonIsNotSummonedExceptionTest() throws DemonIsNotSummonedException, UnitIsDeadException, IsSelfAttackException, MasterAttackedException {
+    @Test ( expected = Warlock.DemonIsNotSummonedException.class )
+    public void demonIsNotSummonedExceptionTest() throws Warlock.DemonIsNotSummonedException, Unit
+            .UnitIsDeadException, Unit
+            .IsSelfAttackException, Demon.MasterAttackedException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Soldier soldier = new Soldier("Steve", 100, 18);
 
@@ -343,7 +361,8 @@ public class UnitTest {
     }
 
     @Test
-    public void addObservableTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException, ManaIsOverException {
+    public void addObservableTest() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException,
+            Demon.MasterAttackedException, Spellcaster.ManaIsOverException {
         Soldier soldier = new Soldier("Steve", 100, 12);
         Rogue rogue = new Rogue("Robin", 100, 8);
         Berserk berserk = new Berserk("Viking", 120, 20);
@@ -376,28 +395,9 @@ public class UnitTest {
     }
 
     @Test
-    public void addBerserkToObservableList() throws UnitIsDeadException, IsSelfAttackException,
-            MasterAttackedException {
-        Berserk berserk = new Berserk("Viking", 120, 20);
-        Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
-
-        necro.attack(berserk);
-
-        Assert.assertEquals(1, berserk.getObservers().size());
-        Assert.assertEquals(1, necro.getObservables().size());
-    }
-
-    @Test
-    public void testGetClass() {
-        Soldier soldier = new Soldier("Steve", 100, 12);
-
-        Assert.assertEquals("Soldier", soldier.getClassName());
-
-    }
-
-    @Test
-    public void addObserversTest() throws UnitIsDeadException, IsSelfAttackException, MasterAttackedException,
-            ManaIsOverException {
+    public void addObserversTest() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException,
+            Demon.MasterAttackedException,
+            Spellcaster.ManaIsOverException {
         Soldier soldier = new Soldier("Steve", 100, 12);
         Rogue rogue = new Rogue("Robin", 100, 8);
         Berserk berserk = new Berserk("Viking", 120, 20);
@@ -448,7 +448,22 @@ public class UnitTest {
     }
 
     @Test
-    public void addSlaveToObservableList() throws DemonIsAlreadySummonedException, IsNotSummonSpellsException, DemonIsNotSummonedException, IsSelfAttackException, ManaIsOverException, UnitIsDeadException {
+    public void addBerserkToObservableList() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException,
+            Demon.MasterAttackedException {
+        Berserk berserk = new Berserk("Viking", 120, 20);
+        Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
+
+        necro.attack(berserk);
+
+        Assert.assertEquals(1, berserk.getObservers().size());
+        Assert.assertEquals(1, necro.getObservables().size());
+    }
+
+    @Test
+    public void addSlaveToObservableList() throws Warlock.DemonIsAlreadySummonedException, Warlock
+            .IsNotSummonSpellsException,
+            Warlock.DemonIsNotSummonedException, Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+                    .UnitIsDeadException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
 
@@ -477,5 +492,4 @@ public class UnitTest {
         Assert.assertEquals(6, wizard.getCurrentSpell().getManaConsumption());
         Assert.assertEquals(HEALSPELL, wizard.getCurrentSpell().getSpellsType());
     }
-
 }

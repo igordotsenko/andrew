@@ -1,58 +1,60 @@
 package com.gymfox.Army.Ability;
 
-import com.gymfox.Army.Exception.IsSelfAttackException;
-import com.gymfox.Army.Exception.UnitIsDeadException;
 import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.State.State;
 import com.gymfox.Army.Units.Unit;
 
 public abstract class Ability {
     private Unit currentUnit;
+    protected State currentState;
+    protected State nextState;
 
     public Ability(Unit currentUnit) {
         this.currentUnit = currentUnit;
     }
 
-    public void attack(Unit victim) throws UnitIsDeadException, IsSelfAttackException {
+    public void attack(Unit victim) throws Unit.UnitIsDeadException, Unit.IsSelfAttackException {
         victim.takeDamage(currentUnit.getDamage());
         victim.counterAttack(currentUnit);
     }
 
-    public void counterAttack(Unit victim) throws UnitIsDeadException {
+    public void counterAttack(Unit victim) throws Unit.UnitIsDeadException {
         victim.takeDamage(getCurrentUnit().getDamage() / 2);
     }
 
-    public void takeDamage(int damage) throws UnitIsDeadException {
-        currentUnit.getCurrentState().takeDamage(damage);
+    public void takeMagicDamage(int damage) throws Unit.UnitIsDeadException {
+        if ( currentUnit.getCurrentHP() <= damage ) {
+            currentUnit.setCurrentHP(0);
+            currentUnit.notifyObservers();
+            currentUnit.notifyObservable();
+
+            return;
+        }
+
+        currentUnit.setCurrentHP(currentUnit.getCurrentHP() - damage);
     }
 
-    public void takeMagicDamage(int damage) throws UnitIsDeadException {
-        currentUnit.getCurrentState().takeMagicDamage(damage);
-    }
+    public void castSpell(Unit victim, Spell currentSpell) throws Unit.UnitIsDeadException {}
 
-    public void castSpell(Unit victim, Spell currentSpell) throws UnitIsDeadException {}
-
-    public void changeState() {
-        State currentState = currentUnit.getCurrentState();
-        State nextState = currentUnit.getNextState();
-        State temp = currentState;
-
-        currentUnit.setCurrentState(nextState);
-        currentUnit.setNextState(temp);
-        currentState = nextState;
-
-        int newCurrentHP = (int)(getHealthMultiplier() * (double)currentState.getHealthPointLimit());
-
-        currentUnit.setHealthPointLimit(currentState.getHealthPointLimit());
-        currentUnit.setCurrentHP(newCurrentHP);
-        currentUnit.setDamage(currentState.getDamage());
-    }
-
-    public double getHealthMultiplier() {
-        return (double)currentUnit.getCurrentHP() / (double)currentUnit.getHealthPointLimit();
-    }
+    public void changeState() {}
 
     public Unit getCurrentUnit() {
         return currentUnit;
+    }
+
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+    }
+
+    public State getNextState() {
+        return nextState;
+    }
+
+    public void setNextState(State nextState) {
+        this.nextState = nextState;
     }
 }
