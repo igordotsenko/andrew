@@ -1,5 +1,6 @@
 package com.gymfox.Army.Spellcasters;
 
+import com.gymfox.Army.MagicSkills.MagicSkills;
 import com.gymfox.Army.Spells.*;
 import com.gymfox.Army.Units.Unit;
 
@@ -12,8 +13,9 @@ public abstract class Spellcaster extends Unit {
 
     private int manaPointLimits;
     private int currentMP;
-    private Spell currentSpell;
-    private Map<String, Spell> spellbook = new HashMap<>();
+    protected Spell currentSpell;
+    protected Map<String, Spell> spellbook = new HashMap<>();
+    protected MagicSkills magicPower;
 
     public Spellcaster(String name, int healthPointLimit, int damage, int manaPointLimits) {
         super(name, healthPointLimit, damage);
@@ -23,13 +25,30 @@ public abstract class Spellcaster extends Unit {
         this.learnSpell(new Heal());
     }
 
-    public void castSpell(Unit victim) throws Unit.IsSelfAttackException, Unit.UnitIsDeadException, ManaIsOverException {
+    public void castSpell(Unit victim) throws IsSelfAttackException, UnitIsDeadException, ManaIsOverException {
         ensureIsNotSelfAttack(victim);
         ensureIsAlive();
         ensureManaIsNotOver();
 
-        getAbility().castSpell(victim, currentSpell);
+        applySpell(victim);
         setCurrentMP(getCurrentMP() - getCurrentSpell().getManaConsumption());
+    }
+
+    public void applySpell(Unit victim) throws UnitIsDeadException {
+        if ( currentSpell.getSpellsType() == Spell.SpellsType.BATTLESPELL ) {
+            victim.takeMagicDamage(battleSpellPoints());
+
+            return;
+        }
+        victim.heal(healingSpellPoints());
+    }
+
+    public int battleSpellPoints() {
+        return (int) ((double)currentSpell.getHitPoints() * magicPower.getBattleMagicSkill());
+    }
+
+    public int healingSpellPoints() {
+        return (int) ((double)currentSpell.getHitPoints() * magicPower.getHealingMagicSkill());
     }
 
     protected void ensureManaIsNotOver() throws ManaIsOverException {

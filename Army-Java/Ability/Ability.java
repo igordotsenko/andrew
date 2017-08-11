@@ -1,6 +1,5 @@
 package com.gymfox.Army.Ability;
 
-import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.State.State;
 import com.gymfox.Army.Units.Unit;
 
@@ -33,8 +32,6 @@ public abstract class Ability {
 
         currentUnit.setCurrentHP(currentUnit.getCurrentHP() - damage);
     }
-
-    public void castSpell(Unit victim, Spell currentSpell) throws Unit.UnitIsDeadException {}
 
     public void changeState() {}
 

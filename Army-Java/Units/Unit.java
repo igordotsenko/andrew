@@ -16,13 +16,12 @@ public abstract class Unit implements Observable, Observer {
     private int healthPointLimit;
     private int currentHP;
     private int damage;
-
-    protected boolean isDead = false;
-    protected Ability ability;
-    protected boolean immunityToMagic = false;
-
     private Set<Unit> observables = new HashSet<>();
     private Set<Unit> observers = new HashSet<>();
+
+    protected Ability ability;
+    protected boolean isDead = false;
+    protected boolean immunityToMagic = false;
 
     public Unit(String name, int healthPointLimit, int damage) {
         this.name = name;
@@ -31,8 +30,7 @@ public abstract class Unit implements Observable, Observer {
         this.damage = damage;
     }
 
-    public void attack(Unit victim) throws IsSelfAttackException, UnitIsDeadException, Demon.MasterAttackedException,
-            Demon.MasterAttackedException {
+    public void attack(Unit victim) throws IsSelfAttackException, UnitIsDeadException, Demon.MasterAttackedException {
         ensureIsNotSelfAttack(victim);
         ensureIsAlive();
 

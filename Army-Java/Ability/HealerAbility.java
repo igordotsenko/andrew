@@ -7,17 +7,4 @@ public class HealerAbility extends Ability {
     public HealerAbility(Unit currentUnit) {
         super(currentUnit);
     }
-
-    public void castSpell(Unit victim, Spell currentSpell) throws Unit.UnitIsDeadException {
-        if ( currentSpell.getSpellsType() == Spell.SpellsType.BATTLESPELL ) {
-            victim.takeMagicDamage(currentSpell.getHitPoints() / 2);
-
-            return;
-        }
-        if ( currentSpell.getSpellsType() == Spell.SpellsType.HEALSPELL) {
-            victim.heal(currentSpell.getHitPoints());
-
-            return;
-        }
-    }
 }

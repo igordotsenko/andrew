@@ -9,6 +9,7 @@ import static com.gymfox.Army.Spells.Spell.SpellsType.BATTLESPELL;
 import static com.gymfox.Army.Spells.Spell.SpellsType.HEALSPELL;
 
 public class UnitTest {
+
     @Test
     public void allUnitsGettersTest() {
         Soldier soldier = new Soldier("Steve", 100, 12);

@@ -1,6 +1,7 @@
 package com.gymfox.Army.Spellcasters;
 
 import com.gymfox.Army.Ability.WarlockAbility;
+import com.gymfox.Army.MagicSkills.MagicSkills;
 import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Spells.Summon;
 import com.gymfox.Army.Units.Demon;
@@ -17,7 +18,8 @@ public class Warlock extends Spellcaster {
         super(name, healthPointLimit, damage, manaPointLimits);
         this.ability = new WarlockAbility(this);
         learnSpell(new Summon());
-        setCurrentSpell("Summon");
+        this.currentSpell = spellbook.get("Summon");
+        this.magicPower = new MagicSkills(0.5,0.5);
     }
 
     public Demon summonDemon() throws IsNotSummonSpellsException, DemonIsAlreadySummonedException,
