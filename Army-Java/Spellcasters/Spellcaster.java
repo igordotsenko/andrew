@@ -35,7 +35,7 @@ public abstract class Spellcaster extends Unit {
     }
 
     public void applySpell(Unit victim) throws UnitIsDeadException {
-        if ( currentSpell.getSpellsType() == Spell.SpellsType.BATTLESPELL ) {
+        if ( currentSpell.isBattleSpell() ) {
             victim.takeMagicDamage(battleSpellPoints());
 
             return;

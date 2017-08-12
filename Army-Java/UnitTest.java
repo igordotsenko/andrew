@@ -5,11 +5,7 @@ import com.gymfox.Army.Units.*;
 import junit.framework.Assert;
 import org.junit.Test;
 
-import static com.gymfox.Army.Spells.Spell.SpellsType.BATTLESPELL;
-import static com.gymfox.Army.Spells.Spell.SpellsType.HEALSPELL;
-
 public class UnitTest {
-
     @Test
     public void allUnitsGettersTest() {
         Soldier soldier = new Soldier("Steve", 100, 12);
@@ -480,17 +476,20 @@ public class UnitTest {
 
     @Test
     public void spellbooksGetters() {
-        Wizard wizard = new Wizard("Marylin", 90,5,120);
+        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
-        Assert.assertEquals("Fireball", wizard.getCurrentSpell().getSpellsName());
-        Assert.assertEquals(12, wizard.getCurrentSpell().getHitPoints());
-        Assert.assertEquals(8, wizard.getCurrentSpell().getManaConsumption());
-        Assert.assertEquals(BATTLESPELL, wizard.getCurrentSpell().getSpellsType());
+        Assert.assertEquals("Summon", warlock.getCurrentSpell().getSpellsName());
+        Assert.assertEquals(0, warlock.getCurrentSpell().getHitPoints());
+        Assert.assertEquals(12, warlock.getCurrentSpell().getManaConsumption());
 
-        wizard.setCurrentSpell("Heal");
-        Assert.assertEquals("Heal", wizard.getCurrentSpell().getSpellsName());
-        Assert.assertEquals(10, wizard.getCurrentSpell().getHitPoints());
-        Assert.assertEquals(6, wizard.getCurrentSpell().getManaConsumption());
-        Assert.assertEquals(HEALSPELL, wizard.getCurrentSpell().getSpellsType());
+        warlock.setCurrentSpell("Fireball");
+        Assert.assertEquals("Fireball", warlock.getCurrentSpell().getSpellsName());
+        Assert.assertEquals(12, warlock.getCurrentSpell().getHitPoints());
+        Assert.assertEquals(8, warlock.getCurrentSpell().getManaConsumption());
+
+        warlock.setCurrentSpell("Heal");
+        Assert.assertEquals("Heal", warlock.getCurrentSpell().getSpellsName());
+        Assert.assertEquals(10, warlock.getCurrentSpell().getHitPoints());
+        Assert.assertEquals(6, warlock.getCurrentSpell().getManaConsumption());
     }
 }

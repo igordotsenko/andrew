@@ -2,7 +2,6 @@ package com.gymfox.Army.Spellcasters;
 
 import com.gymfox.Army.Ability.PriestAbility;
 import com.gymfox.Army.MagicSkills.MagicSkills;
-import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Units.Unit;
 
 public class Priest extends Spellcaster {
@@ -15,7 +14,7 @@ public class Priest extends Spellcaster {
 
     @Override
     public void applySpell(Unit victim) throws UnitIsDeadException {
-        if ( currentSpell.getSpellsType() == Spell.SpellsType.BATTLESPELL ) {
+        if ( currentSpell.isBattleSpell() ) {
             if ( victim.getIsDead() ) {
                 victim.takeMagicDamage(battleSpellPoints()*4);
 

@@ -1,17 +1,10 @@
 package com.gymfox.Army.Spells;
 
 public abstract class Spell {
-
-    public enum SpellsType{
-        BATTLESPELL,
-        HEALSPELL,
-        SUMMONSPELL
-    }
-
     protected String spellsName;
     protected int manaConsumption;
     protected int hitPoints;
-    protected SpellsType spellsType;
+    protected boolean isBattleSpell = false;
 
     public Spell() {}
 
@@ -27,7 +20,7 @@ public abstract class Spell {
         return hitPoints;
     }
 
-    public SpellsType getSpellsType() {
-        return spellsType;
+    public boolean isBattleSpell() {
+        return isBattleSpell;
     }
 }

@@ -2,7 +2,6 @@ package com.gymfox.Army.Spellcasters;
 
 import com.gymfox.Army.Ability.WarlockAbility;
 import com.gymfox.Army.MagicSkills.MagicSkills;
-import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Spells.Summon;
 import com.gymfox.Army.Units.Demon;
 
@@ -44,7 +43,7 @@ public class Warlock extends Spellcaster {
     }
 
     private void ensureIsSummonSpell() throws IsNotSummonSpellsException {
-        if ( getCurrentSpell().getSpellsType() != Spell.SpellsType.SUMMONSPELL ) {
+        if ( getCurrentSpell().getSpellsName() != "Summon" ) {
             throw new IsNotSummonSpellsException();
         }
     }
