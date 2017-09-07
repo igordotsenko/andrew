@@ -48,8 +48,6 @@ public class UnitTest {
         Assert.assertEquals(80, wolf.getCurrentHP());
         Assert.assertEquals(10, wolf.getDamage());
         Assert.assertEquals(false, wolf.getIsDead());
-        Assert.assertEquals("Human", wolf.getAbility().getCurrentState().getStateName());
-        Assert.assertEquals("Wolf", wolf.getAbility().getNextState().getStateName());
 
         wolf.changeState();
 
@@ -58,8 +56,6 @@ public class UnitTest {
         Assert.assertEquals(160, wolf.getCurrentHP());
         Assert.assertEquals(20, wolf.getDamage());
         Assert.assertEquals(false, wolf.getIsDead());
-        Assert.assertEquals("Wolf", wolf.getAbility().getCurrentState().getStateName());
-        Assert.assertEquals("Human", wolf.getAbility().getNextState().getStateName());
 
         Assert.assertEquals("Marylin", wizard.getName());
         Assert.assertEquals(90, wizard.getHealthPointLimit());
@@ -146,6 +142,7 @@ public class UnitTest {
         wizard.setCurrentMP(5);
         warlock.setCurrentMP(5);
 
+        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
         wizard.castSpell(warlock);
     }
@@ -295,6 +292,7 @@ public class UnitTest {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Soldier soldier = new Soldier("Steve", 100, 18);
 
+        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
 
         warlock.getDemon().attack(soldier);
@@ -308,6 +306,7 @@ public class UnitTest {
             Warlock.IsNotSummonSpellsException, Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
+        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
         warlock.summonDemon();
     }
@@ -330,6 +329,7 @@ public class UnitTest {
             Warlock.DemonIsNotSummonedException, Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
+        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
 
         warlock.getDemon().attack(warlock);
@@ -342,6 +342,7 @@ public class UnitTest {
             Warlock.DemonIsNotSummonedException, Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
+        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
 
         warlock.getDemon().attack(warlock.getDemon());
@@ -464,6 +465,7 @@ public class UnitTest {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
 
+        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
         necro.castSpell(warlock.getDemon());
 
@@ -478,14 +480,15 @@ public class UnitTest {
     public void spellbooksGetters() {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
+        Assert.assertEquals("Fireball", warlock.getCurrentSpell().getSpellsName());
+        Assert.assertEquals(12, warlock.getCurrentSpell().getHitPoints());
+        Assert.assertEquals(8, warlock.getCurrentSpell().getManaConsumption());
+
+        warlock.setCurrentSpell("Summon");
         Assert.assertEquals("Summon", warlock.getCurrentSpell().getSpellsName());
         Assert.assertEquals(0, warlock.getCurrentSpell().getHitPoints());
         Assert.assertEquals(12, warlock.getCurrentSpell().getManaConsumption());
 
-        warlock.setCurrentSpell("Fireball");
-        Assert.assertEquals("Fireball", warlock.getCurrentSpell().getSpellsName());
-        Assert.assertEquals(12, warlock.getCurrentSpell().getHitPoints());
-        Assert.assertEquals(8, warlock.getCurrentSpell().getManaConsumption());
 
         warlock.setCurrentSpell("Heal");
         Assert.assertEquals("Heal", warlock.getCurrentSpell().getSpellsName());

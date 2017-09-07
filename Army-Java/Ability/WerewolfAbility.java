@@ -6,6 +6,9 @@ import com.gymfox.Army.State.WolfState;
 import com.gymfox.Army.Units.Unit;
 
 public class WerewolfAbility extends Ability {
+    private State currentState;
+    private State nextState;
+
     public WerewolfAbility(Unit currentUnit) {
         super(currentUnit);
         this.currentState = new HumanState(currentUnit);
@@ -19,15 +22,15 @@ public class WerewolfAbility extends Ability {
 
     @Override
     public void changeState()  {
-        State currentState = getCurrentUnit().getAbility().getCurrentState();
-        State nextState = getCurrentUnit().getAbility().getNextState();
+        State currentState = getCurrentState();
+        State nextState = getNextState();
         State temp = currentState;
 
-        getCurrentUnit().getAbility().setCurrentState(nextState);
-        getCurrentUnit().getAbility().setNextState(temp);
+        setCurrentState(nextState);
+        setNextState(temp);
         currentState = nextState;
 
-        int newCurrentHP = (int)(getHealthMultiplier() * (double)currentState.getHealthPointLimit());
+        int newCurrentHP = (int)(getHealthMultiplier() * currentState.getHealthPointLimit());
 
         getCurrentUnit().setHealthPointLimit(currentState.getHealthPointLimit());
         getCurrentUnit().setCurrentHP(newCurrentHP);
@@ -36,5 +39,21 @@ public class WerewolfAbility extends Ability {
 
     public double getHealthMultiplier() {
         return (double)getCurrentUnit().getCurrentHP() / (double)getCurrentUnit().getHealthPointLimit();
+    }
+
+    public void setCurrentState(State currentState) {
+        this.currentState = currentState;
+    }
+
+    public void setNextState(State nextState) {
+        this.nextState = nextState;
+    }
+
+    public State getCurrentState() {
+        return currentState;
+    }
+
+    public State getNextState() {
+        return nextState;
     }
 }

@@ -46,15 +46,7 @@ public abstract class Unit implements Observable, Observer {
 
     public void takeDamage(int damage) throws UnitIsDeadException {
         ensureIsAlive();
-        if ( getCurrentHP() <= damage ) {
-            setCurrentHP(0);
-            notifyObservers();
-            notifyObservable();
-
-            return;
-        }
-
-        setCurrentHP(getCurrentHP() - damage);
+        getAbility().takeDamage(damage);
     }
 
     public void takeMagicDamage(int damage) throws UnitIsDeadException {

@@ -8,22 +8,25 @@ import java.util.HashMap;
 import java.util.Map;
 
 public abstract class Spellcaster extends Unit {
-
-    public static class ManaIsOverException extends Exception{};
-
     private int manaPointLimits;
     private int currentMP;
-    protected Spell currentSpell;
-    protected Map<String, Spell> spellbook = new HashMap<>();
-    protected MagicSkills magicPower;
+    private Spell currentSpell;
+    private Map<String, Spell> spellbook = new HashMap<>();
+    private MagicSkills magicPower;
 
-    public Spellcaster(String name, int healthPointLimit, int damage, int manaPointLimits) {
+    public static class ManaIsOverException extends Exception{}
+
+    public Spellcaster(String name, int healthPointLimit, int damage, int manaPointLimits, MagicSkills magicPower,
+                       String currentSpell) {
         super(name, healthPointLimit, damage);
         this.manaPointLimits = manaPointLimits;
         this.currentMP = manaPointLimits;
         this.learnSpell(new Fireball());
         this.learnSpell(new Heal());
+        this.magicPower = magicPower;
+        this.currentSpell = spellbook.get(currentSpell);
     }
+
 
     public void castSpell(Unit victim) throws IsSelfAttackException, UnitIsDeadException, ManaIsOverException {
         ensureIsNotSelfAttack(victim);

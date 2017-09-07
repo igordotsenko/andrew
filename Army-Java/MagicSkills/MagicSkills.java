@@ -1,6 +1,6 @@
 package com.gymfox.Army.MagicSkills;
 
-public class MagicSkills {
+public final class MagicSkills {
     private double battleMagicSkill;
     private double healingMagicSkill;
 
