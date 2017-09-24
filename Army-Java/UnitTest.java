@@ -133,16 +133,36 @@ public class UnitTest {
     }
 
     @Test ( expected = Spellcaster.ManaIsOverException.class )
+    public void manaIsOverExceptionForPriestTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit.UnitIsDeadException {
+        Priest priest = new Priest("Francis", 90, 10, 120);
+        Vampire vamp = new Vampire("Count Dracula", 100, 12);
+
+        priest.setCurrentSpell("Fireball");
+        priest.setCurrentMP(5);
+        priest.castSpell(vamp);
+    }
+
+    @Test
+    public void priestHealsUndead() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
+            .UnitIsDeadException {
+        Priest priest = new Priest("Francis", 90, 10, 120);
+        Vampire vamp = new Vampire("Count Dracula", 100, 12);
+
+        priest.castSpell(vamp);
+
+        Assert.assertEquals(100, vamp.getCurrentHP());
+    }
+
+    @Test ( expected = Spellcaster.ManaIsOverException.class )
     public void manaIsOverExceptionForWarlockTest() throws Unit.IsSelfAttackException, Spellcaster.ManaIsOverException,
             Unit
-            .UnitIsDeadException, Warlock.DemonIsAlreadySummonedException, Warlock.IsNotSummonSpellsException {
+            .UnitIsDeadException, Warlock.DemonIsAlreadySummonedException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Wizard wizard = new Wizard("Marylin", 90, 5, 120);
 
         wizard.setCurrentMP(5);
         warlock.setCurrentMP(5);
 
-        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
         wizard.castSpell(warlock);
     }
@@ -285,14 +305,13 @@ public class UnitTest {
     }
 
     @Test
-    public void warlockTest() throws Warlock.DemonIsAlreadySummonedException, Warlock.IsNotSummonSpellsException, Unit
+    public void warlockTest() throws Warlock.DemonIsAlreadySummonedException, Unit
             .UnitIsDeadException, Unit.IsSelfAttackException, Demon.MasterAttackedException,
             Warlock.DemonIsNotSummonedException,
             Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Soldier soldier = new Soldier("Steve", 100, 18);
 
-        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
 
         warlock.getDemon().attack(soldier);
@@ -303,50 +322,25 @@ public class UnitTest {
 
     @Test ( expected = Warlock.DemonIsAlreadySummonedException.class )
     public void demonIsAlreadySummonedExceptionTest() throws Warlock.DemonIsAlreadySummonedException,
-            Warlock.IsNotSummonSpellsException, Spellcaster.ManaIsOverException {
-        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
-
-        warlock.setCurrentSpell("Summon");
-        warlock.summonDemon();
-        warlock.summonDemon();
-    }
-
-    @Test ( expected = Warlock.IsNotSummonSpellsException.class )
-    public void isNotSummonSpellsExceptionTest() throws Warlock.DemonIsAlreadySummonedException,
-            Warlock.IsNotSummonSpellsException,
             Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
-        warlock.setCurrentSpell("Fireball");
-
+        warlock.summonDemon();
         warlock.summonDemon();
     }
 
     @Test ( expected = Demon.MasterAttackedException.class )
     public void masterAttackedExceptionTest() throws Warlock.DemonIsAlreadySummonedException,
-            Warlock.IsNotSummonSpellsException,
             Unit.UnitIsDeadException, Unit.IsSelfAttackException, Demon.MasterAttackedException,
             Warlock.DemonIsNotSummonedException, Spellcaster.ManaIsOverException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
-        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
 
         warlock.getDemon().attack(warlock);
     }
 
-    @Test ( expected = Unit.IsSelfAttackException.class )
-    public void selfAttackExceptionTest() throws Warlock.DemonIsAlreadySummonedException, Warlock
-            .IsNotSummonSpellsException,
-            Unit.UnitIsDeadException, Unit.IsSelfAttackException, Demon.MasterAttackedException,
-            Warlock.DemonIsNotSummonedException, Spellcaster.ManaIsOverException {
-        Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
-        warlock.setCurrentSpell("Summon");
-        warlock.summonDemon();
-
-        warlock.getDemon().attack(warlock.getDemon());
-    }
 
     @Test ( expected = Warlock.DemonIsNotSummonedException.class )
     public void demonIsNotSummonedExceptionTest() throws Warlock.DemonIsNotSummonedException, Unit
@@ -357,6 +351,8 @@ public class UnitTest {
 
         warlock.getDemon().attack(soldier);
     }
+
+
 
     @Test
     public void addObservableTest() throws Unit.UnitIsDeadException, Unit.IsSelfAttackException,
@@ -458,14 +454,12 @@ public class UnitTest {
     }
 
     @Test
-    public void addSlaveToObservableList() throws Warlock.DemonIsAlreadySummonedException, Warlock
-            .IsNotSummonSpellsException,
+    public void addSlaveToObservableList() throws Warlock.DemonIsAlreadySummonedException,
             Warlock.DemonIsNotSummonedException, Unit.IsSelfAttackException, Spellcaster.ManaIsOverException, Unit
                     .UnitIsDeadException {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Necromancer necro = new Necromancer("Freddy", 50, 10, 120);
 
-        warlock.setCurrentSpell("Summon");
         warlock.summonDemon();
         necro.castSpell(warlock.getDemon());
 
@@ -483,12 +477,6 @@ public class UnitTest {
         Assert.assertEquals("Fireball", warlock.getCurrentSpell().getSpellsName());
         Assert.assertEquals(12, warlock.getCurrentSpell().getHitPoints());
         Assert.assertEquals(8, warlock.getCurrentSpell().getManaConsumption());
-
-        warlock.setCurrentSpell("Summon");
-        Assert.assertEquals("Summon", warlock.getCurrentSpell().getSpellsName());
-        Assert.assertEquals(0, warlock.getCurrentSpell().getHitPoints());
-        Assert.assertEquals(12, warlock.getCurrentSpell().getManaConsumption());
-
 
         warlock.setCurrentSpell("Heal");
         Assert.assertEquals("Heal", warlock.getCurrentSpell().getSpellsName());

@@ -19,18 +19,14 @@ public abstract class Ability {
     }
 
     public void takeDamage(int damage) throws Unit.UnitIsDeadException {
-        if ( currentUnit.getCurrentHP() <= damage ) {
-            currentUnit.setCurrentHP(0);
-            currentUnit.notifyObservers();
-            currentUnit.notifyObservable();
-
-            return;
-        }
-
-        currentUnit.setCurrentHP(currentUnit.getCurrentHP() - damage);
+        tryToKill(damage);
     }
 
     public void takeMagicDamage(int damage) throws Unit.UnitIsDeadException {
+        tryToKill(damage);
+    }
+
+    private void tryToKill(int damage) throws Unit.UnitIsDeadException {
         if ( currentUnit.getCurrentHP() <= damage ) {
             currentUnit.setCurrentHP(0);
             currentUnit.notifyObservers();

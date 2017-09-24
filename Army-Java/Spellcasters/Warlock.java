@@ -2,14 +2,22 @@ package com.gymfox.Army.Spellcasters;
 
 import com.gymfox.Army.Ability.DefaultAbility;
 import com.gymfox.Army.MagicSkills.MagicSkills;
-import com.gymfox.Army.Spells.Summon;
+import com.gymfox.Army.Spells.Fireball;
+import com.gymfox.Army.Spells.Heal;
+import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Units.Demon;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 public class Warlock extends Spellcaster {
     private static double DEFAULT_BATTLE_MAGIC_SKILL = 0.5;
     private static double DEFAULT_HEAL_MAGIC_SKILL = 0.5;
+    private final static List<Spell> DEFAULT_SPELL_BOOK = Collections.unmodifiableList(Arrays.asList(new Fireball(),
+            new Heal()));
+    private final int SUMMON_MANA_CONSUMPTION = 12;
 
-    public static class IsNotSummonSpellsException extends Exception{}
     public static class DemonIsAlreadySummonedException extends Exception{}
     public static class DemonIsNotSummonedException extends Exception{}
 
@@ -17,21 +25,18 @@ public class Warlock extends Spellcaster {
 
     public Warlock(String name, int healthPointLimit, int damage, int manaPointLimits) {
         super(name, healthPointLimit, damage, manaPointLimits, new MagicSkills(DEFAULT_BATTLE_MAGIC_SKILL,
-                        DEFAULT_HEAL_MAGIC_SKILL),
-                "Fireball");
-        learnSpell(new Summon());
+                        DEFAULT_HEAL_MAGIC_SKILL), DEFAULT_SPELL_BOOK);
         this.ability = new DefaultAbility(this);
     }
 
-    public Demon summonDemon() throws IsNotSummonSpellsException, DemonIsAlreadySummonedException,
+    public Demon summonDemon() throws DemonIsAlreadySummonedException,
             Spellcaster.ManaIsOverException {
-        ensureIsSummonSpell();
         ensureManaIsNotOver();
         ensureIsNotSummoned();
 
         demon = new Demon(this);
 
-        setCurrentMP(getCurrentMP() - getCurrentSpell().getManaConsumption());
+        setCurrentMP(getCurrentMP() - SUMMON_MANA_CONSUMPTION);
 
         return demon;
     }
@@ -40,14 +45,9 @@ public class Warlock extends Spellcaster {
         if ( demon == null ) {
             return;
         }
+
         demon.notifyObservers();
         demon = null;
-    }
-
-    private void ensureIsSummonSpell() throws IsNotSummonSpellsException {
-        if ( !getCurrentSpell().getSpellsName().equals("Summon") ) {
-            throw new IsNotSummonSpellsException();
-        }
     }
 
     private void ensureIsNotSummoned() throws DemonIsAlreadySummonedException {

@@ -5,6 +5,7 @@ import com.gymfox.Army.Observer.Observable;
 import com.gymfox.Army.Observer.Observer;
 
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 public abstract class Unit implements Observable, Observer {
@@ -16,8 +17,8 @@ public abstract class Unit implements Observable, Observer {
     private int healthPointLimit;
     private int currentHP;
     private int damage;
-    private Set<Unit> observables = new HashSet<>();
-    private Set<Unit> observers = new HashSet<>();
+    private Set<Observable> observables = new HashSet<>();
+    private Set<Observer> observers = new HashSet<>();
 
     protected Ability ability;
     protected boolean isDead = false;
@@ -93,10 +94,16 @@ public abstract class Unit implements Observable, Observer {
         out.append("DMG: " + getDamage() + "\n");
 
         if ( !observables.isEmpty() ) {
-            out.append("Observable: [ ");
+            out.append("Observable: [");
+            Iterator<Observable> it = observables.iterator();
 
-            for ( Unit observable : observables ) {
-                out.append(observable.getName()+ " ");
+            for ( ; it.hasNext() ; ) {
+                Unit observable = (Unit) it.next();
+                out.append(observable.getName());
+
+                if ( it.hasNext() ) {
+                    out.append(", ");
+                }
             }
 
             out.append("]\n");
@@ -104,9 +111,14 @@ public abstract class Unit implements Observable, Observer {
 
         if ( !observers.isEmpty() ) {
             out.append("Observers: [ ");
+            Iterator<Observer> it = observers.iterator();
+            for ( ; it.hasNext() ; ) {
+                Unit observer = (Unit) it.next();
+                out.append(observer.getName());
 
-            for ( Unit observer : observers ) {
-                out.append(observer.getName() + " ");
+                if ( it.hasNext() ) {
+                    out.append(", ");
+                }
             }
             out.append("]\n");
         }
@@ -115,36 +127,39 @@ public abstract class Unit implements Observable, Observer {
     }
 
     @Override
-    public void addObservable(Unit observable) {
+    public void addObservable(Observable observable) {
         observables.add(observable);
         observable.addObserver(this);
     }
 
     @Override
-    public void addObserver(Unit observer) {
+    public void addObserver(Observer observer) {
         observers.add(observer);
     }
 
     @Override
-    public void removeObservable(Unit observable) {
+    public void removeObservable(Observable observable) {
         observables.remove(observable);
     }
 
     @Override
-    public void removeObserver(Unit observer) {
+    public void removeObserver(Observer observer) {
         observers.remove(observer);
     }
 
     @Override
     public void notifyObservable() {
-        for ( Unit observable: observables ) {
+        for ( Observable observable: observables ) {
             observable.removeObserver(this);
         }
     }
 
     @Override
     public void notifyObservers() throws UnitIsDeadException {
-        for ( Unit observer: observers ) {
+        Iterator<Observer> it = observers.iterator();
+
+        for ( ;it.hasNext(); ) {
+            Unit observer = (Unit) it.next();
             observer.removeObservable(this);
             observer.heal(observer.getDamage());
         }
@@ -178,11 +193,11 @@ public abstract class Unit implements Observable, Observer {
         return immunityToMagic;
     }
 
-    public Set<Unit> getObservables() {
+    public Set<Observable> getObservables() {
         return observables;
     }
 
-    public Set<Unit> getObservers() {
+    public Set<Observer> getObservers() {
         return observers;
     }
 

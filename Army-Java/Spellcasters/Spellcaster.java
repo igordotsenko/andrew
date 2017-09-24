@@ -1,57 +1,59 @@
 package com.gymfox.Army.Spellcasters;
 
 import com.gymfox.Army.MagicSkills.MagicSkills;
-import com.gymfox.Army.Spells.*;
+import com.gymfox.Army.Spells.Fireball;
+import com.gymfox.Army.Spells.Heal;
+import com.gymfox.Army.Spells.Spell;
 import com.gymfox.Army.Units.Unit;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public abstract class Spellcaster extends Unit {
     private int manaPointLimits;
     private int currentMP;
     private Spell currentSpell;
-    private Map<String, Spell> spellbook = new HashMap<>();
     private MagicSkills magicPower;
+    private Map<String, Spell> spellbook = new HashMap<>();
+    private static final String DEFAULT_SPELL = "Fireball";
+    private final static List<Spell> DEFAULT_SPELL_BOOK = Collections.unmodifiableList(Arrays.asList(new Fireball(),
+            new Heal()));
 
     public static class ManaIsOverException extends Exception{}
 
     public Spellcaster(String name, int healthPointLimit, int damage, int manaPointLimits, MagicSkills magicPower,
-                       String currentSpell) {
+                       List<Spell> DEFAULT_SPELL_BOOK) {
+        this(name, healthPointLimit, damage, manaPointLimits, magicPower, DEFAULT_SPELL_BOOK, DEFAULT_SPELL);
+    }
+
+    public Spellcaster(String name, int healthPointLimit, int damage, int manaPointLimits, MagicSkills magicPower,
+                       String spell) {
+        this(name, healthPointLimit, damage, manaPointLimits, magicPower, DEFAULT_SPELL_BOOK, spell);
+    }
+
+    public Spellcaster(String name, int healthPointLimit, int damage, int manaPointLimits, MagicSkills magicPower,
+                       List<Spell> spells, String currentSpell) {
         super(name, healthPointLimit, damage);
         this.manaPointLimits = manaPointLimits;
         this.currentMP = manaPointLimits;
-        this.learnSpell(new Fireball());
-        this.learnSpell(new Heal());
+        learnAllSpells(spells);
         this.magicPower = magicPower;
         this.currentSpell = spellbook.get(currentSpell);
     }
 
+    private void learnAllSpells(List<Spell> spells) {
+        for (Spell spell : spells) {
+            spellbook.put(spell.getSpellsName(), spell);
+        }
+    }
 
     public void castSpell(Unit victim) throws IsSelfAttackException, UnitIsDeadException, ManaIsOverException {
         ensureIsNotSelfAttack(victim);
         ensureIsAlive();
         ensureManaIsNotOver();
 
-        applySpell(victim);
+        getCurrentSpell().applySpell(victim, magicPower);
+
         setCurrentMP(getCurrentMP() - getCurrentSpell().getManaConsumption());
-    }
-
-    public void applySpell(Unit victim) throws UnitIsDeadException {
-        if ( currentSpell.isBattleSpell() ) {
-            victim.takeMagicDamage(battleSpellPoints());
-
-            return;
-        }
-        victim.heal(healingSpellPoints());
-    }
-
-    public int battleSpellPoints() {
-        return (int) ((double)currentSpell.getHitPoints() * magicPower.getBattleMagicSkill());
-    }
-
-    public int healingSpellPoints() {
-        return (int) ((double)currentSpell.getHitPoints() * magicPower.getHealingMagicSkill());
     }
 
     protected void ensureManaIsNotOver() throws ManaIsOverException {

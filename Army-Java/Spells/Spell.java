@@ -1,12 +1,36 @@
 package com.gymfox.Army.Spells;
 
+import com.gymfox.Army.MagicSkills.MagicSkills;
+import com.gymfox.Army.Units.Unit;
+
 public abstract class Spell {
-    protected String spellsName;
-    protected int manaConsumption;
-    protected int hitPoints;
+    private String spellsName;
+    private int manaConsumption;
+    private int hitPoints;
     protected boolean isBattleSpell = false;
 
-    public Spell() {}
+    public Spell(String spellsName, int manaConsumption, int hitPoints) {
+        this.spellsName = spellsName;
+        this.manaConsumption = manaConsumption;
+        this.hitPoints = hitPoints;
+    }
+
+    public void applySpell(Unit victim, MagicSkills magicPower) throws Unit.UnitIsDeadException {
+        if ( isBattleSpell() ) {
+            victim.takeMagicDamage(battleSpellDamagePoints(magicPower));
+
+            return;
+        }
+        victim.heal(healSpellPoints(magicPower));
+    }
+
+    private int battleSpellDamagePoints(MagicSkills battleDamage) {
+        return (int) (getHitPoints() * battleDamage.getBattleMagicSkill());
+    }
+
+    private int healSpellPoints(MagicSkills healPoints) {
+        return (int) (getHitPoints() * healPoints.getHealingMagicSkill());
+    }
 
     public String getSpellsName() {
         return spellsName;
