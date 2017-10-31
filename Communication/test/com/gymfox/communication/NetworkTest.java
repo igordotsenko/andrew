@@ -170,39 +170,4 @@ public class NetworkTest {
         Assert.assertEquals("192.168.0.254",subnet[1].getLastUsableAddress().toString());
         Assert.assertEquals("192.168.0.255",subnet[1].getBroadcastAddress().toString());
     }
-
-    @Test
-    public void getBiggerSubnetsMask() throws Network.InvalidMaskValueExcetion, Network.InvalidNewMaskLenghtException,
-            IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException {
-        Network net = new Network(new IPv4Address("192.168.0.0"), 25);
-        Network[] subnet = net.getSubnets();
-        Assert.assertEquals("192.168.0.0/26", subnet[0].toString());
-        Assert.assertEquals("192.168.0.0",subnet[0].getAddress().toString());
-        Assert.assertEquals("192.168.0.1",subnet[0].getFirstUsableAddress().toString());
-        Assert.assertEquals("192.168.0.62",subnet[0].getLastUsableAddress().toString());
-        Assert.assertEquals("192.168.0.63",subnet[0].getBroadcastAddress().toString());
-        Assert.assertEquals("192.168.0.64/26", subnet[1].toString());
-        Assert.assertEquals("192.168.0.64",subnet[1].getAddress().toString());
-        Assert.assertEquals("192.168.0.65",subnet[1].getFirstUsableAddress().toString());
-        Assert.assertEquals("192.168.0.126",subnet[1].getLastUsableAddress().toString());
-        Assert.assertEquals("192.168.0.127",subnet[1].getBroadcastAddress().toString());
-        Assert.assertEquals("192.168.0.128/26", subnet[2].toString());
-        Assert.assertEquals("192.168.0.128",subnet[2].getAddress().toString());
-        Assert.assertEquals("192.168.0.129",subnet[2].getFirstUsableAddress().toString());
-        Assert.assertEquals("192.168.0.190",subnet[2].getLastUsableAddress().toString());
-        Assert.assertEquals("192.168.0.191",subnet[2].getBroadcastAddress().toString());
-        Assert.assertEquals("192.168.0.192/26", subnet[3].toString());
-        Assert.assertEquals("192.168.0.192",subnet[3].getAddress().toString());
-        Assert.assertEquals("192.168.0.193",subnet[3].getFirstUsableAddress().toString());
-        Assert.assertEquals("192.168.0.254",subnet[3].getLastUsableAddress().toString());
-        Assert.assertEquals("192.168.0.255",subnet[3].getBroadcastAddress().toString());
-    }
-
-    @Test ( expected = Network.InvalidNewMaskLenghtException.class )
-    public void getSubnetsValidationTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion,
-            Network.InvalidNewMaskLenghtException {
-        Network net = new Network(new IPv4Address("192.168.0.0"), 23);
-        Network[] subnet = net.getSubnets();
-    }
 }

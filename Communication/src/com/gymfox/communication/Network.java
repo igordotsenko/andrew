@@ -93,24 +93,13 @@ public class Network {
     public Network[] getSubnets() throws IPv4Address.InvalidValueInOctetsException,
             IPv4Address.InvalidOctetsCountException, InvalidMaskValueExcetion, InvalidNewMaskLenghtException {
         int newMaskLength = maskLength + 1;
-        subnetValidate(newMaskLength);
-        int totalSubnets = 1 << (newMaskLength - DEFAULT_MASK);
-        long subnetsAddress = getAddress().toLong();
-        Network[] subnets = new Network[totalSubnets];
+        Network[] subnets = new Network[2];
+        long secondSubnetAddress = getFirstUsableAddress().toLong() + getTotalHosts() / 2;
 
-        for ( int i = 0; i < subnets.length; i++ ) {
-            IPv4Address newSubnetsAddress = new IPv4Address(subnetsAddress);
-            subnets[i] = new Network(newSubnetsAddress, newMaskLength);
-            subnetsAddress += DEFAULT_HOSTS/totalSubnets;
-        }
+        subnets[0] = new Network(new IPv4Address(getFirstUsableAddress().toLong()), newMaskLength);
+        subnets[1] = new Network(new IPv4Address(secondSubnetAddress), newMaskLength);
 
         return subnets;
-    } // produce two half-sized subnets
-
-    private void subnetValidate(int newMaskLength) throws InvalidNewMaskLenghtException {
-        if ( newMaskLength <= DEFAULT_MASK ) {
-            throw new InvalidNewMaskLenghtException();
-        }
     }
 
     public long getTotalHosts() {
