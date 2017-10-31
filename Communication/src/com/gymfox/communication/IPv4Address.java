@@ -1,9 +1,9 @@
 
-package com.gymfox.communication.ipv4address;
+package com.gymfox.communication;
 
 public class IPv4Address {
-    private final long LONG_MAX_IP = 4294967295l;
-    private final int MAX_OCTETS_VALUE = 255;
+    protected static final long LONG_MAX_IP = 4294967295l;
+    protected static final int MAX_OCTETS_VALUE = 255;
     private final int MIN_OCTETS_VALUE = 0;
     private final int OCTETS = 4;
 
@@ -68,7 +68,7 @@ public class IPv4Address {
             for ( int i = 3; i >= 0; i-- ) {
                 int shift = i * 8;
 
-                out.append((ipAsLong >> shift) & 255);
+                out.append((ipAsLong >> shift) & MAX_OCTETS_VALUE);
                 if ( i > 0 ) {
                     out.append(".");
                 }

@@ -1,5 +1,6 @@
-package com.gymfox.communication.ipv4address;
+package com.gymfox.communication;
 
+import com.gymfox.communication.IPv4Address;
 import org.junit.Assert;
 import org.junit.Test;
 
