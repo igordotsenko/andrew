@@ -13,8 +13,8 @@ public class Network {
     private final int MAX_MASK_VALUE = 32;
     private final int MIN_MASK_VALUE = 0;
     private final int RESERVED_ADDRESS = 2;
+    private final int SUBNETS_COUNT = 2;
     private final static int DEFAULT_MASK = 24;
-    private final static int DEFAULT_HOSTS = 256;
 
     private int maskLength;
     private IPv4Address address;
@@ -93,8 +93,8 @@ public class Network {
     public Network[] getSubnets() throws IPv4Address.InvalidValueInOctetsException,
             IPv4Address.InvalidOctetsCountException, InvalidMaskValueExcetion, InvalidNewMaskLenghtException {
         int newMaskLength = maskLength + 1;
-        Network[] subnets = new Network[2];
-        long secondSubnetAddress = getFirstUsableAddress().toLong() + getTotalHosts() / 2;
+        Network[] subnets = new Network[SUBNETS_COUNT];
+        long secondSubnetAddress = getFirstUsableAddress().toLong() + getTotalHosts() / SUBNETS_COUNT;
 
         subnets[0] = new Network(new IPv4Address(getFirstUsableAddress().toLong()), newMaskLength);
         subnets[1] = new Network(new IPv4Address(secondSubnetAddress), newMaskLength);
