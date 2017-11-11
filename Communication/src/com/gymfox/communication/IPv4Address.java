@@ -81,11 +81,12 @@ public class IPv4Address {
     public long toLong() {
         if (isString) {
             String[] octets = ipAsString.split("\\.");
+            long newIpAsLong = 0;
 
             for ( String s : octets ) {
-                ipAsLong = ipAsLong * 256 + Integer.parseInt(s);
+                newIpAsLong = newIpAsLong * 256 + Integer.parseInt(s);
             }
-            return ipAsLong;
+            return newIpAsLong;
         }
         return ipAsLong;
     }

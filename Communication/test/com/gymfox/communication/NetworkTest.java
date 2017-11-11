@@ -105,18 +105,21 @@ public class NetworkTest {
     @Test
     public void containsTest() throws IPv4Address.InvalidOctetsCountException,
             IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion {
-        Network net = new Network(new IPv4Address("192.168.0.0"), 24);
+        Network net1 = new Network(new IPv4Address("192.168.0.0"), 24);
+        Network net2 = new Network(new IPv4Address("0.0.0.0"), 0);
+
         IPv4Address ip1 = new IPv4Address("192.168.0.1");
         IPv4Address ip2 = new IPv4Address("192.168.1.1");
         IPv4Address ip3 = new IPv4Address("192.167.0.1");
         IPv4Address ip4 = new IPv4Address("167.28.0.1");
         IPv4Address ip5 = new IPv4Address("127.12.45.22");
 
-        Assert.assertEquals(true, net.contains(ip1));
-        Assert.assertEquals(true, net.contains(ip2));
-        Assert.assertEquals(false, net.contains(ip3));
-        Assert.assertEquals(false, net.contains(ip4));
-        Assert.assertEquals(false, net.contains(ip5));
+        Assert.assertEquals(true, net1.contains(ip1));
+        Assert.assertEquals(false, net1.contains(ip2));
+        Assert.assertEquals(false, net1.contains(ip3));
+        Assert.assertEquals(false, net1.contains(ip4));
+        Assert.assertEquals(false, net1.contains(ip5));
+        Assert.assertEquals(true, net2.contains(ip1));
     }
 
     @Test
