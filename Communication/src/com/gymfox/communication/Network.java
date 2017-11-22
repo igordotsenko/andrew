@@ -44,6 +44,7 @@ public class Network {
         return address.greaterThan(getAddress()) && address.lessThan(getBroadcastAddress());
     }
 
+
     public IPv4Address getAddress() {
         return address;
     }
