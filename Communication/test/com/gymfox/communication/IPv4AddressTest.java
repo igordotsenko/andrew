@@ -1,6 +1,5 @@
 package com.gymfox.communication;
 
-import com.gymfox.communication.IPv4Address;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -16,16 +15,23 @@ public class IPv4AddressTest {
     @Test
     public void equalsIpAsLongWithStringTest() throws IPv4Address.InvalidOctetsCountException,
             IPv4Address.InvalidValueInOctetsException {
-        Assert.assertEquals(2131504406l, new IPv4Address("127.12.45.22").toLong());
-        Assert.assertEquals(3171620819l, new IPv4Address("189.11.23.211").toLong());
-        Assert.assertEquals(4294967295l, new IPv4Address("255.255.255.255").toLong());
+        Assert.assertEquals(2131504406l, new IPv4Address("127.12.45.22").getIpLong());
+        Assert.assertEquals(3171620819l, new IPv4Address("189.11.23.211").getIpLong());
+        Assert.assertEquals(4294967295l, new IPv4Address("255.255.255.255").getIpLong());
     }
 
     @Test
     public void equalsIpAsLongTest() {
-        Assert.assertEquals(2131504406l, new IPv4Address(2131504406l).toLong());
-        Assert.assertEquals(3171620819l, new IPv4Address(3171620819l).toLong());
-        Assert.assertEquals(4294967295l, new IPv4Address(4294967295l).toLong());
+        Assert.assertEquals(2131504406l, new IPv4Address(2131504406l).getIpLong());
+        Assert.assertEquals(3171620819l, new IPv4Address(3171620819l).getIpLong());
+        Assert.assertEquals(4294967295l, new IPv4Address(4294967295l).getIpLong());
+    }
+
+    @Test
+    public void equalsStringWithStringTest() throws IPv4Address.InvalidOctetsCountException,
+            IPv4Address.InvalidValueInOctetsException {
+        Assert.assertEquals(true, (new IPv4Address("127.12.45.22")).equals(new IPv4Address("127.12.45.22")));
+        Assert.assertEquals(true, (new IPv4Address("189.11.23.211")).equals(new IPv4Address("189.11.23.211")));
     }
 
     @Test
@@ -33,6 +39,12 @@ public class IPv4AddressTest {
             IPv4Address.InvalidValueInOctetsException {
         Assert.assertEquals(true, (new IPv4Address("127.12.45.22")).equals(new IPv4Address(2131504406l)));
         Assert.assertEquals(true, (new IPv4Address("189.11.23.211")).equals(new IPv4Address(3171620819l)));
+    }
+
+    @Test
+    public void equalsLongWithLongTest() {
+        Assert.assertEquals(true, (new IPv4Address(2131504406l)).equals(new IPv4Address(2131504406l)));
+        Assert.assertEquals(true, (new IPv4Address(3171620819l)).equals(new IPv4Address(3171620819l)));
     }
 
     @Test
@@ -53,7 +65,16 @@ public class IPv4AddressTest {
     }
 
     @Test
-    public void ipStringLessThanTest() {
+    public void ipStringLessThanTest() throws IPv4Address.InvalidOctetsCountException,
+            IPv4Address.InvalidValueInOctetsException {
+        IPv4Address ip1 = new IPv4Address("127.12.45.22");
+        IPv4Address ip2 = new IPv4Address("189.11.23.211");
+
+        Assert.assertEquals(true, ip1.lessThan(ip2));
+    }
+
+    @Test
+    public void ipLongLessThanTest() {
         IPv4Address ip1 = new IPv4Address(2131504406l);
         IPv4Address ip2 = new IPv4Address(3171620819l);
 
