@@ -6,7 +6,10 @@ public class Route {
     private String interfaceName;
     private int metric;
 
-    public Route(Network network, IPv4Address gateway, String interfaceName, int metric) {
+    public static class InvalidGatewayException extends Exception{}
+
+    public Route(Network network, IPv4Address gateway, String interfaceName, int metric) throws InvalidGatewayException {
+        validate(network.getAddress(), gateway);
         this.network = network;
         this.gateway = gateway;
         this.interfaceName = interfaceName;
@@ -14,11 +17,23 @@ public class Route {
     }
 
     public Route(Network network, Object gateway, String interfaceName, int metric)
-            throws IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException {
+            throws IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException,
+            InvalidGatewayException {
+        validate(network.getAddress(), new IPv4Address((String) gateway));
         this.network = network;
         this.gateway = new IPv4Address((String) gateway);
         this.interfaceName = interfaceName;
         this.metric = metric;
+    }
+
+    private void validate(IPv4Address netAddres, IPv4Address gateway) throws InvalidGatewayException {
+        if ( gateway == null ) {
+            return;
+        }
+
+        if ( netAddres.equals(gateway) ) {
+            throw new InvalidGatewayException();
+        }
     }
 
     public IPv4Address getGateway() {

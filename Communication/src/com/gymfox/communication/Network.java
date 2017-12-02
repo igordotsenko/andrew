@@ -4,7 +4,7 @@ import static com.gymfox.communication.IPv4Address.LONG_MAX_IP;
 import static com.gymfox.communication.IPv4Address.MAX_OCTETS_VALUE;
 
 public class Network {
-    private final IPv4Address[] privateAddress = {
+    private final IPv4Address privateAddress[] = {
             new IPv4Address("10.0.0.0"),
             new IPv4Address("172.16.0.0"),
             new IPv4Address("192.168.0.0")
@@ -31,7 +31,7 @@ public class Network {
             IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException {
         validate(maskLength);
         this.maskLength = maskLength;
-        this.address = new IPv4Address(address.toLong() & getMask());
+        this.address = new IPv4Address(address.getIpLong() & getMask());
     }
 
     private void validate(int maskLength) throws InvalidMaskValueExcetion {
@@ -44,25 +44,24 @@ public class Network {
         return address.greaterThan(getAddress()) && address.lessThan(getBroadcastAddress());
     }
 
-
     public IPv4Address getAddress() {
         return address;
     }
 
     public IPv4Address getBroadcastAddress() {
-        return (new IPv4Address(address.toLong() | (LONG_MAX_IP >> maskLength)));
+        return (new IPv4Address(address.getIpLong() | (LONG_MAX_IP >> maskLength)));
     }
 
     public IPv4Address getFirstUsableAddress() {
         if ( maskLength < MAX_MASK_VALUE ) {
-            return new IPv4Address(address.toLong() + 1);
+            return new IPv4Address(address.getIpLong() + 1);
         }
         return address;
     }
 
     public IPv4Address getLastUsableAddress() {
         if ( maskLength < MAX_MASK_VALUE ) {
-            return new IPv4Address(getBroadcastAddress().toLong() - 1);
+            return new IPv4Address(getBroadcastAddress().getIpLong() - 1);
         }
         return getBroadcastAddress();
     }
@@ -94,10 +93,11 @@ public class Network {
     public Network[] getSubnets() throws IPv4Address.InvalidValueInOctetsException,
             IPv4Address.InvalidOctetsCountException, InvalidMaskValueExcetion, InvalidNewMaskLenghtException {
         int newMaskLength = maskLength + 1;
+        validate(newMaskLength);
         Network[] subnets = new Network[SUBNETS_COUNT];
-        long secondSubnetAddress = getFirstUsableAddress().toLong() + getTotalHosts() / SUBNETS_COUNT;
+        long secondSubnetAddress = getFirstUsableAddress().getIpLong() + getTotalHosts() / SUBNETS_COUNT;
 
-        subnets[0] = new Network(new IPv4Address(getFirstUsableAddress().toLong()), newMaskLength);
+        subnets[0] = new Network(new IPv4Address(getFirstUsableAddress().getIpLong()), newMaskLength);
         subnets[1] = new Network(new IPv4Address(secondSubnetAddress), newMaskLength);
 
         return subnets;
@@ -107,7 +107,8 @@ public class Network {
         return ((1 << (MAX_MASK_VALUE - maskLength)) - RESERVED_ADDRESS);
     }
 
-    public boolean isPublic() throws IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException {
+    public boolean isPublic() throws IPv4Address.InvalidOctetsCountException,
+            IPv4Address.InvalidValueInOctetsException {
         for ( IPv4Address pa : privateAddress ) {
             if ( getAddress().equals(pa) ) {
                 return false;

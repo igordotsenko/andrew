@@ -5,15 +5,19 @@ import java.util.Set;
 import java.util.TreeSet;
 
 public class Router {
-    private Set<Route> routes = new TreeSet<Route>(new CompareRoute()){{
-        add(new Route(new Network(new IPv4Address("0.0.0.0"), 0),"0.0.0.1", "en0", 10));
-    }};
+    private Set<Route> routes = new TreeSet<Route>(new CompareRoute());
 
     public Router(Iterable<Route> routes) throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion {
+            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion, Route.InvalidGatewayException {
+        defaultRoute();
         for ( Route route : routes ) {
             this.routes.add(route);
         }
+    }
+
+    private void defaultRoute() throws IPv4Address.InvalidOctetsCountException,
+            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion, Route.InvalidGatewayException {
+        addRoute(new Route(new Network(new IPv4Address("0.0.0.0"), 0),"0.0.0.1", "en0", 10));
     }
 
     public void addRoute(Route route) {

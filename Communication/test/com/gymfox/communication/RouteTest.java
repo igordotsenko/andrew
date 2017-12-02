@@ -6,17 +6,12 @@ import org.testng.Assert;
 public class RouteTest {
     @Test
     public void creationRouteTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion {
-        Route route1 = new Route(new Network(new IPv4Address("192.168.0.0")), new IPv4Address("192.168.0.1"),
-                "en10", 10);
-        Route route2 = new Route(new Network(new IPv4Address("135.56.23.19")), null,
-                "en10", 10);
-        Route route3 = new Route(new Network(new IPv4Address("10.123.0.0"), 20), null,
-                "en1", 10);
-        Route route4 = new Route(new Network(new IPv4Address("0.0.0.0"), 0), "192.168.0.1",
-                "en0", 10);
-        Route route5 = new Route(new Network(new IPv4Address("10.0.0.0"), 8), "10.123.0.1",
-                "en1", 10);
+            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion, Route.InvalidGatewayException {
+        Route route1 = new Route(new Network(new IPv4Address("192.168.0.0")), new IPv4Address("192.168.0.1"),"en10", 10);
+        Route route2 = new Route(new Network(new IPv4Address("135.56.23.19")), null,"en10", 10);
+        Route route3 = new Route(new Network(new IPv4Address("10.123.0.0"), 20), null,"en1", 10);
+        Route route4 = new Route(new Network(new IPv4Address("0.0.0.0"), 0), "192.168.0.1","en0", 10);
+        Route route5 = new Route(new Network(new IPv4Address("10.0.0.0"), 8), "10.123.0.1","en1", 10);
 
         Assert.assertEquals("net: 192.168.0.0/24, gateway: 192.168.0.1, interface: en10, metric: 10", route1.toString());
         Assert.assertEquals("net: 135.56.23.0/24, interface: en10, metric: 10", route2.toString());

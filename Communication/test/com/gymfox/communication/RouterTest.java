@@ -10,7 +10,7 @@ public class RouterTest {
 
     @Test
     public void routerTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion {
+            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion, Route.InvalidGatewayException {
         Set<Route> routes = new TreeSet<Route>(new CompareRoute()) {{
             add(new Route(new Network(new IPv4Address("10.0.0.0"), 8), "10.123.0.1", "en1", 10));
             add(new Route(new Network(new IPv4Address("192.168.5.0"), 25), "10.123.0.0", "en0", 10));
@@ -31,19 +31,24 @@ public class RouterTest {
 
     @Test
     public void addAndGetRouteTest() throws Network.InvalidMaskValueExcetion,
-            IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException {
+            IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException,
+            Route.InvalidGatewayException {
         Set<Route> routes = new TreeSet<Route>();
         Router router = new Router(routes);
 
         router.addRoute(new Route(new Network(new IPv4Address("15.148.16.0"), 20), null ,"en1",
                 10));
+        router.addRoute(new Route(new Network(new IPv4Address("172.16.0.0"), 8), null ,"en1",
+                10));
 
         Assert.assertEquals("15.148.16.0/20", router.getRouteForAddress(new IPv4Address("15.148.25.13")).getNetwork().toString());
+        Assert.assertEquals("172.0.0.0/8", router.getRouteForAddress(new IPv4Address("172.156.192.13")).getNetwork()
+                .toString());
     }
 
     @Test
     public void removeRouteTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion {
+            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion, Route.InvalidGatewayException {
         Set<Route> routes = new TreeSet<Route>(new CompareRoute()) {{
             add(new Route(new Network(new IPv4Address("10.0.0.0"), 8), "10.123.0.1", "en1", 10));
             add(new Route(new Network(new IPv4Address("192.168.5.0"), 25), "10.123.0.0", "en0", 10));
