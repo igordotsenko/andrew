@@ -20,7 +20,6 @@ public class Network {
     private IPv4Address address;
 
     public static class InvalidMaskValueExcetion extends Exception {}
-    public static class InvalidNewMaskLenghtException extends Exception {}
 
     public Network(IPv4Address address) throws IPv4Address.InvalidOctetsCountException,
             IPv4Address.InvalidValueInOctetsException, InvalidMaskValueExcetion {
@@ -91,7 +90,7 @@ public class Network {
     }
 
     public Network[] getSubnets() throws IPv4Address.InvalidValueInOctetsException,
-            IPv4Address.InvalidOctetsCountException, InvalidMaskValueExcetion, InvalidNewMaskLenghtException {
+            IPv4Address.InvalidOctetsCountException, InvalidMaskValueExcetion {
         int newMaskLength = maskLength + 1;
         validate(newMaskLength);
         Network[] subnets = new Network[SUBNETS_COUNT];

@@ -157,7 +157,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void getSubnetsTest() throws Network.InvalidMaskValueExcetion, Network.InvalidNewMaskLenghtException,
+    public void getSubnetsTest() throws Network.InvalidMaskValueExcetion,
             IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException {
         Network net = new Network(new IPv4Address("192.168.0.0"));
         Network[] subnet = net.getSubnets();
@@ -172,5 +172,12 @@ public class NetworkTest {
         Assert.assertEquals("192.168.0.129",subnet[1].getFirstUsableAddress().toString());
         Assert.assertEquals("192.168.0.254",subnet[1].getLastUsableAddress().toString());
         Assert.assertEquals("192.168.0.255",subnet[1].getBroadcastAddress().toString());
+    }
+
+    @Test ( expected = Network.InvalidMaskValueExcetion.class )
+    public void invalidSubnetsMaskTest() throws IPv4Address.InvalidOctetsCountException,
+            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion {
+        Network net = new Network(new IPv4Address("172.16.0.0"), 32);
+        Network[] subnet = net.getSubnets();
     }
 }
