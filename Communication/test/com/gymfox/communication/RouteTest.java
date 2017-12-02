@@ -19,4 +19,11 @@ public class RouteTest {
         Assert.assertEquals("net: 0.0.0.0/0, gateway: 192.168.0.1, interface: en0, metric: 10", route4.toString());
         Assert.assertEquals("net: 10.0.0.0/8, gateway: 10.123.0.1, interface: en1, metric: 10", route5.toString());
     }
+
+    @Test ( expected = Route.InvalidGatewayException.class )
+    public void invalidGatewayExceptionTest() throws IPv4Address.InvalidOctetsCountException,
+            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion, Route.InvalidGatewayException {
+        Route route1 = new Route(new Network(new IPv4Address("192.168.0.0")), new IPv4Address("192.168.0.0"),
+ "en10", 10);
+    }
 }
