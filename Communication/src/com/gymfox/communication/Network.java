@@ -1,96 +1,180 @@
 package com.gymfox.communication;
 
 import static com.gymfox.communication.IPv4Address.LONG_MAX_IP;
-import static com.gymfox.communication.IPv4Address.MAX_OCTETS_VALUE;
 
 public class Network {
-    private final IPv4Address privateAddress[] = {
+    private static final IPv4Address privateAddress[] = {
             new IPv4Address("10.0.0.0"),
             new IPv4Address("172.16.0.0"),
             new IPv4Address("192.168.0.0")
     };
 
-    private final int MAX_MASK_VALUE = 32;
-    private final int MIN_MASK_VALUE = 0;
-    private final int RESERVED_ADDRESS = 2;
+    private static final int MAX_MASK_VALUE = 32;
+    private static final int MIN_MASK_VALUE = 0;
+    private static final int RESERVED_ADDRESS = 2;
     private final int SUBNETS_COUNT = 2;
     private final static int DEFAULT_MASK = 24;
 
-    private int maskLength;
-    private IPv4Address address;
+    private final int maskLength;
+    private final long maskAsLong;
+    private final String networkAsString;
+    private final IPv4Address address;
+    private final NetworkMetadata networkMetadata;
 
-    public static class InvalidMaskValueExcetion extends Exception {}
+    public static class InvalidMaskValueException extends IllegalArgumentException{
+        public InvalidMaskValueException(String errorMesage) {
+            super(errorMesage);
+        }
+    }
 
-    public Network(IPv4Address address) throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException, InvalidMaskValueExcetion {
+    private static final class NetworkMetadata {
+        IPv4Address networkAddress;
+        int maskAsInt;
+
+        IPv4Address broadcastAddress;
+        IPv4Address firstUsableAddress;
+        IPv4Address lastUsableAddress;
+        String maskAsString;
+        int totalHosts;
+        boolean isPublic = true;
+
+        public NetworkMetadata(Network address) {
+            this.networkAddress = address.getNetworkAddress();
+            this.maskAsInt = address.getMaskLength();
+
+            setBroadcastAddress(address.getNetworkAddress().getIpLong());
+            setFirstUsableAddress(address.getNetworkAddress().getIpLong());
+            setLastUsableAddress();
+            setMaskAsString(address.getMaskAsLong());
+            setTotalHosts();
+            setPublic(address);
+        }
+
+        void setBroadcastAddress(long address) {
+            broadcastAddress = new IPv4Address(address | (LONG_MAX_IP >> maskAsInt));
+        }
+
+        void setFirstUsableAddress(long address) {
+            firstUsableAddress = new IPv4Address(address + 1);
+        }
+
+        void setLastUsableAddress() {
+            lastUsableAddress = new IPv4Address(broadcastAddress.getIpLong() - 1);
+        }
+
+        void setMaskAsString(long address) {
+            long[] octets = new long[4];
+
+            octets[0] = ( address & 0xFF000000L ) >> 24;
+            octets[1] = ( address & 0x00FF0000L ) >> 16;
+            octets[2] = ( address & 0x0000FF00L ) >> 8;
+            octets[3] = ( address & 0x000000FFL ) ;
+
+            maskAsString = String.format("%d.%d.%d.%d", octets[0], octets[1], octets[2], octets[3]);
+        }
+
+        void setTotalHosts() {
+            totalHosts = ((1 << (MAX_MASK_VALUE - maskAsInt)) - RESERVED_ADDRESS);
+        }
+
+        void setPublic(Network address) {
+            for ( IPv4Address pa : privateAddress ) {
+                if ( address.getNetworkAddress().equals(pa) ) {
+                    isPublic = false;
+                }
+            }
+        }
+    }
+
+    public Network(IPv4Address address) {
         this(address, DEFAULT_MASK);
     }
 
-    public Network(IPv4Address address, int maskLength) throws InvalidMaskValueExcetion,
-            IPv4Address.InvalidOctetsCountException, IPv4Address.InvalidValueInOctetsException {
-        validate(maskLength);
+    public Network(IPv4Address address, int maskLength) {
+        this.maskAsLong = maskToLong(maskLength);
         this.maskLength = maskLength;
-        this.address = new IPv4Address(address.getIpLong() & getMask());
+        this.address = new IPv4Address(address.getIpLong() & getMaskAsLong());
+        this.networkMetadata = new NetworkMetadata(this);
+        this.networkAsString = networkToString();
     }
 
-    private void validate(int maskLength) throws InvalidMaskValueExcetion {
+    private long maskToLong(int maskLength) {
+        validate(maskLength);
+        int shift = MAX_MASK_VALUE - maskLength;
+
+        return LONG_MAX_IP << shift;
+    }
+
+    private void validate(int maskLength) {
         if ( maskLength < MIN_MASK_VALUE || maskLength > MAX_MASK_VALUE ) {
-            throw new InvalidMaskValueExcetion();
+            throw new InvalidMaskValueException("Invalid Mask");
         }
     }
 
     public boolean contains(IPv4Address address) {
-        return address.greaterThan(getAddress()) && address.lessThan(getBroadcastAddress());
+        return address.greaterThan(getNetworkAddress()) && address.lessThan(getBroadcastAddress());
     }
 
-    public IPv4Address getAddress() {
+    private String networkToString() {
+        StringBuffer out = new StringBuffer();
+
+        out.append("Network: " + getNetwork() + "\n");
+        out.append("Network address: " + getNetworkAddress().getIpString() + "\n");
+        out.append("Network broadcast: " + getBroadcastAddress().getIpString() + "\n");
+        out.append("First address: " + getFirstUsableAddress().getIpString() + "\n");
+        out.append("Last address: " + getLastUsableAddress().getIpString() + "\n");
+        out.append("Total hosts: " + getTotalHosts() + "\n");
+        out.append("Is public: " + isPublic() + "\n");
+
+        return out.toString();
+    }
+
+    @Override
+    public String toString() {
+        return networkAsString;
+    }
+
+    public String getNetwork() {
+        return getNetworkAddress().getIpString() + "/" + getMaskLength();
+    }
+
+    public IPv4Address getNetworkAddress() {
         return address;
     }
 
     public IPv4Address getBroadcastAddress() {
-        return (new IPv4Address(address.getIpLong() | (LONG_MAX_IP >> maskLength)));
+        return networkMetadata.broadcastAddress;
     }
 
     public IPv4Address getFirstUsableAddress() {
-        if ( maskLength < MAX_MASK_VALUE ) {
-            return new IPv4Address(address.getIpLong() + 1);
-        }
-        return address;
+        return networkMetadata.firstUsableAddress;
     }
 
     public IPv4Address getLastUsableAddress() {
-        if ( maskLength < MAX_MASK_VALUE ) {
-            return new IPv4Address(getBroadcastAddress().getIpLong() - 1);
-        }
-        return getBroadcastAddress();
-    }
-
-    public long getMask() {
-        int shift = MAX_MASK_VALUE - maskLength;
-
-        return (LONG_MAX_IP >> shift) << shift;
-    }
-
-    public String getMaskString() {
-        StringBuffer out = new StringBuffer();
-
-        for ( int i = 3; i >= 0; i-- ) {
-            int shift = i * 8;
-
-            out.append((getMask() >> shift) & MAX_OCTETS_VALUE);
-            if ( i > 0 ) {
-                out.append(".");
-            }
-        }
-        return out.toString();
+        return networkMetadata.lastUsableAddress;
     }
 
     public int getMaskLength() {
         return maskLength;
     }
 
-    public Network[] getSubnets() throws IPv4Address.InvalidValueInOctetsException,
-            IPv4Address.InvalidOctetsCountException, InvalidMaskValueExcetion {
+    public long getMaskAsLong() {
+        return maskAsLong;
+    }
+
+    public String getMaskAsString() {
+        return networkMetadata.maskAsString;
+    }
+
+    public long getTotalHosts() {
+        return networkMetadata.totalHosts;
+    }
+
+    public boolean isPublic() {
+        return networkMetadata.isPublic;
+    }
+
+    public Network[] getSubnets() {
         int newMaskLength = maskLength + 1;
         validate(newMaskLength);
         Network[] subnets = new Network[SUBNETS_COUNT];
@@ -100,23 +184,5 @@ public class Network {
         subnets[1] = new Network(new IPv4Address(secondSubnetAddress), newMaskLength);
 
         return subnets;
-    }
-
-    public long getTotalHosts() {
-        return ((1 << (MAX_MASK_VALUE - maskLength)) - RESERVED_ADDRESS);
-    }
-
-    public boolean isPublic() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
-        for ( IPv4Address pa : privateAddress ) {
-            if ( getAddress().equals(pa) ) {
-                return false;
-            }
-        }
-        return true;
-    }
-
-    public String toString() {
-        return getAddress().toString() + "/" + getMaskLength();
     }
 }

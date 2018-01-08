@@ -1,23 +1,19 @@
 package com.gymfox.communication;
 
 import java.util.Comparator;
-import java.util.Set;
 import java.util.TreeSet;
 
 public class Router {
-    private Set<Route> routes = new TreeSet<Route>(new CompareRoute());
+    private TreeSet<Route> routes = new TreeSet<Route>(new RouteComparator());
 
-    public Router(Iterable<Route> routes) throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion, Route.InvalidGatewayException {
+    public Router(TreeSet<Route> newRoutes) throws Route.InvalidGatewayException {
         defaultRoute();
-        for ( Route route : routes ) {
-            this.routes.add(route);
-        }
+
+        this.routes.addAll(newRoutes);
     }
 
-    private void defaultRoute() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException, Network.InvalidMaskValueExcetion, Route.InvalidGatewayException {
-        addRoute(new Route(new Network(new IPv4Address("0.0.0.0"), 0),"0.0.0.1", "en0", 10));
+    private void defaultRoute() throws  Route.InvalidGatewayException {
+        addRoute(new Route(new Network(new IPv4Address("0.0.0.0"), 0), "en0", 10, new IPv4Address("0.0.0.1")));
     }
 
     public void addRoute(Route route) {
@@ -26,16 +22,16 @@ public class Router {
 
     public Route getRouteForAddress(IPv4Address address) {
         for ( Route route : routes ) {
-            if ( route.getNetwork().contains(address) ) {
+            if ( route.getNetworkAddress().contains(address) ) {
                 return route;
             }
         }
 
-        return null;
+        throw new RuntimeException();
     }
 
-    public Iterable<Route> getRoutes() {
-        return routes;
+    public TreeSet<Route> getRoutes() {
+        return (TreeSet<Route>)routes.clone();
     }
 
     public void removeRoute(Route route) {
@@ -43,18 +39,13 @@ public class Router {
     }
 }
 
-class CompareRoute implements Comparator<Route> {
+class RouteComparator implements Comparator<Route> {
     @Override
     public int compare(Route route, Route otherRoute) {
-        int diffMask = otherRoute.getNetwork().getMaskLength() - route.getNetwork().getMaskLength();
+        int diffMask = otherRoute.getNetworkAddress().getMaskLength() - route.getNetworkAddress().getMaskLength();
 
         if ( diffMask == 0 ) {
-            int diffMetric = route.getMetric() - otherRoute.getMetric();
-
-            if ( diffMetric == 0 ) {
-                return 0;
-            }
-            return diffMetric;
+            return route.getMetric() - otherRoute.getMetric();
         }
         return diffMask;
     }
