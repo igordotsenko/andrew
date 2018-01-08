@@ -38,7 +38,7 @@ public class Route {
             out.append("gateway: " + getGateway().getIpString() + ", ");
         }
 
-        out.append("interface: "+getInterfaceName() + ", metric: " + getMetric());
+        out.append("interface: " + getInterfaceName() + ", metric: " + getMetric());
 
         return out.toString();
     }
