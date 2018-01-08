@@ -5,16 +5,14 @@ import org.junit.Test;
 
 public class IPv4AddressTest {
     @Test
-    public void equalsIpAsStringTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
-        Assert.assertEquals("255.255.255.255", new IPv4Address("255.255.255.255").toString());
-        Assert.assertEquals("127.12.45.22", new IPv4Address("127.12.45.22").toString());
-        Assert.assertEquals("189.11.23.211", new IPv4Address("189.11.23.211").toString());
+    public void equalsIpAsStringTest() {
+        Assert.assertEquals("255.255.255.255", new IPv4Address("255.255.255.255").getIpString());
+        Assert.assertEquals("127.12.45.22", new IPv4Address("127.12.45.22").getIpString());
+        Assert.assertEquals("189.11.23.211", new IPv4Address("189.11.23.211").getIpString());
     }
 
     @Test
-    public void equalsIpAsLongWithStringTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
+    public void equalsIpAsLongWithStringTest() {
         Assert.assertEquals(2131504406l, new IPv4Address("127.12.45.22").getIpLong());
         Assert.assertEquals(3171620819l, new IPv4Address("189.11.23.211").getIpLong());
         Assert.assertEquals(4294967295l, new IPv4Address("255.255.255.255").getIpLong());
@@ -28,15 +26,13 @@ public class IPv4AddressTest {
     }
 
     @Test
-    public void equalsStringWithStringTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
+    public void equalsStringWithStringTest() {
         Assert.assertEquals(true, (new IPv4Address("127.12.45.22")).equals(new IPv4Address("127.12.45.22")));
         Assert.assertEquals(true, (new IPv4Address("189.11.23.211")).equals(new IPv4Address("189.11.23.211")));
     }
 
     @Test
-    public void equalsStringWithLongTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
+    public void equalsStringWithLongTest() {
         Assert.assertEquals(true, (new IPv4Address("127.12.45.22")).equals(new IPv4Address(2131504406l)));
         Assert.assertEquals(true, (new IPv4Address("189.11.23.211")).equals(new IPv4Address(3171620819l)));
     }
@@ -48,8 +44,7 @@ public class IPv4AddressTest {
     }
 
     @Test
-    public void ipStringGraterThanTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
+    public void ipStringGraterThanTest() {
         IPv4Address ip1 = new IPv4Address("189.11.23.211");
         IPv4Address ip2 = new IPv4Address("127.12.45.22");
 
@@ -65,8 +60,7 @@ public class IPv4AddressTest {
     }
 
     @Test
-    public void ipStringLessThanTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
+    public void ipStringLessThanTest() {
         IPv4Address ip1 = new IPv4Address("127.12.45.22");
         IPv4Address ip2 = new IPv4Address("189.11.23.211");
 
@@ -86,21 +80,18 @@ public class IPv4AddressTest {
         IPv4Address ip = new IPv4Address(4294967296l);
     }
 
-    @Test ( expected = IPv4Address.InvalidOctetsCountException.class )
-    public void validateOctetsCountTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
+    @Test ( expected = IllegalArgumentException.class )
+    public void validateOctetsCountTest() {
         IPv4Address ip = new IPv4Address("255.255.255.255.255");
     }
 
-    @Test ( expected = IPv4Address.InvalidOctetsCountException.class )
-    public void notEnoughOctetsTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
+    @Test ( expected = IllegalArgumentException.class )
+    public void notEnoughOctetsTest() {
         IPv4Address ip = new IPv4Address("255.255");
     }
 
-    @Test ( expected = IPv4Address.InvalidValueInOctetsException.class )
-    public void validateNumbersInOctetsTest() throws IPv4Address.InvalidOctetsCountException,
-            IPv4Address.InvalidValueInOctetsException {
+    @Test ( expected = IllegalArgumentException.class )
+    public void validateNumbersInOctetsTest() {
         IPv4Address ip = new IPv4Address("999.999.999.999");
     }
 }
