@@ -139,11 +139,11 @@ public class Network {
 
     @Override
     public String toString() {
-        return networkMetadata.netAsString;
+        return networkMetadataAsString;
     }
 
-    public String getNetworkMetadata() {
-        return networkMetadataAsString;
+    public String getNetworkAsString() {
+        return networkMetadata.netAsString;
     }
 
     public IPv4Address getNetworkAddress() {

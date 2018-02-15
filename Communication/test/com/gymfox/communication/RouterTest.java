@@ -20,17 +20,17 @@ public class RouterTest {
         Router router = new Router(routes);
 
         Assert.assertEquals("10.0.0.0/8", router.getRouteForAddress(new IPv4Address("10.192.168.172")).getNetworkAddress()
-                .toString());
+                .getNetworkAsString());
         Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("172.16.25.157"))
-                .getNetworkAddress().toString());
+                .getNetworkAddress().getNetworkAsString());
         Assert.assertEquals("192.168.5.0/25", router.getRouteForAddress(new IPv4Address("192.168.5.7")).getNetworkAddress()
-                .toString());
+                .getNetworkAsString());
         Assert.assertEquals("192.168.5.0/24", router.getRouteForAddress(new IPv4Address("192.168.5.220")).getNetworkAddress
-                ().toString());
+                ().getNetworkAsString());
         Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("192.168.1.52"))
-                .getNetworkAddress().toString());
+                .getNetworkAddress().getNetworkAsString());
         Assert.assertEquals("10.123.0.0/20", router.getRouteForAddress(new IPv4Address("10.123.5.78")).getNetworkAddress()
-                .toString());
+                .getNetworkAsString());
     }
 
     @Test
@@ -44,9 +44,9 @@ public class RouterTest {
                 10));
 
         Assert.assertEquals("15.148.16.0/20", router.getRouteForAddress(new IPv4Address("15.148.25.13")).getNetworkAddress
-                ().toString());
+                ().getNetworkAsString());
         Assert.assertEquals("172.0.0.0/8", router.getRouteForAddress(new IPv4Address("172.156.192.13")).getNetworkAddress()
-                .toString());
+                .getNetworkAsString());
     }
 
     @Test
@@ -63,11 +63,11 @@ public class RouterTest {
         router.addRoute(route);
 
         Assert.assertEquals("147.25.0.0/16", router.getRouteForAddress(new IPv4Address("147.25.36.19")).getNetworkAddress()
-                .toString());
+                .getNetworkAsString());
 
         router.removeRoute(route);
 
         Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("147.25.36.19"))
-                .getNetworkAddress().toString());
+                .getNetworkAddress().getNetworkAsString());
     }
 }

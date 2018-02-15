@@ -29,18 +29,18 @@ public class NetworkTest {
         Network net11 = new Network(new IPv4Address("192.168.0.13"), 29);
         Network net12 = new Network(new IPv4Address("192.168.0.13"), 30);
 
-        Assert.assertEquals("192.168.0.0/19", net1.toString());
-        Assert.assertEquals("192.168.0.0/20", net2.toString());
-        Assert.assertEquals("192.168.0.0/21", net3.toString());
-        Assert.assertEquals("192.168.0.0/22", net4.toString());
-        Assert.assertEquals("192.168.0.0/23", net5.toString());
-        Assert.assertEquals("192.168.0.0/24", net6.toString());
-        Assert.assertEquals("192.168.0.0/25", net7.toString());
-        Assert.assertEquals("192.168.0.0/26", net8.toString());
-        Assert.assertEquals("192.168.0.0/27", net9.toString());
-        Assert.assertEquals("192.168.0.0/28", net10.toString());
-        Assert.assertEquals("192.168.0.8/29", net11.toString());
-        Assert.assertEquals("192.168.0.12/30", net12.toString());
+        Assert.assertEquals("192.168.0.0/19", net1.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/20", net2.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/21", net3.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/22", net4.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/23", net5.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/24", net6.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/25", net7.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/26", net8.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/27", net9.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/28", net10.getNetworkAsString());
+        Assert.assertEquals("192.168.0.8/29", net11.getNetworkAsString());
+        Assert.assertEquals("192.168.0.12/30", net12.getNetworkAsString());
     }
 
     @Test
@@ -180,12 +180,12 @@ public class NetworkTest {
         Network net = new Network(new IPv4Address("192.168.0.0"));
         Network[] subnet = net.getSubnets();
 
-        Assert.assertEquals("192.168.0.0/25", subnet[0].toString());
+        Assert.assertEquals("192.168.0.0/25", subnet[0].getNetworkAsString());
         Assert.assertEquals("192.168.0.0",subnet[0].getNetworkAddress().getIpString());
         Assert.assertEquals("192.168.0.1",subnet[0].getFirstUsableAddress().getIpString());
         Assert.assertEquals("192.168.0.126",subnet[0].getLastUsableAddress().getIpString());
         Assert.assertEquals("192.168.0.127",subnet[0].getBroadcastAddress().getIpString());
-        Assert.assertEquals("192.168.0.128/25", subnet[1].toString());
+        Assert.assertEquals("192.168.0.128/25", subnet[1].getNetworkAsString());
         Assert.assertEquals("192.168.0.128",subnet[1].getNetworkAddress().getIpString());
         Assert.assertEquals("192.168.0.129",subnet[1].getFirstUsableAddress().getIpString());
         Assert.assertEquals("192.168.0.254",subnet[1].getLastUsableAddress().getIpString());
