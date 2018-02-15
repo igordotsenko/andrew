@@ -4,6 +4,18 @@ import java.util.Comparator;
 import java.util.TreeSet;
 
 public class Router {
+    static class RouteComparator implements Comparator<Route> {
+        @Override
+        public int compare(Route route, Route otherRoute) {
+            int diffMask = otherRoute.getNetworkAddress().getMaskLength() - route.getNetworkAddress().getMaskLength();
+
+            if ( diffMask == 0 ) {
+                return route.getMetric() - otherRoute.getMetric();
+            }
+            return diffMask;
+        }
+    }
+
     private TreeSet<Route> routes = new TreeSet<Route>(new RouteComparator());
 
     public Router(TreeSet<Route> newRoutes) throws Route.InvalidGatewayException {
@@ -20,33 +32,23 @@ public class Router {
         routes.add(route);
     }
 
+    //todo check it
     public Route getRouteForAddress(IPv4Address address) {
         for ( Route route : routes ) {
             if ( route.getNetworkAddress().contains(address) ) {
                 return route;
             }
         }
-
-        throw new RuntimeException();
+        return null;
     }
 
+    //todo check it
     public TreeSet<Route> getRoutes() {
-        return (TreeSet<Route>)routes.clone();
+        return new TreeSet<Route>(routes);
     }
 
     public void removeRoute(Route route) {
         routes.remove(route);
     }
-}
 
-class RouteComparator implements Comparator<Route> {
-    @Override
-    public int compare(Route route, Route otherRoute) {
-        int diffMask = otherRoute.getNetworkAddress().getMaskLength() - route.getNetworkAddress().getMaskLength();
-
-        if ( diffMask == 0 ) {
-            return route.getMetric() - otherRoute.getMetric();
-        }
-        return diffMask;
-    }
 }

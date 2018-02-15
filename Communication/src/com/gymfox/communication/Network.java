@@ -17,7 +17,7 @@ public class Network {
 
     private final int maskLength;
     private final long maskAsLong;
-    private final String networkAsString;
+    private final String networkMetadataAsString;
     private final IPv4Address address;
     private final NetworkMetadata networkMetadata;
 
@@ -34,6 +34,7 @@ public class Network {
         IPv4Address broadcastAddress;
         IPv4Address firstUsableAddress;
         IPv4Address lastUsableAddress;
+        String netAsString;
         String maskAsString;
         int totalHosts;
         boolean isPublic = true;
@@ -42,12 +43,18 @@ public class Network {
             this.networkAddress = address.getNetworkAddress();
             this.maskAsInt = address.getMaskLength();
 
+            setNetAsString(networkAddress, maskAsInt);
+
             setBroadcastAddress(address.getNetworkAddress().getIpLong());
             setFirstUsableAddress(address.getNetworkAddress().getIpLong());
             setLastUsableAddress();
             setMaskAsString(address.getMaskAsLong());
             setTotalHosts();
             setPublic(address);
+        }
+
+        void setNetAsString(IPv4Address networkAddress, int maskAsInt) {
+            netAsString = networkAddress.getIpString() + "/" + maskAsInt;
         }
 
         void setBroadcastAddress(long address) {
@@ -95,7 +102,8 @@ public class Network {
         this.maskLength = maskLength;
         this.address = new IPv4Address(address.getIpLong() & getMaskAsLong());
         this.networkMetadata = new NetworkMetadata(this);
-        this.networkAsString = networkToString();
+
+        this.networkMetadataAsString = networkToString();
     }
 
     private long maskToLong(int maskLength) {
@@ -118,7 +126,7 @@ public class Network {
     private String networkToString() {
         StringBuffer out = new StringBuffer();
 
-        out.append("Network: " + getNetwork() + "\n");
+        out.append("Network: " + toString() + "\n");
         out.append("Network address: " + getNetworkAddress().getIpString() + "\n");
         out.append("Network broadcast: " + getBroadcastAddress().getIpString() + "\n");
         out.append("First address: " + getFirstUsableAddress().getIpString() + "\n");
@@ -131,11 +139,11 @@ public class Network {
 
     @Override
     public String toString() {
-        return networkAsString;
+        return networkMetadata.netAsString;
     }
 
-    public String getNetwork() {
-        return getNetworkAddress().getIpString() + "/" + getMaskLength();
+    public String getNetworkMetadata() {
+        return networkMetadataAsString;
     }
 
     public IPv4Address getNetworkAddress() {

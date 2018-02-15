@@ -4,8 +4,8 @@ package com.gymfox.communication;
 public class IPv4Address {
     protected static final long LONG_MAX_IP = 4294967295l;
     protected static final int MAX_OCTETS_VALUE = 255;
-    private final int MIN_OCTETS_VALUE = 0;
-    private final int OCTETS_COUNT = 4;
+    private static final int MIN_OCTETS_VALUE = 0;
+    private static final int OCTETS_COUNT = 4;
 
     private final String ipAsString;
     private final long ipAsLong;
@@ -39,7 +39,7 @@ public class IPv4Address {
 
         long newIpAsLong = 0;
 
-        for ( String s : octets) {
+        for ( String s : octets ) {
             long octetValue = Long.parseLong(s);
 
             validateOctetValue(octetValue);
@@ -63,19 +63,32 @@ public class IPv4Address {
 
     private void validateOctetsCount(String[] splitOctets) {
         if ( splitOctets.length != OCTETS_COUNT ) {
-            throw new InvalidOctetsCountException("Invalid octets count");
+            throw new InvalidOctetsCountException(String.format("%d octets are expected. Got %d for IP %s instead.",
+                    OCTETS_COUNT, splitOctets.length, buildStringFromOctets(splitOctets)));
         }
+    }
+
+    private String buildStringFromOctets(String[] octets) {
+        StringBuffer wrongIP = new StringBuffer();
+
+        for ( String s : octets ) {
+            wrongIP.append(s +".");
+        }
+        wrongIP.delete(wrongIP.length()-1, wrongIP.length());
+
+        return wrongIP.toString();
     }
 
     private void validateOctetValue(long octetsNumbers) {
         if ( octetsNumbers < MIN_OCTETS_VALUE || octetsNumbers > MAX_OCTETS_VALUE ) {
-            throw new InvalidValueInOctetsException("Invalid octet value");
+            throw new InvalidValueInOctetsException(String.format("%d octet is incorrect. Expected less than %d.",
+                    octetsNumbers, MAX_OCTETS_VALUE));
         }
     }
 
     private void validateLongValue(long address) {
         if ( address > LONG_MAX_IP || address < 0 ) {
-            throw new InvalidValueInOctetsException("Invalid long octet value");
+            throw new InvalidValueInOctetsException(String.format("%d value is wrong.", address));
         }
     }
 

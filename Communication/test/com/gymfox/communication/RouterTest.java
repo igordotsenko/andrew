@@ -9,7 +9,7 @@ public class RouterTest {
 
     @Test
     public void routerTest() throws Route.InvalidGatewayException {
-        TreeSet<Route> routes = new TreeSet<Route>(new RouteComparator()) {{
+        TreeSet<Route> routes = new TreeSet<Route>(new Router.RouteComparator()) {{
             add(new Route(new Network(new IPv4Address("10.0.0.0"), 8),"en1", 10, new IPv4Address("10.123.0.1")));
             add(new Route(new Network(new IPv4Address("192.168.5.0"), 25), "en0", 10, new IPv4Address("10.123.0.0")));
             add(new Route(new Network(new IPv4Address("192.168.5.0"), 24), "en0", 5, new IPv4Address("192.168.2.1")));
@@ -20,15 +20,17 @@ public class RouterTest {
         Router router = new Router(routes);
 
         Assert.assertEquals("10.0.0.0/8", router.getRouteForAddress(new IPv4Address("10.192.168.172")).getNetworkAddress()
-                .getNetwork());
-        Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("172.16.25.157")).getNetworkAddress().getNetwork());
+                .toString());
+        Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("172.16.25.157"))
+                .getNetworkAddress().toString());
         Assert.assertEquals("192.168.5.0/25", router.getRouteForAddress(new IPv4Address("192.168.5.7")).getNetworkAddress()
-                .getNetwork());
+                .toString());
         Assert.assertEquals("192.168.5.0/24", router.getRouteForAddress(new IPv4Address("192.168.5.220")).getNetworkAddress
-                ().getNetwork());
-        Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("192.168.1.52")).getNetworkAddress().getNetwork());
+                ().toString());
+        Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("192.168.1.52"))
+                .getNetworkAddress().toString());
         Assert.assertEquals("10.123.0.0/20", router.getRouteForAddress(new IPv4Address("10.123.5.78")).getNetworkAddress()
-                .getNetwork());
+                .toString());
     }
 
     @Test
@@ -42,14 +44,14 @@ public class RouterTest {
                 10));
 
         Assert.assertEquals("15.148.16.0/20", router.getRouteForAddress(new IPv4Address("15.148.25.13")).getNetworkAddress
-                ().getNetwork());
+                ().toString());
         Assert.assertEquals("172.0.0.0/8", router.getRouteForAddress(new IPv4Address("172.156.192.13")).getNetworkAddress()
-                .getNetwork());
+                .toString());
     }
 
     @Test
     public void removeRouteTest() throws Route.InvalidGatewayException {
-        TreeSet<Route> routes = new TreeSet<Route>(new RouteComparator()) {{
+        TreeSet<Route> routes = new TreeSet<Route>(new Router.RouteComparator()) {{
             add(new Route(new Network(new IPv4Address("10.0.0.0"), 8), "en1", 10, new IPv4Address("10.123.0.1")));
             add(new Route(new Network(new IPv4Address("192.168.5.0"), 25), "en0", 10, new IPv4Address("10.123.0.0")));
             add(new Route(new Network(new IPv4Address("192.168.5.0"), 24), "en0", 5, new IPv4Address("192.168.2.1")));
@@ -61,10 +63,11 @@ public class RouterTest {
         router.addRoute(route);
 
         Assert.assertEquals("147.25.0.0/16", router.getRouteForAddress(new IPv4Address("147.25.36.19")).getNetworkAddress()
-                .getNetwork());
+                .toString());
 
         router.removeRoute(route);
 
-        Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("147.25.36.19")).getNetworkAddress().getNetwork());
+        Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("147.25.36.19"))
+                .getNetworkAddress().toString());
     }
 }

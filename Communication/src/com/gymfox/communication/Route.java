@@ -32,7 +32,7 @@ public class Route {
     private String routeToString() {
         StringBuffer out = new StringBuffer();
 
-        out.append("net: " + getNetworkAddress().getNetwork() + ", ");
+        out.append("net: " + getNetworkAddress().toString() + ", ");
 
         if ( gateway != null ) {
             out.append("gateway: " + getGateway().getIpString() + ", ");

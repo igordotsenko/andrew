@@ -20,39 +20,43 @@ public class IPv4AddressTest {
 
     @Test
     public void equalsIpAsLongTest() {
-        Assert.assertEquals(2131504406l, new IPv4Address(2131504406l).getIpLong());
-        Assert.assertEquals(3171620819l, new IPv4Address(3171620819l).getIpLong());
-        Assert.assertEquals(4294967295l, new IPv4Address(4294967295l).getIpLong());
+        long expectedLongValue1 = 2131504406l;
+        long expectedLongValue2 = 3171620819l;
+        long expectedLongValue3 = 4294967295l;
+
+        Assert.assertEquals(expectedLongValue1, new IPv4Address(expectedLongValue1).getIpLong());
+        Assert.assertEquals(expectedLongValue2, new IPv4Address(expectedLongValue2).getIpLong());
+        Assert.assertEquals(expectedLongValue3, new IPv4Address(expectedLongValue3).getIpLong());
     }
 
     @Test
     public void equalsStringWithStringTest() {
-        Assert.assertEquals(true, (new IPv4Address("127.12.45.22")).equals(new IPv4Address("127.12.45.22")));
-        Assert.assertEquals(true, (new IPv4Address("189.11.23.211")).equals(new IPv4Address("189.11.23.211")));
+        Assert.assertTrue((new IPv4Address("127.12.45.22")).equals(new IPv4Address("127.12.45.22")));
+        Assert.assertTrue((new IPv4Address("189.11.23.211")).equals(new IPv4Address("189.11.23.211")));
     }
 
     @Test
     public void equalsStringWithLongTest() {
-        Assert.assertEquals(true, (new IPv4Address("127.12.45.22")).equals(new IPv4Address(2131504406l)));
-        Assert.assertEquals(true, (new IPv4Address("189.11.23.211")).equals(new IPv4Address(3171620819l)));
+        Assert.assertTrue((new IPv4Address("127.12.45.22")).equals(new IPv4Address(2131504406l)));
+        Assert.assertTrue((new IPv4Address("189.11.23.211")).equals(new IPv4Address(3171620819l)));
     }
 
     @Test
     public void equalsLongWithLongTest() {
-        Assert.assertEquals(true, (new IPv4Address(2131504406l)).equals(new IPv4Address(2131504406l)));
-        Assert.assertEquals(true, (new IPv4Address(3171620819l)).equals(new IPv4Address(3171620819l)));
+        Assert.assertTrue((new IPv4Address(2131504406l)).equals(new IPv4Address(2131504406l)));
+        Assert.assertTrue((new IPv4Address(3171620819l)).equals(new IPv4Address(3171620819l)));
     }
 
     @Test
-    public void ipStringGraterThanTest() {
+    public void ipStringGreaterThanTest() {
         IPv4Address ip1 = new IPv4Address("189.11.23.211");
         IPv4Address ip2 = new IPv4Address("127.12.45.22");
 
-        Assert.assertEquals(true, ip1.greaterThan(ip2));
+        Assert.assertTrue(ip1.greaterThan(ip2));
     }
 
     @Test
-    public void ipLongGraterThanTest() {
+    public void ipLongGreaterThanTest() {
         IPv4Address ip1 = new IPv4Address(3171620819l);
         IPv4Address ip2 = new IPv4Address(2131504406l);
 
@@ -64,7 +68,7 @@ public class IPv4AddressTest {
         IPv4Address ip1 = new IPv4Address("127.12.45.22");
         IPv4Address ip2 = new IPv4Address("189.11.23.211");
 
-        Assert.assertEquals(true, ip1.lessThan(ip2));
+        Assert.assertTrue(ip1.lessThan(ip2));
     }
 
     @Test
@@ -72,7 +76,7 @@ public class IPv4AddressTest {
         IPv4Address ip1 = new IPv4Address(2131504406l);
         IPv4Address ip2 = new IPv4Address(3171620819l);
 
-        Assert.assertEquals(true, ip1.lessThan(ip2));
+        Assert.assertTrue(ip1.lessThan(ip2));
     }
 
     @Test ( expected = IllegalArgumentException.class )
