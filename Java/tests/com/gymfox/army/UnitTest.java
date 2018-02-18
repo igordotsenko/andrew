@@ -2,8 +2,9 @@ package com.gymfox.army;
 
 import com.gymfox.army.Spellcasters.*;
 import com.gymfox.army.Units.*;
-import junit.framework.Assert;
 import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
 
 public class UnitTest {
     @Test
@@ -19,83 +20,83 @@ public class UnitTest {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
         Necromancer necro = new Necromancer("Freddy", 50, 10, 100);
 
-        Assert.assertEquals("Steve", soldier.getName());
-        Assert.assertEquals(100, soldier.getHealthPointLimit());
-        Assert.assertEquals(100, soldier.getCurrentHP());
-        Assert.assertEquals(12, soldier.getDamage());
-        Assert.assertEquals(false, soldier.getIsDead());
+        assertEquals("Steve", soldier.getName());
+        assertEquals(100, soldier.getHealthPointLimit());
+        assertEquals(100, soldier.getCurrentHP());
+        assertEquals(12, soldier.getDamage());
+        assertEquals(false, soldier.getIsDead());
 
-        Assert.assertEquals("Robin", rogue.getName());
-        Assert.assertEquals(100, rogue.getHealthPointLimit());
-        Assert.assertEquals(100, rogue.getCurrentHP());
-        Assert.assertEquals(8, rogue.getDamage());
-        Assert.assertEquals(false, rogue.getIsDead());
+        assertEquals("Robin", rogue.getName());
+        assertEquals(100, rogue.getHealthPointLimit());
+        assertEquals(100, rogue.getCurrentHP());
+        assertEquals(8, rogue.getDamage());
+        assertEquals(false, rogue.getIsDead());
 
-        Assert.assertEquals("Viking", berserk.getName());
-        Assert.assertEquals(120, berserk.getHealthPointLimit());
-        Assert.assertEquals(120, berserk.getCurrentHP());
-        Assert.assertEquals(20, berserk.getDamage());
-        Assert.assertEquals(false, berserk.getIsDead());
+        assertEquals("Viking", berserk.getName());
+        assertEquals(120, berserk.getHealthPointLimit());
+        assertEquals(120, berserk.getCurrentHP());
+        assertEquals(20, berserk.getDamage());
+        assertEquals(false, berserk.getIsDead());
 
-        Assert.assertEquals("Count Dracula", vamp.getName());
-        Assert.assertEquals(100, vamp.getHealthPointLimit());
-        Assert.assertEquals(100, vamp.getCurrentHP());
-        Assert.assertEquals(12, vamp.getDamage());
-        Assert.assertEquals(true, vamp.getIsDead());
+        assertEquals("Count Dracula", vamp.getName());
+        assertEquals(100, vamp.getHealthPointLimit());
+        assertEquals(100, vamp.getCurrentHP());
+        assertEquals(12, vamp.getDamage());
+        assertEquals(true, vamp.getIsDead());
 
-        Assert.assertEquals("Van Hellsing", wolf.getName());
-        Assert.assertEquals(80, wolf.getHealthPointLimit());
-        Assert.assertEquals(80, wolf.getCurrentHP());
-        Assert.assertEquals(10, wolf.getDamage());
-        Assert.assertEquals(false, wolf.getIsDead());
+        assertEquals("Van Hellsing", wolf.getName());
+        assertEquals(80, wolf.getHealthPointLimit());
+        assertEquals(80, wolf.getCurrentHP());
+        assertEquals(10, wolf.getDamage());
+        assertEquals(false, wolf.getIsDead());
 
         wolf.changeState();
 
-        Assert.assertEquals("Van Hellsing", wolf.getName());
-        Assert.assertEquals(160, wolf.getHealthPointLimit());
-        Assert.assertEquals(160, wolf.getCurrentHP());
-        Assert.assertEquals(20, wolf.getDamage());
-        Assert.assertEquals(false, wolf.getIsDead());
+        assertEquals("Van Hellsing", wolf.getName());
+        assertEquals(160, wolf.getHealthPointLimit());
+        assertEquals(160, wolf.getCurrentHP());
+        assertEquals(20, wolf.getDamage());
+        assertEquals(false, wolf.getIsDead());
 
-        Assert.assertEquals("Marylin", wizard.getName());
-        Assert.assertEquals(90, wizard.getHealthPointLimit());
-        Assert.assertEquals(90, wizard.getCurrentHP());
-        Assert.assertEquals(5, wizard.getDamage());
-        Assert.assertEquals(120, wizard.getManaPointLimits());
-        Assert.assertEquals(120, wizard.getCurrentMP());
-        Assert.assertEquals(false, wizard.getIsDead());
+        assertEquals("Marylin", wizard.getName());
+        assertEquals(90, wizard.getHealthPointLimit());
+        assertEquals(90, wizard.getCurrentHP());
+        assertEquals(5, wizard.getDamage());
+        assertEquals(120, wizard.getManaPointLimits());
+        assertEquals(120, wizard.getCurrentMP());
+        assertEquals(false, wizard.getIsDead());
 
-        Assert.assertEquals("Manson", healer.getName());
-        Assert.assertEquals(60, healer.getHealthPointLimit());
-        Assert.assertEquals(60, healer.getCurrentHP());
-        Assert.assertEquals(4, healer.getDamage());
-        Assert.assertEquals(100, healer.getManaPointLimits());
-        Assert.assertEquals(100, healer.getCurrentMP());
-        Assert.assertEquals(false, healer.getIsDead());
+        assertEquals("Manson", healer.getName());
+        assertEquals(60, healer.getHealthPointLimit());
+        assertEquals(60, healer.getCurrentHP());
+        assertEquals(4, healer.getDamage());
+        assertEquals(100, healer.getManaPointLimits());
+        assertEquals(100, healer.getCurrentMP());
+        assertEquals(false, healer.getIsDead());
 
-        Assert.assertEquals("Francis", priest.getName());
-        Assert.assertEquals(90, priest.getHealthPointLimit());
-        Assert.assertEquals(90, priest.getCurrentHP());
-        Assert.assertEquals(10, priest.getDamage());
-        Assert.assertEquals(120, priest.getManaPointLimits());
-        Assert.assertEquals(120, priest.getCurrentMP());
-        Assert.assertEquals(false, priest.getIsDead());
+        assertEquals("Francis", priest.getName());
+        assertEquals(90, priest.getHealthPointLimit());
+        assertEquals(90, priest.getCurrentHP());
+        assertEquals(10, priest.getDamage());
+        assertEquals(120, priest.getManaPointLimits());
+        assertEquals(120, priest.getCurrentMP());
+        assertEquals(false, priest.getIsDead());
 
-        Assert.assertEquals("Warlock", warlock.getName());
-        Assert.assertEquals(90, warlock.getHealthPointLimit());
-        Assert.assertEquals(90, warlock.getCurrentHP());
-        Assert.assertEquals(8, warlock.getDamage());
-        Assert.assertEquals(120, warlock.getManaPointLimits());
-        Assert.assertEquals(120, warlock.getCurrentMP());
-        Assert.assertEquals(false, warlock.getIsDead());
+        assertEquals("Warlock", warlock.getName());
+        assertEquals(90, warlock.getHealthPointLimit());
+        assertEquals(90, warlock.getCurrentHP());
+        assertEquals(8, warlock.getDamage());
+        assertEquals(120, warlock.getManaPointLimits());
+        assertEquals(120, warlock.getCurrentMP());
+        assertEquals(false, warlock.getIsDead());
 
-        Assert.assertEquals("Freddy", necro.getName());
-        Assert.assertEquals(50, necro.getHealthPointLimit());
-        Assert.assertEquals(50, necro.getCurrentHP());
-        Assert.assertEquals(10, necro.getDamage());
-        Assert.assertEquals(100, necro.getManaPointLimits());
-        Assert.assertEquals(100, necro.getCurrentMP());
-        Assert.assertEquals(true, necro.getIsDead());
+        assertEquals("Freddy", necro.getName());
+        assertEquals(50, necro.getHealthPointLimit());
+        assertEquals(50, necro.getCurrentHP());
+        assertEquals(10, necro.getDamage());
+        assertEquals(100, necro.getManaPointLimits());
+        assertEquals(100, necro.getCurrentMP());
+        assertEquals(true, necro.getIsDead());
     }
 
     @Test ( expected = Unit.UnitIsDeadException.class )
@@ -148,9 +149,10 @@ public class UnitTest {
         Priest priest = new Priest("Francis", 90, 10, 120);
         Vampire vamp = new Vampire("Count Dracula", 100, 12);
 
+        priest.setCurrentSpell("Heal");
         priest.castSpell(vamp);
 
-        Assert.assertEquals(100, vamp.getCurrentHP());
+        assertEquals(100, vamp.getCurrentHP());
     }
 
     @Test ( expected = Spellcaster.ManaIsOverException.class )
@@ -175,13 +177,13 @@ public class UnitTest {
 
         soldier1.attack(soldier2);
 
-        Assert.assertEquals(88, soldier2.getCurrentHP());
-        Assert.assertEquals(93, soldier1.getCurrentHP());
+        assertEquals(88, soldier2.getCurrentHP());
+        assertEquals(93, soldier1.getCurrentHP());
 
         soldier2.attack(soldier1);
 
-        Assert.assertEquals(79, soldier1.getCurrentHP());
-        Assert.assertEquals(82, soldier2.getCurrentHP());
+        assertEquals(79, soldier1.getCurrentHP());
+        assertEquals(82, soldier2.getCurrentHP());
     }
 
     @Test
@@ -191,8 +193,8 @@ public class UnitTest {
 
         rogue.attack(soldier);
 
-        Assert.assertEquals(100, rogue.getCurrentHP());
-        Assert.assertEquals(92, soldier.getCurrentHP());
+        assertEquals(100, rogue.getCurrentHP());
+        assertEquals(92, soldier.getCurrentHP());
     }
 
     @Test
@@ -202,8 +204,8 @@ public class UnitTest {
         Wizard wizard = new Wizard("Marylin", 90,5,120);
 
         wizard.castSpell(berserk);
-        Assert.assertEquals(120, berserk.getCurrentHP());
-        Assert.assertEquals(112, wizard.getCurrentMP());
+        assertEquals(120, berserk.getCurrentHP());
+        assertEquals(112, wizard.getCurrentMP());
     }
 
     @Test
@@ -214,7 +216,7 @@ public class UnitTest {
 
         wizard.castSpell(soldier);
 
-        Assert.assertEquals(88, soldier.getCurrentHP());
+        assertEquals(88, soldier.getCurrentHP());
     }
 
     @Test
@@ -228,8 +230,8 @@ public class UnitTest {
 
         wizard.castSpell(soldier);
 
-        Assert.assertEquals(55, soldier.getCurrentHP());
-        Assert.assertEquals(114, wizard.getCurrentMP());
+        assertEquals(55, soldier.getCurrentHP());
+        assertEquals(114, wizard.getCurrentMP());
     }
 
     @Test
@@ -240,12 +242,12 @@ public class UnitTest {
 
         vamp.attack(soldier);
 
-        Assert.assertEquals(80, soldier.getCurrentHP());
-        Assert.assertEquals(91, vamp.getCurrentHP());
+        assertEquals(80, soldier.getCurrentHP());
+        assertEquals(91, vamp.getCurrentHP());
 
         soldier.attack(vamp);
-        Assert.assertEquals(80, vamp.getCurrentHP());
-        Assert.assertEquals(67, soldier.getCurrentHP());
+        assertEquals(80, vamp.getCurrentHP());
+        assertEquals(67, soldier.getCurrentHP());
     }
 
     @Test
@@ -255,12 +257,12 @@ public class UnitTest {
         Wizard wizard = new Wizard("Marylin", 90, 5, 120);
 
         wizard.castSpell(wolf);
-        Assert.assertEquals(68, wolf.getCurrentHP());
+        assertEquals(68, wolf.getCurrentHP());
 
         wolf.changeState();
 
         wizard.castSpell(wolf);
-        Assert.assertEquals(112, wolf.getCurrentHP());
+        assertEquals(112, wolf.getCurrentHP());
     }
 
     @Test
@@ -273,8 +275,8 @@ public class UnitTest {
 
         healer.castSpell(soldier);
 
-        Assert.assertEquals(94, soldier.getCurrentHP());
-        Assert.assertEquals(92, healer.getCurrentMP());
+        assertEquals(94, soldier.getCurrentHP());
+        assertEquals(92, healer.getCurrentMP());
     }
 
     @Test
@@ -289,8 +291,8 @@ public class UnitTest {
         priest.castSpell(soldier);
         priest.castSpell(vamp);
 
-        Assert.assertEquals(94, soldier.getCurrentHP());
-        Assert.assertEquals(76, vamp.getCurrentHP());
+        assertEquals(94, soldier.getCurrentHP());
+        assertEquals(76, vamp.getCurrentHP());
     }
 
     @Test
@@ -301,7 +303,7 @@ public class UnitTest {
 
         soldier.heal(soldier.getDamage());
 
-        Assert.assertEquals(100, soldier.getCurrentHP());
+        assertEquals(100, soldier.getCurrentHP());
     }
 
     @Test
@@ -316,8 +318,8 @@ public class UnitTest {
 
         warlock.getDemon().attack(soldier);
 
-        Assert.assertEquals(88, soldier.getCurrentHP());
-        Assert.assertEquals(91, warlock.getDemon().getCurrentHP());
+        assertEquals(88, soldier.getCurrentHP());
+        assertEquals(91, warlock.getDemon().getCurrentHP());
     }
 
     @Test ( expected = Warlock.DemonIsAlreadySummonedException.class )
@@ -378,14 +380,14 @@ public class UnitTest {
         necro.castSpell(priest);
         necro.castSpell(warlock);
 
-        Assert.assertEquals(8, necro.getObservables().size());
+        assertEquals(8, necro.getObservables().size());
 
         soldier.setCurrentHP(8);
         soldier.attack(necro);
         soldier.attack(necro);
 
-        Assert.assertEquals(7, necro.getObservables().size());
-        Assert.assertEquals(36, necro.getCurrentHP());
+        assertEquals(7, necro.getObservables().size());
+        assertEquals(36, necro.getCurrentHP());
     }
 
     @Test
@@ -415,30 +417,30 @@ public class UnitTest {
         necro.castSpell(warlock);
         necro.castSpell(necro1);
 
-        Assert.assertEquals(1, soldier.getObservers().size());
-        Assert.assertEquals(1, rogue.getObservers().size());
-        Assert.assertEquals(0, berserk.getObservers().size());
-        Assert.assertEquals(1, vamp.getObservers().size());
-        Assert.assertEquals(1, wolf.getObservers().size());
-        Assert.assertEquals(1, wizard.getObservers().size());
-        Assert.assertEquals(1, healer.getObservers().size());
-        Assert.assertEquals(1, priest.getObservers().size());
-        Assert.assertEquals(1, warlock.getObservers().size());
-        Assert.assertEquals(1, necro1.getObservers().size());
+        assertEquals(1, soldier.getObservers().size());
+        assertEquals(1, rogue.getObservers().size());
+        assertEquals(0, berserk.getObservers().size());
+        assertEquals(1, vamp.getObservers().size());
+        assertEquals(1, wolf.getObservers().size());
+        assertEquals(1, wizard.getObservers().size());
+        assertEquals(1, healer.getObservers().size());
+        assertEquals(1, priest.getObservers().size());
+        assertEquals(1, warlock.getObservers().size());
+        assertEquals(1, necro1.getObservers().size());
 
         necro.setCurrentHP(5);
         necro.attack(berserk);
 
-        Assert.assertEquals(0, soldier.getObservers().size());
-        Assert.assertEquals(0, rogue.getObservers().size());
-        Assert.assertEquals(0, berserk.getObservers().size());
-        Assert.assertEquals(0, vamp.getObservers().size());
-        Assert.assertEquals(0, wolf.getObservers().size());
-        Assert.assertEquals(0, wizard.getObservers().size());
-        Assert.assertEquals(0, healer.getObservers().size());
-        Assert.assertEquals(0, priest.getObservers().size());
-        Assert.assertEquals(0, warlock.getObservers().size());
-        Assert.assertEquals(0, necro1.getObservers().size());
+        assertEquals(0, soldier.getObservers().size());
+        assertEquals(0, rogue.getObservers().size());
+        assertEquals(0, berserk.getObservers().size());
+        assertEquals(0, vamp.getObservers().size());
+        assertEquals(0, wolf.getObservers().size());
+        assertEquals(0, wizard.getObservers().size());
+        assertEquals(0, healer.getObservers().size());
+        assertEquals(0, priest.getObservers().size());
+        assertEquals(0, warlock.getObservers().size());
+        assertEquals(0, necro1.getObservers().size());
     }
 
     @Test
@@ -449,8 +451,8 @@ public class UnitTest {
 
         necro.attack(berserk);
 
-        Assert.assertEquals(1, berserk.getObservers().size());
-        Assert.assertEquals(1, necro.getObservables().size());
+        assertEquals(1, berserk.getObservers().size());
+        assertEquals(1, necro.getObservables().size());
     }
 
     @Test
@@ -463,24 +465,24 @@ public class UnitTest {
         warlock.summonDemon();
         necro.castSpell(warlock.getDemon());
 
-        Assert.assertEquals(1, necro.getObservables().size());
+        assertEquals(1, necro.getObservables().size());
 
         warlock.removeDemon();
 
-        Assert.assertEquals(0, necro.getObservables().size());
+        assertEquals(0, necro.getObservables().size());
     }
 
     @Test
     public void spellbooksGetters() {
         Warlock warlock = new Warlock("Warlock", 90, 8, 120);
 
-        Assert.assertEquals("Fireball", warlock.getCurrentSpell().getSpellsName());
-        Assert.assertEquals(12, warlock.getCurrentSpell().getHitPoints());
-        Assert.assertEquals(8, warlock.getCurrentSpell().getManaConsumption());
+        assertEquals("Fireball", warlock.getCurrentSpell().getSpellsName());
+        assertEquals(12, warlock.getCurrentSpell().getHitPoints());
+        assertEquals(8, warlock.getCurrentSpell().getManaConsumption());
 
         warlock.setCurrentSpell("Heal");
-        Assert.assertEquals("Heal", warlock.getCurrentSpell().getSpellsName());
-        Assert.assertEquals(10, warlock.getCurrentSpell().getHitPoints());
-        Assert.assertEquals(6, warlock.getCurrentSpell().getManaConsumption());
+        assertEquals("Heal", warlock.getCurrentSpell().getSpellsName());
+        assertEquals(10, warlock.getCurrentSpell().getHitPoints());
+        assertEquals(6, warlock.getCurrentSpell().getManaConsumption());
     }
 }
