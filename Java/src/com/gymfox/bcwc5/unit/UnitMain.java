@@ -1,6 +1,5 @@
-/**
- * Created by andrew on 04.12.16.
- */
+package com.gymfox.bcwc5.unit;
+
 public class UnitMain {
     public static void main(String[] args) throws UnitIsDeadException, CloneNotSupportedException {
         Unit barberain = new Unit("Barberian", 150, 20);

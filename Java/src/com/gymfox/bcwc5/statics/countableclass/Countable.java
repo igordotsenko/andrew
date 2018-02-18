@@ -1,4 +1,4 @@
-package com.gymfox.statics.countableclass;
+package com.gymfox.bcwc5.statics.countableclass;
 
 public class Countable {
     private static int totalCount = 0;

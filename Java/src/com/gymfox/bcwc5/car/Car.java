@@ -1,6 +1,6 @@
 package com.gymfox.bcwc5.car;
 
-import com.gymfox.base.Point.Point;
+import com.gymfox.bcwc5.base.point.Point;
 
 public class Car implements Cloneable{
     private double fuelAmount;

@@ -1,4 +1,3 @@
-/**
- * Created by andrew on 03.12.16.
- */
+package com.gymfox.bcwc5.gun;
+
 public class OutOfRoundsException extends Exception {}

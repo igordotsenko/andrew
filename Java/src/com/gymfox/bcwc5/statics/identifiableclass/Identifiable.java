@@ -1,4 +1,4 @@
-package com.gymfox.statics.identifiableclass;
+package com.gymfox.bcwc5.statics.identifiableclass;
 
 public class Identifiable {
     private static int totalIdCount = 0;
