@@ -1,7 +1,7 @@
 package com.gymfox.communication;
 
 import org.junit.Test;
-import org.testng.Assert;
+import org.junit.Assert;
 
 public class NetworkTest {
     @Test ( expected = IllegalArgumentException.class )

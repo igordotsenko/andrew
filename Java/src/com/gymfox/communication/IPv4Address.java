@@ -1,4 +1,3 @@
-
 package com.gymfox.communication;
 
 public class IPv4Address {
