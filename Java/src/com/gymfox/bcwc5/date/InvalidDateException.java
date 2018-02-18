@@ -1,11 +1,4 @@
-/**
- * Created by andrew on 03.12.16.
- */
-public class InvalidDateException extends Exception {
-    public String text;
+package com.gymfox.bcwc5.date;
 
-    public InvalidDateException(String text) {
-        this.text = text;
-    }
-}
+public class InvalidDateException extends Exception {}
 

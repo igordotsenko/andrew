@@ -1,3 +1,5 @@
+package com.gymfox.bcwc5.unit;
+
 public class Unit implements Cloneable{
     private String name;
     private int hitPoints;

@@ -1,16 +1,17 @@
-package com.gymfox.statics.passportclass;
+package com.gymfox.bcwc5.statics.passportclass;
 
-import com.gymfox.Date.*;
+import com.gymfox.bcwc5.date.*;
 import java.util.Arrays;
 
 public class Passport {
     private static char[] newSeries = {'A','A'};
     private static int newSerialNumber = 1;
+    private final static int SERIES_LENGTH = newSeries.length;
     private final static int MAX_SERIAL = 999999;
     private final static int FIRST_LETTER = 0;
     private final static int SECOND_LETTER = 1;
 
-    private char[] series = new char[newSeries.length];
+    private char[] series = new char[SERIES_LENGTH];
     private int serialNumber;
     private String name;
     private String surname;
@@ -22,8 +23,9 @@ public class Passport {
         this.surname = surname;
         this.birthDate = new Date(bDay, bMonth, bYear);
 
-        series = Arrays.copyOf(newSeries, newSeries.length);
-
+        for ( int i = 0; i < SERIES_LENGTH; i++ ) {
+            series = Arrays.copyOf(newSeries, SERIES_LENGTH);
+        }
         serialNumber = newSerialNumber;
 
         seriesGeneration();
@@ -57,8 +59,9 @@ public class Passport {
 
         validateSeries(buffer);
 
-        newSeries = Arrays.copyOf(buffer, newSeries.length);
-
+        for ( int i = 0; i < SERIES_LENGTH; i++ ) {
+            newSeries = Arrays.copyOf(buffer, SERIES_LENGTH);
+        }
         newSerialNumber = 1;
     }
 
@@ -76,8 +79,10 @@ public class Passport {
 
         validate(buffer, serialNumber);
 
-        newSeries = Arrays.copyOf(buffer, newSeries.length);
-
+        for ( int i = 0; i < SERIES_LENGTH; i++ ) {
+            newSeries[i] = buffer[i];
+            newSeries = Arrays.copyOf(buffer, SERIES_LENGTH);
+        }
         newSerialNumber = serialNumber;
     }
 
@@ -118,21 +123,23 @@ public class Passport {
 
     private static void validateSeries(char[] series)
             throws InvalidSerialException {
-        for ( int i = 0; i < newSeries.length; i++ ) {
-            series[i] = Character.toUpperCase(series[i]);
+        for ( int i = 0; i < SERIES_LENGTH; i++ ) {
+            if ( Character.isLowerCase(series[i]) ) {
+                series[i] = Character.toUpperCase(series[i]);
+            }
         }
 
-        if ( series.length > newSeries.length ) {
+        if ( series.length > SERIES_LENGTH ) {
             throw new InvalidSerialException();
         }
 
-        for ( int i = 0; i < newSeries.length; i++ ) {
+        for ( int i = 0; i < SERIES_LENGTH; i++ ) {
             if ( !Character.isUpperCase(series[i]) ) {
                 throw new InvalidSerialException();
             }
         }
 
-        for ( int i = 0; i < newSeries.length; i++ ) {
+        for ( int i = 0; i < SERIES_LENGTH; i++ ) {
             if ( newSeries[i] > series[i] ){
                 throw new InvalidSerialException();
             }

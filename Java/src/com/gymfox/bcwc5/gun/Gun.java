@@ -1,6 +1,5 @@
-/**
- * Created by andrew on 03.12.16.
- */
+package com.gymfox.bcwc5.gun;
+
 public class Gun {
     private int amount;
     private int capacity;

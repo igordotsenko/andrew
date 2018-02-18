@@ -1,6 +1,5 @@
-/**
- * Created by andrew on 18.11.16.
- */
+package com.gymfox.bcwc5.base.point;
+
 public class Point implements Cloneable{
     private double x;
     private double y;
