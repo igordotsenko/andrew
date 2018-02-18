@@ -1,7 +1,8 @@
 package com.gymfox.bcwc5.statics.countableclass;
 
-import junit.framework.Assert;
 import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
 
 public class CountableTest {
     @Test
@@ -10,9 +11,9 @@ public class CountableTest {
         Countable obj2 = new Countable();
         Countable obj3 = new Countable();
 
-        Assert.assertEquals(Countable.getTotalCount(), 3);
+        assertEquals(Countable.getTotalCount(), 3);
         obj3.destroy();
-        Assert.assertEquals(Countable.getTotalCount(), 2);
+        assertEquals(Countable.getTotalCount(), 2);
         Countable.reset();
     }
 
@@ -22,7 +23,7 @@ public class CountableTest {
         Countable obj5 = new Countable();
         Countable obj6 = new Countable();
 
-        Assert.assertEquals(Countable.getTotalCount(), 3);
+        assertEquals(Countable.getTotalCount(), 3);
         Countable.reset();
         obj6.destroy();
     }

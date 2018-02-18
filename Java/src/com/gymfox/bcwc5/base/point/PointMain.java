@@ -1,6 +1,5 @@
-/**
- * Created by andrew on 18.11.16.
- */
+package com.gymfox.bcwc5.base.point;
+
 public class PointMain {
     public static void main(String[] args) throws CloneNotSupportedException {
         Point a = new Point(2.7, 8.3);

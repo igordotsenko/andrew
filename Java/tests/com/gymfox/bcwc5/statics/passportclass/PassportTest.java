@@ -1,8 +1,9 @@
 package com.gymfox.bcwc5.statics.passportclass;
 
 import com.gymfox.bcwc5.date.InvalidDateException;
-import junit.framework.Assert;
 import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
 
 public class PassportTest {
     @Test
@@ -24,12 +25,12 @@ public class PassportTest {
         Passport obj7 = new Passport("ololo", "lolol", 1,1,1970);
         Passport obj8 = new Passport("ololo", "lolol", 1,1,1970);
 
-        Assert.assertEquals("AA000001", obj1.getSeries() + obj1.getSerialNumber());
-        Assert.assertEquals("AB000001", obj2.getSeries() + obj2.getSerialNumber());
-        Assert.assertEquals("AC000100", obj3.getSeries() + obj3.getSerialNumber());
-        Assert.assertEquals("AC999999", obj4.getSeries() + obj4.getSerialNumber());
-        Assert.assertEquals("AD000001", obj5.getSeries() + obj5.getSerialNumber());
-        Assert.assertEquals("AD000002", obj6.getSeries() + obj6.getSerialNumber());
+        assertEquals("AA000001", obj1.getSeries() + obj1.getSerialNumber());
+        assertEquals("AB000001", obj2.getSeries() + obj2.getSerialNumber());
+        assertEquals("AC000100", obj3.getSeries() + obj3.getSerialNumber());
+        assertEquals("AC999999", obj4.getSeries() + obj4.getSerialNumber());
+        assertEquals("AD000001", obj5.getSeries() + obj5.getSerialNumber());
+        assertEquals("AD000002", obj6.getSeries() + obj6.getSerialNumber());
     }
 
     @Test(expected = InvalidSerialNumberException.class)

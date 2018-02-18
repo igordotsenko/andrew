@@ -1,7 +1,8 @@
 package com.gymfox.bcwc5.statics.mohicanclass;
 
-import junit.framework.Assert;
 import org.junit.Test;
+
+import static junit.framework.Assert.assertEquals;
 
 public class MohicanTest {
     @Test (expected = NoLastMohicanException.class)
@@ -44,7 +45,7 @@ public class MohicanTest {
         Mohican mohican2 = new Mohican("M2");
         Mohican last = Mohican.getLastMohican();
 
-        Assert.assertEquals(Mohican.getLastMohican(), last);
+        assertEquals(Mohican.getLastMohican(), last);
         Mohican.reset();
     }
 }
