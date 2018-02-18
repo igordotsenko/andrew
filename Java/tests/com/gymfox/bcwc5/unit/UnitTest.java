@@ -1,3 +1,5 @@
+package com.gymfox.bcwc5.unit;
+
 import org.junit.Assert;
 import org.junit.Test;
 
