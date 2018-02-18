@@ -1,4 +1,4 @@
-package com.gymfox.statics.countableclass;
+package com.gymfox.bcwc5.statics.countableclass;
 
 import junit.framework.Assert;
 import org.junit.Test;
