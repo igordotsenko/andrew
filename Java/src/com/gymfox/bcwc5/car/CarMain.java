@@ -1,9 +1,10 @@
-/**
- * Created by andrew on 01.12.16.
- */
+package com.gymfox.bcwc5.car;
+
+import com.gymfox.bcwc5.base.point.Point;
+
 public class CarMain {
     public static void main(String[] args) throws OutOfFuelException,
-            ToMuchFuelException, CloneNotSupportedException {
+            ToMuchFuelException {
         Car car = new Car(100, 0.15, new Point(1.0, 1.0), "Mercedes");
 
         System.out.println(car);
