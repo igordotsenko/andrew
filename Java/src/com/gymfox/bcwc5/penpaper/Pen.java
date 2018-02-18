@@ -1,4 +1,4 @@
-package com.gymfox.penpaper;
+package com.gymfox.bcwc5.penpaper;
 
 public class Pen {
     private int inkCapacity;

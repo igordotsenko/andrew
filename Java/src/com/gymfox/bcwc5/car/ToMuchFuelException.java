@@ -1,5 +1,4 @@
-/**
- * Created by andrew on 01.12.16.
- */
+package com.gymfox.bcwc5.car;
+
 public class ToMuchFuelException extends Exception{
 }
