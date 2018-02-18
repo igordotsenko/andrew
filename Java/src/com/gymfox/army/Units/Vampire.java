@@ -1,6 +1,6 @@
-package com.gymfox.Army.Units;
+package com.gymfox.army.Units;
 
-import com.gymfox.Army.Ability.VampireAbility;
+import com.gymfox.army.Ability.VampireAbility;
 
 public class Vampire extends Unit {
     public Vampire(String name, int healthPointLimit, int damage) {

@@ -1,6 +1,6 @@
-package com.gymfox.Army.Observer;
+package com.gymfox.army.Observer;
 
-import com.gymfox.Army.Units.Unit;
+import com.gymfox.army.Units.Unit;
 
 public interface Observable {
     public void addObserver(Observer observer);

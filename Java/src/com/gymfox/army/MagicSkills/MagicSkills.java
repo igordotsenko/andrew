@@ -1,4 +1,4 @@
-package com.gymfox.Army.MagicSkills;
+package com.gymfox.army.MagicSkills;
 
 public final class MagicSkills {
     private double battleMagicSkill;

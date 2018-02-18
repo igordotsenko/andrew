@@ -1,9 +1,9 @@
-package com.gymfox.Army.Ability;
+package com.gymfox.army.Ability;
 
-import com.gymfox.Army.State.HumanState;
-import com.gymfox.Army.State.State;
-import com.gymfox.Army.State.WolfState;
-import com.gymfox.Army.Units.Unit;
+import com.gymfox.army.State.HumanState;
+import com.gymfox.army.State.State;
+import com.gymfox.army.State.WolfState;
+import com.gymfox.army.Units.Unit;
 
 public class WerewolfAbility extends Ability {
     private State currentState;

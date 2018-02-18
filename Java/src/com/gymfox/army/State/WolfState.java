@@ -1,6 +1,6 @@
-package com.gymfox.Army.State;
+package com.gymfox.army.State;
 
-import com.gymfox.Army.Units.Unit;
+import com.gymfox.army.Units.Unit;
 
 public class WolfState extends State {
     public WolfState(Unit currentUnitState) {

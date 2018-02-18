@@ -1,6 +1,7 @@
-package com.gymfox.Army.Units;
+package com.gymfox.army.Units;
 
-import com.gymfox.Army.Ability.DefaultAbility;
+import com.gymfox.army.Ability.DefaultAbility;
+
 public class Soldier extends Unit {
     public Soldier(String name, int healthPointLimit, int damage) {
         super(name, healthPointLimit, damage);

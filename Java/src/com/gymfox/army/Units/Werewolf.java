@@ -1,6 +1,6 @@
-package com.gymfox.Army.Units;
+package com.gymfox.army.Units;
 
-import com.gymfox.Army.Ability.WerewolfAbility;
+import com.gymfox.army.Ability.WerewolfAbility;
 
 public class Werewolf extends Unit {
     public Werewolf(String name, int healthPointLimit, int damage) {

@@ -1,7 +1,7 @@
-package com.gymfox.Army;
+package com.gymfox.army;
 
-import com.gymfox.Army.Spellcasters.*;
-import com.gymfox.Army.Units.*;
+import com.gymfox.army.Spellcasters.*;
+import com.gymfox.army.Units.*;
 import junit.framework.Assert;
 import org.junit.Test;
 
