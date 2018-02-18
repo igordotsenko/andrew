@@ -1,6 +1,6 @@
-package com.gymfox.army.Ability;
+package com.gymfox.army.ability;
 
-import com.gymfox.army.Units.Unit;
+import com.gymfox.army.units.Unit;
 
 public abstract class Ability {
     private Unit currentUnit;

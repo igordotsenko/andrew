@@ -1,4 +1,4 @@
-package com.gymfox.army.Spells;
+package com.gymfox.army.spells;
 
 public class Fireball extends Spell {
     public Fireball() {

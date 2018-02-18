@@ -1,6 +1,6 @@
-package com.gymfox.army.Units;
+package com.gymfox.army.units;
 
-import com.gymfox.army.Ability.BerserkAbility;
+import com.gymfox.army.ability.BerserkAbility;
 
 public class Berserk extends Unit {
     public Berserk(String name, int healthPointLimit, int damage) {

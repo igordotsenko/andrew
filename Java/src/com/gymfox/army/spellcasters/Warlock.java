@@ -1,11 +1,11 @@
-package com.gymfox.army.Spellcasters;
+package com.gymfox.army.spellcasters;
 
-import com.gymfox.army.Ability.DefaultAbility;
-import com.gymfox.army.MagicSkills.MagicSkills;
-import com.gymfox.army.Spells.Fireball;
-import com.gymfox.army.Spells.Heal;
-import com.gymfox.army.Spells.Spell;
-import com.gymfox.army.Units.Demon;
+import com.gymfox.army.ability.DefaultAbility;
+import com.gymfox.army.magicskills.MagicSkills;
+import com.gymfox.army.spells.Fireball;
+import com.gymfox.army.spells.Heal;
+import com.gymfox.army.spells.Spell;
+import com.gymfox.army.units.Demon;
 
 import java.util.Arrays;
 import java.util.Collections;

@@ -1,4 +1,4 @@
-package com.gymfox.army.Observer;
+package com.gymfox.army.observer;
 
 public interface Observer {
     public void addObservable(Observable observable);

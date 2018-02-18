@@ -1,8 +1,8 @@
-package com.gymfox.army.Units;
+package com.gymfox.army.units;
 
-import com.gymfox.army.Ability.Ability;
-import com.gymfox.army.Observer.Observable;
-import com.gymfox.army.Observer.Observer;
+import com.gymfox.army.ability.Ability;
+import com.gymfox.army.observer.Observable;
+import com.gymfox.army.observer.Observer;
 
 import java.util.HashSet;
 import java.util.Iterator;

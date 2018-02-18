@@ -1,6 +1,6 @@
-package com.gymfox.army.Units;
+package com.gymfox.army.units;
 
-import com.gymfox.army.Spellcasters.Warlock;
+import com.gymfox.army.spellcasters.Warlock;
 
 public class Demon extends Soldier {
     public static class MasterAttackedException extends Exception{};

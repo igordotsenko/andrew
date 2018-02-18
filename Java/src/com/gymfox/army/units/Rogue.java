@@ -1,6 +1,6 @@
-package com.gymfox.army.Units;
+package com.gymfox.army.units;
 
-import com.gymfox.army.Ability.RogueAbility;
+import com.gymfox.army.ability.RogueAbility;
 public class Rogue extends Unit {
     public Rogue(String name, int healthPointLimit, int damage) {
         super(name, healthPointLimit, damage);

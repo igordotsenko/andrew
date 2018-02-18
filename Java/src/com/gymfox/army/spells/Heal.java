@@ -1,4 +1,4 @@
-package com.gymfox.army.Spells;
+package com.gymfox.army.spells;
 
 public class Heal extends Spell {
     public Heal() {

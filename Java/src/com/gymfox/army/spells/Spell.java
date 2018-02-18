@@ -1,7 +1,7 @@
-package com.gymfox.army.Spells;
+package com.gymfox.army.spells;
 
-import com.gymfox.army.MagicSkills.MagicSkills;
-import com.gymfox.army.Units.Unit;
+import com.gymfox.army.magicskills.MagicSkills;
+import com.gymfox.army.units.Unit;
 
 public abstract class Spell {
     private String spellsName;
