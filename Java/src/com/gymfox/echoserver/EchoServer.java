@@ -9,17 +9,26 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public class EchoServer {
-    private final int port;
-    private volatile boolean isRunning;
-    private BufferedReader inputMessage;
-    private ServerSocket serverSocket;
-    private Socket clientSocket;
     private final static int DEFAULT_PORT = 8080;
     private final static int MIN_PERMISSION_PORT = 1024;
     private final static int MAX_PERMISSION_PORT = 65536;
+    private final int port;
+    private volatile boolean isRunning;
+    private volatile ServerSocket serverSocket;
     private ExecutorService pool = Executors.newFixedThreadPool(2);
 
-    public static class InvalidPortException extends Exception{}
+    public static class InvalidPortException extends Exception {
+        public InvalidPortException(String errorMessage) {
+            super(errorMessage);
+        }
+
+    }
+
+    public static class ServerIsAlreadyRunningException extends Exception {
+        public ServerIsAlreadyRunningException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
 
     public EchoServer() throws InvalidPortException {
         this(DEFAULT_PORT);
@@ -33,7 +42,8 @@ public class EchoServer {
 
     private void validate(int port) throws InvalidPortException {
         if ( port < MIN_PERMISSION_PORT || port > MAX_PERMISSION_PORT ) {
-            throw new InvalidPortException();
+            throw new InvalidPortException(String.format("%d is invalid port. Value beetwen %d and %d is expected.",
+                    port, MIN_PERMISSION_PORT, MAX_PERMISSION_PORT));
         }
     }
 
@@ -45,23 +55,21 @@ public class EchoServer {
         return port;
     }
 
-    public void start() throws IOException {
+    public synchronized void start() throws ServerIsAlreadyRunningException, IOException {
         run();
 
         while (isRunning()) {
-            clientSocket = serverSocket.accept();
-            System.out.println("Client has been connected\n");
-
             pool.execute(() -> {
-                try {
-                    while ( clientIsNotClose() ) {
-                        inputMessage = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
-                        String line = inputMessage.readLine();
+                 try (Socket clientSocket = serverSocket.accept();
+                      BufferedReader sin = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                     System.out.println("Client has been connected\n");
+                     clientSocket.setSoTimeout(5000);
 
-                        checkCommand(line);
+                     String line;
 
-                        System.out.println ("Entry message: " + line);
-                    }
+                     while ( checkLine(line = sin.readLine()) ) {
+                         System.out.println("Entry message: " + line);
+                     }
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -70,7 +78,15 @@ public class EchoServer {
         }
     }
 
-    private void run() throws IOException {
+    private boolean checkLine(String line) {
+        return isRunning() && line != null && !line.equals("disconnect");
+    }
+
+    private synchronized void run() throws ServerIsAlreadyRunningException, IOException {
+        if ( isRunning() ) {
+            throw new ServerIsAlreadyRunningException("Server is already running");
+        }
+
         if ( !isRunning() ) {
             isRunning = true;
             serverSocket = new ServerSocket(getPort());
@@ -79,58 +95,43 @@ public class EchoServer {
         }
     }
 
-    private void checkCommand(String line) throws IOException {
-        if ( line.equals("disconnect") ) {
-            disconnect();
-        }
-    }
-
-    private void disconnect() throws IOException {
-        inputMessage.close();
-        clientSocket.close();
-
-        System.out.println("Client has been disconnected");
-    }
-
-    private boolean clientIsNotClose() {
-        return !clientSocket.isClosed();
-    }
-
-    public void stop() throws IOException {
+    public synchronized void stop() throws IOException {
         if ( isRunning() ) {
-            if ( clientIsNotClose() ) {
-                disconnect();
-            }
-
-            isRunning = false;
             pool.shutdown();
             serverSocket.close();
-            System.out.println("Server has been closed");
+            isRunning = false;
 
-            return;
+            System.out.println("Server has been closed");
         }
-        System.out.println("Echo server is close");
     }
 }
 
 class StartEchoServer {
-    public static void main(String[] args) throws IOException, EchoServer.InvalidPortException, InterruptedException {
+    public static void main(String[] args) throws EchoServer.InvalidPortException, InterruptedException, IOException {
         EchoServer server = new EchoServer();
         runServer(server);
-        server.stop();
+        runServer(server);
+
+//        server.stop();
+
         System.exit(0);
     }
 
-    public static void runServer(EchoServer server) throws InterruptedException {
+    public static void runServer(EchoServer server) throws InterruptedException, IOException {
+        System.out.println("Start server");
         Runnable r = () -> {
             try {
                 server.start();
+            } catch (EchoServer.ServerIsAlreadyRunningException e) {
+                e.printStackTrace();
             } catch (IOException e) {
                 e.printStackTrace();
             }
         };
-        Thread t = new Thread(r);
-        t.start();
-        t.sleep(10000);
+
+        ExecutorService t = Executors.newFixedThreadPool(1);
+        t.execute(r);
+        server.stop();
+        Thread.sleep(100);
     }
 }
