@@ -1,8 +1,6 @@
 package com.gymfox.echoserver;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -21,7 +19,6 @@ public class EchoServer {
         public InvalidPortException(String errorMessage) {
             super(errorMessage);
         }
-
     }
 
     public static class ServerIsAlreadyRunningException extends Exception {
@@ -55,31 +52,31 @@ public class EchoServer {
         return port;
     }
 
-    public synchronized void start() throws ServerIsAlreadyRunningException, IOException {
+    public void start() throws ServerIsAlreadyRunningException, IOException {
         run();
 
         while (isRunning()) {
+            Socket clientSocket = serverSocket.accept();
             pool.execute(() -> {
-                 try (Socket clientSocket = serverSocket.accept();
-                      BufferedReader sin = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
-                     System.out.println("Client has been connected\n");
-                     clientSocket.setSoTimeout(5000);
+                    try (PrintWriter sout = new PrintWriter(new OutputStreamWriter(clientSocket.getOutputStream()));
+                         BufferedReader sin = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()))) {
+                        System.out.println("Client has been connected\n");
+                        clientSocket.setSoTimeout(5000);
 
-                     String line;
+                        String line;
 
-                     while ( checkLine(line = sin.readLine()) ) {
-                         System.out.println("Entry message: " + line);
-                     }
-
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+                        while ( checkLine(line = sin.readLine()) ) {
+                            System.out.println("Entry message: " + line);
+                            sout.println("Message from server: " + line);
+                            sout.flush();
+                        }
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    } finally {
+                        closeClientSocket(clientSocket);
+                    }
             });
         }
-    }
-
-    private boolean checkLine(String line) {
-        return isRunning() && line != null && !line.equals("disconnect");
     }
 
     private synchronized void run() throws ServerIsAlreadyRunningException, IOException {
@@ -95,11 +92,23 @@ public class EchoServer {
         }
     }
 
+    private boolean checkLine(String line) {
+        return isRunning() && line != null && !line.equals("disconnect");
+    }
+
+    private void closeClientSocket(Socket clientSocket) {
+        try {
+            clientSocket.close();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
     public synchronized void stop() throws IOException {
         if ( isRunning() ) {
+            isRunning = false;
             pool.shutdown();
             serverSocket.close();
-            isRunning = false;
 
             System.out.println("Server has been closed");
         }
@@ -110,28 +119,24 @@ class StartEchoServer {
     public static void main(String[] args) throws EchoServer.InvalidPortException, InterruptedException, IOException {
         EchoServer server = new EchoServer();
         runServer(server);
-        runServer(server);
 
-//        server.stop();
+        server.stop();
 
         System.exit(0);
     }
 
-    public static void runServer(EchoServer server) throws InterruptedException, IOException {
+    public static void runServer(EchoServer server) throws InterruptedException {
         System.out.println("Start server");
         Runnable r = () -> {
             try {
                 server.start();
-            } catch (EchoServer.ServerIsAlreadyRunningException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (EchoServer.ServerIsAlreadyRunningException | IOException e) {
                 e.printStackTrace();
             }
         };
 
         ExecutorService t = Executors.newFixedThreadPool(1);
         t.execute(r);
-        server.stop();
-        Thread.sleep(100);
+        Thread.sleep(10000);
     }
 }
