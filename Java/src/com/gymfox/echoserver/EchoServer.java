@@ -107,8 +107,8 @@ public class EchoServer {
     public synchronized void stop() throws IOException {
         if ( isRunning() ) {
             isRunning = false;
-            pool.shutdown();
             serverSocket.close();
+            pool.shutdown();
 
             System.out.println("Server has been closed");
         }
