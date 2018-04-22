@@ -1,6 +1,10 @@
 package com.gymfox.echoserver;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.concurrent.ExecutorService;
@@ -10,10 +14,10 @@ public class EchoServer {
     private final static int DEFAULT_PORT = 8080;
     private final static int MIN_PERMISSION_PORT = 1024;
     private final static int MAX_PERMISSION_PORT = 65536;
+    private final ExecutorService pool = Executors.newFixedThreadPool(2);
     private final int port;
     private volatile boolean isRunning;
     private volatile ServerSocket serverSocket;
-    private ExecutorService pool = Executors.newFixedThreadPool(2);
 
     public static class InvalidPortException extends Exception {
         public InvalidPortException(String errorMessage) {
@@ -70,6 +74,7 @@ public class EchoServer {
                             sout.println("Message from server: " + line);
                             sout.flush();
                         }
+
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
@@ -83,13 +88,11 @@ public class EchoServer {
         if ( isRunning() ) {
             throw new ServerIsAlreadyRunningException("Server is already running");
         }
+        
+        isRunning = true;
+        serverSocket = new ServerSocket(getPort());
 
-        if ( !isRunning() ) {
-            isRunning = true;
-            serverSocket = new ServerSocket(getPort());
-
-            System.out.println("Echo sever has been started");
-        }
+        System.out.println("Echo sever has been started");
     }
 
     private boolean checkLine(String line) {
