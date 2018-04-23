@@ -10,20 +10,13 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-public class EchoServer {
-    private final static int DEFAULT_PORT = 8080;
-    private final static int MIN_PERMISSION_PORT = 1024;
-    private final static int MAX_PERMISSION_PORT = 65536;
+import static com.gymfox.echoserver.ServerUtils.*;
+
+public class EchoServer implements Executable {
     private final ExecutorService pool = Executors.newFixedThreadPool(2);
     private final int port;
     private volatile boolean isRunning;
     private volatile ServerSocket serverSocket;
-
-    public static class InvalidPortException extends Exception {
-        public InvalidPortException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
 
     public static class ServerIsAlreadyRunningException extends Exception {
         public ServerIsAlreadyRunningException(String errorMessage) {
@@ -41,13 +34,6 @@ public class EchoServer {
         this.isRunning = false;
     }
 
-    private void validate(int port) throws InvalidPortException {
-        if ( port < MIN_PERMISSION_PORT || port > MAX_PERMISSION_PORT ) {
-            throw new InvalidPortException(String.format("%d is invalid port. Value beetwen %d and %d is expected.",
-                    port, MIN_PERMISSION_PORT, MAX_PERMISSION_PORT));
-        }
-    }
-
     public boolean isRunning() {
         return isRunning;
     }
@@ -57,7 +43,7 @@ public class EchoServer {
     }
 
     public void start() throws ServerIsAlreadyRunningException, IOException {
-        run();
+        runServer();
 
         while (isRunning()) {
             Socket clientSocket = serverSocket.accept();
@@ -78,17 +64,17 @@ public class EchoServer {
                     } catch (IOException e) {
                         e.printStackTrace();
                     } finally {
-                        closeClientSocket(clientSocket);
+                        closeSocket(clientSocket);
                     }
             });
         }
     }
 
-    private synchronized void run() throws ServerIsAlreadyRunningException, IOException {
+    private synchronized void runServer() throws ServerIsAlreadyRunningException, IOException {
         if ( isRunning() ) {
             throw new ServerIsAlreadyRunningException("Server is already running");
         }
-        
+
         isRunning = true;
         serverSocket = new ServerSocket(getPort());
 
@@ -97,14 +83,6 @@ public class EchoServer {
 
     private boolean checkLine(String line) {
         return isRunning() && line != null && !line.equals("disconnect");
-    }
-
-    private void closeClientSocket(Socket clientSocket) {
-        try {
-            clientSocket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public synchronized void stop() throws IOException {
@@ -119,27 +97,11 @@ public class EchoServer {
 }
 
 class StartEchoServer {
-    public static void main(String[] args) throws EchoServer.InvalidPortException, InterruptedException, IOException {
+    public static void main(String[] args) throws InvalidPortException, IOException, InterruptedException {
         EchoServer server = new EchoServer();
-        runServer(server);
+        startConnect(server);
 
         server.stop();
-
         System.exit(0);
-    }
-
-    public static void runServer(EchoServer server) throws InterruptedException {
-        System.out.println("Start server");
-        Runnable r = () -> {
-            try {
-                server.start();
-            } catch (EchoServer.ServerIsAlreadyRunningException | IOException e) {
-                e.printStackTrace();
-            }
-        };
-
-        ExecutorService t = Executors.newFixedThreadPool(1);
-        t.execute(r);
-        Thread.sleep(10000);
     }
 }
