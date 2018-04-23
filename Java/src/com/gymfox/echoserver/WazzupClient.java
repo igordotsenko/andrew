@@ -7,39 +7,26 @@ import java.net.Socket;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.sun.jndi.ldap.LdapCtx.DEFAULT_PORT;
+import static com.gymfox.echoserver.ServerUtils.*;
 
-public class WazzupClient {
-    private final static int MAX_PERMISSION_PORT = 65536;
-    private final static int MIN_PERMISSION_PORT = 1024;
+public class WazzupClient implements Executable {
+    private final static IPv4Address DEFAULT_IP_ADDRESS = new IPv4Address("127.0.0.1");
+    private final IPv4Address address;
+    private final int port;
     private Socket socket;
-    private IPv4Address address;
-    private int port;
-    private volatile boolean isConnect;
+    private boolean isConnect;
     private ExecutorService pool = Executors.newFixedThreadPool(1);
 
-    public static class InvalidPortException extends Exception {
-        public InvalidPortException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    public WazzupClient() throws InvalidPortException {
-        this(new IPv4Address("127.0.0.1"), DEFAULT_PORT);
+    public WazzupClient() throws ServerUtils.InvalidPortException {
+        this(DEFAULT_IP_ADDRESS, DEFAULT_PORT);
         this.isConnect = false;
+
     }
 
-    public WazzupClient(IPv4Address address, int port) throws InvalidPortException {
+    public WazzupClient(IPv4Address address, int port) throws ServerUtils.InvalidPortException {
         validate(port);
         this.address = address;
         this.port = port;
-    }
-
-    private void validate(int port) throws InvalidPortException {
-        if ( port < MIN_PERMISSION_PORT || port > MAX_PERMISSION_PORT ) {
-            throw new InvalidPortException(String.format("%d is invalid port. Value beetwen %d and %d is expected.",
-                    port, MIN_PERMISSION_PORT, MAX_PERMISSION_PORT));
-        }
     }
 
     public String getAddress() {
@@ -54,7 +41,7 @@ public class WazzupClient {
         return isConnect;
     }
 
-    public void connect() throws IOException {
+    public void start() throws IOException {
         startConnection();
         System.out.println("Send your message");
 
@@ -75,7 +62,7 @@ public class WazzupClient {
                 } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
-                    endConnection(socket);
+                    closeSocket(socket);
                 }
             });
         }
@@ -89,45 +76,27 @@ public class WazzupClient {
         }
     }
 
-    private void endConnection(Socket socket) {
-        try {
-            socket.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
-    private boolean checkLine(String line) {
+    public boolean checkLine(String line) {
         return isConnect() && line != null;
     }
 
     public void stop() {
-        pool.shutdown();
-        System.out.println("Client has benn disconnected");
+        if ( isConnect() ) {
+            pool.shutdown();
+            isConnect = false;
+            System.out.println("Client has benn disconnected");
+        }
     }
 }
 
 class StartWazzupClient {
-    public static void main(String[] args) throws WazzupClient.InvalidPortException, InterruptedException {
-        WazzupClient client = new WazzupClient(new IPv4Address("127.0.0.129"), 8080);
+    public static void main(String[] args) throws InterruptedException, InvalidPortException {
+        WazzupClient client = new WazzupClient();
 
-        connectToServer(client);
+        startConnect(client);
+
         client.stop();
 
         System.exit(0);
-    }
-
-    public static void connectToServer(WazzupClient client) throws InterruptedException {
-        Runnable r = () -> {
-            try {
-                client.connect();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        };
-
-        ExecutorService t = Executors.newFixedThreadPool(1);
-        t.execute(r);
-        Thread.sleep(20000);
     }
 }
