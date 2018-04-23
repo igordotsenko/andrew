@@ -57,7 +57,7 @@ public class Downloader {
 
     @Override
     public String toString() {
-        return url;
+        return getUrl();
     }
 }
 
