@@ -10,37 +10,28 @@ import java.util.concurrent.Executors;
 
 public class Downloader {
     private String url;
-    private ExecutorService pool = Executors.newFixedThreadPool(1);
 
     public Downloader(String url) {
         this.url = url;
     }
 
-    public String getUrl() {
-        return url;
-    }
-
     public void downloadImage() {
-        pool.execute(() -> {
-            try {
-                URL urlImage = new URL(getUrl());
-                Path fileName = Paths.get(getUrl()).getFileName();
-                HttpURLConnection myUrlConnection = (HttpURLConnection) urlImage.openConnection();
-                InputStream inputStream = urlImage.openStream();
-                OutputStream outputStream = new FileOutputStream(new File(String.valueOf(fileName)));
-                byte[] buffer = new byte[myUrlConnection.getContentLength()];
+        try {
+            URL urlImage = new URL(getUrl());
+            Path fileName = Paths.get(getUrl()).getFileName();
+            HttpURLConnection myUrlConnection = (HttpURLConnection) urlImage.openConnection();
+            InputStream inputStream = urlImage.openStream();
+            OutputStream outputStream = new FileOutputStream(new File(String.valueOf(fileName)));
+            byte[] buffer = new byte[myUrlConnection.getContentLength()];
 
-                writeToFile(buffer, inputStream, outputStream);
+            writeToFile(buffer, inputStream, outputStream);
 
-                outputStream.flush();
-                outputStream.close();
-                inputStream.close();
-            } catch (Exception e) {
-                e.printStackTrace();
-            } finally {
-                closeExecutors();
-            }
-        });
+            outputStream.flush();
+            outputStream.close();
+            inputStream.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void writeToFile(byte[] buffer, InputStream inputStream, OutputStream outputStream) throws IOException {
@@ -51,13 +42,13 @@ public class Downloader {
         }
     }
 
-    private void closeExecutors() {
-        pool.shutdown();
+    public String getUrl() {
+        return url;
     }
 
     @Override
     public String toString() {
-        return getUrl();
+        return "Image to download: " + getUrl();
     }
 }
 
