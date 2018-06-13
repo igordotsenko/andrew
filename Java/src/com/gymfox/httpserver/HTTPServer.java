@@ -1,15 +1,10 @@
 package com.gymfox.httpserver;
 
-import com.gymfox.communication.IPv4Address;
-
 import java.io.*;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.URL;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Scanner;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -22,69 +17,16 @@ public class HTTPServer {
     private final ExecutorService pool = Executors.newFixedThreadPool(1);
     private volatile ServerSocket serverSocket;
     private volatile boolean isRunning;
-    private static HttpServerConf httpServerConf;
+    static HTTPServerConf httpServerConf;
 
-    private static class HttpServerConf {
-        private final IPv4Address address;
-        private final int port;
-        private final File directory;
-
-        public HttpServerConf(String pathToFile) throws IOException {
-            validatePath(new File(pathToFile));
-            config = getConfig(pathToFile);
-
-            this.address = new IPv4Address(config.get("address"));
-            this.port = validatePort(Integer.parseInt(config.get("port")));
-            this.directory = validatePath(new File(config.get("root_dir")));
-        }
-
-        private Map<String, String> getConfig(String path) throws IOException {
-            FileReader fileReader = new FileReader(path);
-            Scanner fileScanner = new Scanner(fileReader);
-
-            Map<String, String> config = new HashMap<>();
-
-            while ( fileScanner.hasNextLine() ) {
-                config.put(fileScanner.next(), fileScanner.next());
-            }
-
-            fileReader.close();
-
-            return config;
-        }
-
-        public String getAddress() {
-            return address.getIpString();
-        }
-
-        public int getPort() {
-            return port;
-        }
-
-        public File getRootDirectory() {
-            return directory;
-        }
-
-        @Override
-        public String toString() {
-            StringBuilder out = new StringBuilder();
-
-            out.append("Configuration file:\n\t");
-            out.append("address     ").append(getAddress()).append("\n\t");
-            out.append("port        ").append(getPort()).append("\n\t");
-            out.append("root_dir    ").append(getRootDirectory()).append("\n\n");
-
-            return out.toString();
-        }
-    }
-
-    public HTTPServer() throws IOException {
+    public HTTPServer() throws IOException, InvalidPathToCurrentFileException, InvalidPortException {
         this(CONFIG_FILE);
     }
 
-    public HTTPServer(String pathToConfigFile) throws IOException {
-        httpServerConf = new HttpServerConf(pathToConfigFile);
-        this.isRunning = false;
+    public HTTPServer(File pathToConfigFile) throws IOException, InvalidPathToCurrentFileException,
+            InvalidPortException {
+        validatePath(pathToConfigFile);
+        httpServerConf = ConfigSerializer.getConfig(pathToConfigFile);
     }
 
     public void start() throws IOException {
@@ -113,7 +55,7 @@ public class HTTPServer {
 
                         connection.disconnect();
                     }
-                } catch (IOException e) {
+                } catch (IOException | InvalidHttpVersionException | InvalidPathToCurrentFileException | NotAllowedMethodException e) {
                     e.printStackTrace();
                 } finally {
                     closeSocket(socket);
@@ -151,36 +93,36 @@ public class HTTPServer {
         return httpServerConf.getRootDirectory().getName();
     }
 
+    public String getURL() {
+        return "http://" + getHost() + getRequestURI() + "\n";
+    }
+
     public boolean isRunning() {
         return isRunning;
     }
 
-    public HttpServerConf getHttpServerConf() {
+    public HTTPServerConf getHttpServerConf() {
         return httpServerConf;
     }
 
     @Override
     public String toString() {
-        StringBuilder out = new StringBuilder();
 
-        out.append(getHttpServerConf());
-
-        out.append("URL:\n\t");
-        out.append(getURL());
-        out.append(getRequest());
-        out.append(getResponse());
-
-        return out.toString();
+        return String.valueOf(getHttpServerConf()) +
+                "URL:\n\t" +
+                getURL() +
+                getRequest() +
+                getResponse();
     }
-}
 
-class StartHttpServer {
-    public static void main(String[] args) throws IOException, InterruptedException {
-        HTTPServer httpServer = new HTTPServer();
+    public static void main(String[] args) throws IOException, InterruptedException,
+            HTTPServerUtils.InvalidPathToCurrentFileException, HTTPServerUtils.InvalidPortException, FileIsEmptyException {
+        File configFile = validateIsNotEmpty(new File(args[0]));
+
+        HTTPServer httpServer = new HTTPServer(configFile);
 
         startServer(httpServer);
         httpServer.stopHttpServer();
-        System.out.println(httpServer.toString());
 
         System.exit(0);
     }
