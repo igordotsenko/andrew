@@ -4,19 +4,25 @@ import com.gymfox.communication.IPv4Address;
 
 import java.io.File;
 
+import static com.gymfox.httpserver.HTTPServerUtils.validatePath;
+import static com.gymfox.httpserver.HTTPServerUtils.validatePort;
+
 public class HTTPServerConf {
     private final IPv4Address configAddress;
     private final int configPort;
     private final File configRootDirectory;
 
-    public HTTPServerConf(IPv4Address address, int port, File root_dir) {
+    public HTTPServerConf(IPv4Address address, int port, File root_dir) throws HTTPServerUtils.InvalidPortException, HTTPServerUtils.InvalidPathToCurrentFileException {
+        validatePort(port);
+        validatePath(root_dir);
+
         this.configAddress = address;
         this.configPort = port;
         this.configRootDirectory = root_dir;
     }
 
-    IPv4Address getAddress() {
-        return configAddress;
+    String getAddress() {
+        return configAddress.getIpString();
     }
 
     int getPort() {
@@ -31,8 +37,8 @@ public class HTTPServerConf {
     public String toString() {
 
         return "Configuration file:\n" +
-                "address     " + getAddress() + "\n" +
-                "port        " + getPort() + "\n" +
-                "root_dir    " + getRootDirectory() + "\n\n";
+                "address " + getAddress() + "\n" +
+                "port " + getPort() + "\n" +
+                "root_dir " + getRootDirectory() + "\n\n";
     }
 }

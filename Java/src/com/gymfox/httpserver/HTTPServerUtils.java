@@ -18,35 +18,30 @@ final class HTTPServerUtils {
     private HTTPServerUtils() {}
 
     public static class FileIsEmptyException extends Exception {
-
         public FileIsEmptyException(String errorMessage) {
             super(errorMessage);
         }
     }
 
     public static class InvalidPortException extends Exception {
-
         public InvalidPortException(String errorMessage) {
             super(errorMessage);
         }
     }
 
     public static class InvalidPathToCurrentFileException extends Exception {
-
         public InvalidPathToCurrentFileException(String errorMessage) {
             super(errorMessage);
         }
     }
 
     public static class NotAllowedMethodException extends Exception {
-
         public NotAllowedMethodException(String errorMessage) {
             super(errorMessage);
         }
     }
 
     public static class InvalidHttpVersionException extends Exception {
-
         public InvalidHttpVersionException(String errorMessage) {
             super(errorMessage);
         }
@@ -56,7 +51,12 @@ final class HTTPServerUtils {
         public HttpServerIsRunningException(String errorMessage) {
             super(errorMessage);
         }
+    }
 
+    public static class InvalidPartsHTTPVersionException extends Throwable {
+        public InvalidPartsHTTPVersionException(String errorMessage) {
+            super(errorMessage);
+        }
     }
 
     public static void startServer(HTTPServer httpServer) throws InterruptedException {
@@ -70,7 +70,7 @@ final class HTTPServerUtils {
 
         ExecutorService t = Executors.newFixedThreadPool(1);
         t.execute(r);
-        Thread.sleep(30000);
+        Thread.sleep(15000);
     }
 
     public static void closeSocket(Socket clientSocket) {
@@ -88,27 +88,24 @@ final class HTTPServerUtils {
         return configFile;
     }
 
-    static File validatePath(File file) throws InvalidPathToCurrentFileException {
+    static void validatePath(File file) throws InvalidPathToCurrentFileException {
         if ( !file.exists() ) {
             throw new InvalidPathToCurrentFileException(String.format("File \"%s\" isn't exist", file.getName()));
         }
-
-        return file;
     }
 
-    static int validatePort(int port) throws InvalidPortException {
+    static void validatePort(int port) throws InvalidPortException {
         if ( port < MIN_SYSTEM_PORT_VALUE || port > MAX_SYSTEM_PORT_VALUE ) {
             throw new InvalidPortException(String.format("%d is invalid port. Value beetwen %d and %d is expected",
                         port, MIN_SYSTEM_PORT_VALUE, MAX_SYSTEM_PORT_VALUE));
         }
-
-        return port;
     }
 
     static String checkRequestMethod(String requestMethod) throws NotAllowedMethodException {
-        validateRequestMethod(requestMethod);
+        String newRequestMethod = requestMethod.toUpperCase();
+        validateRequestMethod(newRequestMethod);
 
-        return requestMethod;
+        return newRequestMethod;
     }
 
     static void validateRequestMethod(String requestMethod) throws NotAllowedMethodException {
@@ -117,14 +114,18 @@ final class HTTPServerUtils {
         }
     }
 
-    static String checkHttpVersion(String requestHttpVersion) throws InvalidHttpVersionException {
-        validateRequestHttpVersion(requestHttpVersion);
+    static String checkHttpVersion(String requestHttpVersion) throws InvalidHttpVersionException,
+            InvalidPartsHTTPVersionException {
+        String newRequestHttpVersion = requestHttpVersion.toUpperCase();
+        validateRequestHttpVersion(newRequestHttpVersion);
 
-        return requestHttpVersion;
+        return newRequestHttpVersion;
     }
 
-    static void validateRequestHttpVersion(String requestHttpVersion) throws InvalidHttpVersionException {
+    static void validateRequestHttpVersion(String requestHttpVersion) throws InvalidHttpVersionException,
+            InvalidPartsHTTPVersionException {
         String[] httpVersionParts = requestHttpVersion.split("/");
+        validateParts(httpVersionParts);
         double httpVersion = Double.parseDouble(httpVersionParts[1]);
 
         if ( !httpVersionParts[0].equals("HTTP") ) {
@@ -133,6 +134,13 @@ final class HTTPServerUtils {
 
         if ( !VALID_HTTP_VERSIONS.contains(httpVersion) ) {
             throw new InvalidHttpVersionException("Invalid protocol version");
+        }
+    }
+
+    static void validateParts(String[] httpVersionParts) throws InvalidPartsHTTPVersionException {
+        if ( httpVersionParts.length > 2 ) {
+            throw new InvalidPartsHTTPVersionException(String.format("Invalid HTTP version parts. Expected 2, but " +
+                    "found %d", httpVersionParts.length));
         }
     }
 }

@@ -3,14 +3,14 @@ package com.gymfox.httpserver;
 import com.gymfox.communication.IPv4Address;
 
 import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
-import java.util.HashMap;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.Map;
-import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 import static com.gymfox.httpserver.HTTPServerUtils.*;
-import static com.gymfox.httpserver.HTTPServerUtils.validatePort;
 
 final class ConfigSerializer {
     private ConfigSerializer() {}
@@ -18,17 +18,16 @@ final class ConfigSerializer {
     static HTTPServerConf getConfig(File path) throws IOException, InvalidPathToCurrentFileException,
             InvalidPortException {
         validatePath(path);
-        FileReader fileReader = new FileReader(path);
-        Scanner fileScanner = new Scanner(fileReader);
-        Map<String, String> config = new HashMap<>();
 
-        while (fileScanner.hasNextLine()) {
-            config.put(fileScanner.next(), fileScanner.next());
+        Map<String, String> config;
+
+        try (Stream<String> stream = Files.lines(Paths.get(String.valueOf(path)))) {
+            config = stream
+                    .map(lines -> lines.split(" "))
+                    .collect(Collectors.toMap(lines->lines[0], lines->lines[1]));
         }
 
-        fileReader.close();
-
         return new HTTPServerConf(new IPv4Address(config.get("address")),
-                validatePort(Integer.parseInt(config.get("port"))), validatePath(new File(config.get("root_dir"))));
+                Integer.parseInt(config.get("port")), new File(config.get("root_dir")));
     }
 }

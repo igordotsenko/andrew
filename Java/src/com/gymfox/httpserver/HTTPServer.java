@@ -55,7 +55,7 @@ public class HTTPServer {
 
                         connection.disconnect();
                     }
-                } catch (IOException | InvalidHttpVersionException | InvalidPathToCurrentFileException | NotAllowedMethodException e) {
+                } catch (IOException | InvalidHttpVersionException | NotAllowedMethodException | InvalidPartsHTTPVersionException e) {
                     e.printStackTrace();
                 } finally {
                     closeSocket(socket);
@@ -107,7 +107,6 @@ public class HTTPServer {
 
     @Override
     public String toString() {
-
         return String.valueOf(getHttpServerConf()) +
                 "URL:\n\t" +
                 getURL() +

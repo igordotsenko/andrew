@@ -18,25 +18,18 @@ final class HTTPCreateRequest {
     private HTTPCreateRequest() {}
 
     static void processingRequest(PrintWriter sout, BufferedReader sin) throws IOException,
-            NotAllowedMethodException, InvalidPathToCurrentFileException, InvalidHttpVersionException {
+            NotAllowedMethodException, InvalidHttpVersionException, InvalidPartsHTTPVersionException {
         sout.println("Enter request: ");
         sout.flush();
 
-        String requestMethod = checkRequestMethod(sin.readLine().toUpperCase());
-        requestParameters.put("method", requestMethod);
-
-        String requestURI = checkRequestURI(sin.readLine());
-        requestParameters.put("uri", requestURI);
-
-        String requestHttpVersion = checkHttpVersion(sin.readLine().toUpperCase());
-        requestParameters.put("version", requestHttpVersion);
-
-//        requestParameters.put("host", getHost());
+        setRequestMethod(sin.readLine());
+        setRequestURI(sin.readLine());
+        setRequestHTTPVersion(sin.readLine());
 
         requestToString();
     }
 
-    private static String checkRequestURI(String requestURI) throws InvalidPathToCurrentFileException {
+    static String checkRequestURI(String requestURI) throws InvalidPathToCurrentFileException {
         String checkedURI = checkSplitURI(requestURI);
 
         validateRequestURI(checkedURI);
@@ -44,7 +37,7 @@ final class HTTPCreateRequest {
         return checkedURI;
     }
 
-    private static String checkSplitURI(String splitURI) {
+    static String checkSplitURI(String splitURI) {
         String[] splitRequestURI = splitURI.split("/");
         String last = splitRequestURI[splitRequestURI.length-1];
 
@@ -72,6 +65,18 @@ final class HTTPCreateRequest {
                 "\tHost: " + getHost() + "\n";
     }
 
+    static void setRequestMethod(String requestMethod) throws NotAllowedMethodException {
+        requestParameters.put("method", checkRequestMethod(requestMethod));
+    }
+
+    static void setRequestURI(String requestURI) {
+        requestParameters.put("uri", checkSplitURI(requestURI));
+    }
+
+    static void setRequestHTTPVersion(String requestHttpVersion) throws InvalidHttpVersionException, InvalidPartsHTTPVersionException {
+        requestParameters.put("version", checkHttpVersion(requestHttpVersion));
+    }
+
     static String getRequestMethod() {
         return requestParameters.get("method");
     }
@@ -83,10 +88,6 @@ final class HTTPCreateRequest {
     static String getHttpVersion() {
         return requestParameters.get("version");
     }
-
-//    static String getRequestHost() {
-//        return requestParameters.get("host");
-//    }
 
     static String getRequest() {
         return request;
