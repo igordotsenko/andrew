@@ -23,11 +23,15 @@ final class ConfigSerializer {
 
         try (Stream<String> stream = Files.lines(Paths.get(String.valueOf(path)))) {
             config = stream
-                    .map(lines -> lines.split(" "))
+                    .map(lines -> lines.split("[\\s]++"))
                     .collect(Collectors.toMap(lines->lines[0], lines->lines[1]));
         }
 
         return new HTTPServerConf(new IPv4Address(config.get("address")),
                 Integer.parseInt(config.get("port")), new File(config.get("root_dir")));
+    }
+
+    public static void main(String[] args) throws InvalidPortException, InvalidPathToCurrentFileException, IOException {
+        new HTTPServer();
     }
 }
