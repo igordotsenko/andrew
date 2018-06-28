@@ -30,8 +30,4 @@ final class ConfigSerializer {
         return new HTTPServerConf(new IPv4Address(config.get("address")),
                 Integer.parseInt(config.get("port")), new File(config.get("root_dir")));
     }
-
-    public static void main(String[] args) throws InvalidPortException, InvalidPathToCurrentFileException, IOException {
-        new HTTPServer();
-    }
 }
