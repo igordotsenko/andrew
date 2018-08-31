@@ -13,12 +13,14 @@ import static com.gymfox.httpserver.HTTPServerUtils.*;
 
 final class HTTPCreateRequest {
     private static final Map<String, String> requestParameters = new HashMap<>();
-    private static volatile String request;
+    private static String request;
 
-    private HTTPCreateRequest() {}
+    HTTPCreateRequest(PrintWriter sout, BufferedReader sin) throws
+            IOException {
+        processingRequest(sout, sin);
+    }
 
-    static void processingRequest(PrintWriter sout, BufferedReader sin) throws IOException,
-            NotAllowedMethodException, InvalidHttpVersionException, InvalidPartsHTTPVersionException {
+    void processingRequest(PrintWriter sout, BufferedReader sin) throws IOException {
         sout.println("Enter request: ");
         sout.flush();
 
@@ -57,7 +59,6 @@ final class HTTPCreateRequest {
     }
 
     static void requestToString() {
-
         request = "Request: \n\t" +
                 getRequestMethod() + " " +
                 getRequestURI() + " " +
