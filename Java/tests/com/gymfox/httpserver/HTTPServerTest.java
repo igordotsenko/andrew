@@ -3,7 +3,7 @@ package com.gymfox.httpserver;
 import com.gymfox.communication.IPv4Address;
 import com.gymfox.httpserver.HTTPServerUtils.*;
 import org.junit.Test;
-import org.testng.Assert;
+import org.junit.Assert;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,24 +20,24 @@ public class HTTPServerTest {
     }
 
     @Test ( expected = IPv4Address.InvalidValueInOctetsException.class )
-    public void validateAddressTest() throws IOException, HTTPServerUtils.InvalidPathToCurrentFileException, InvalidPortException {
+    public void validateAddressTest() throws IOException, InvalidPortException {
         new HTTPServer(new File(pathToConf + "validateAddressTest.conf"));
     }
 
     @Test ( expected = HTTPServerUtils.InvalidPortException.class )
-    public void validatePortTest() throws IOException, HTTPServerUtils.InvalidPathToCurrentFileException, InvalidPortException {
+    public void validatePortTest() throws IOException, InvalidPortException {
         new HTTPServer(new File(pathToConf + "validatePortTest.conf"));
     }
 
-    @Test ( expected = HTTPServerUtils.InvalidPathToCurrentFileException.class )
-    public void validatePathTest() throws IOException, HTTPServerUtils.InvalidPathToCurrentFileException, InvalidPortException {
+    @Test ( expected = IOException.class )
+    public void validatePathTest() throws IOException, InvalidPortException {
         new HTTPServer(new File(pathToConf + "validatePathTest.conf"));
     }
 
-    @Test ( expected = HTTPServerUtils.InvalidPathToCurrentFileException.class )
-    public void validateConfigFile() throws IOException, HTTPServerUtils.InvalidPathToCurrentFileException, InvalidPortException {
+    @Test ( expected = IOException.class )
+    public void validateConfigFile() throws IOException, InvalidPortException {
         new HTTPServer(new File(pathToConf + "ExistConfigFile.conf"));
-        new HTTPServer(new File("httpIsNotExist.conf"));
+        new HTTPServer(new File("httpDoesNotExist.conf"));
     }
 
     @Test ( expected = NotAllowedMethodException.class )
@@ -60,8 +60,8 @@ public class HTTPServerTest {
         validateRequestHttpVersion("HTTP/2.5");
     }
 
-    @Test ( expected = InvalidPathToCurrentFileException.class )
-    public void validateRequestURITest() throws HTTPServerUtils.InvalidPathToCurrentFileException {
+    @Test ( expected = IOException.class )
+    public void validateRequestURITest() throws IOException {
         validateRequestURI("/findex.html");
     }
 
@@ -70,18 +70,18 @@ public class HTTPServerTest {
         validateRequestHttpVersion("HTTP/1.0");
     }
 
-    @Test
-    public void allConfigIsOkTest() throws IOException, HTTPServerUtils.InvalidPathToCurrentFileException, InvalidPortException {
-        new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
-    }
-
     @Test ( expected = InvalidPartsHTTPVersionException.class )
     public void validatePartsTest() throws InvalidPartsHTTPVersionException {
         validateParts(new String[]{"HTTP", "1.1", "i", "want", "to", "break", "free"});
     }
 
+    @Test ( expected = InvalidPartsHTTPVersionException.class )
+    public void validateNonePartsTest() throws InvalidPartsHTTPVersionException {
+        validateParts(new String[]{});
+    }
+
     @Test
-    public void getHTTPServerConfigTest() throws InvalidPortException, InvalidPathToCurrentFileException, IOException {
+    public void getHTTPServerConfigTest() throws InvalidPortException, IOException {
         HTTPServer httpServer = new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
         Assert.assertEquals(httpServer.getHttpServerConf().getAddress(), "127.0.0.1");
         Assert.assertEquals(httpServer.getHttpServerConf().getPort(), 80);
@@ -94,8 +94,8 @@ public class HTTPServerTest {
     }
 
     @Test
-    public void setRequestMethodsTest() throws InvalidPortException, InvalidPathToCurrentFileException,
-            IOException, NotAllowedMethodException, InvalidHttpVersionException, InvalidPartsHTTPVersionException {
+    public void setRequestMethodsTest() throws InvalidPortException, IOException, NotAllowedMethodException,
+            InvalidHttpVersionException, InvalidPartsHTTPVersionException {
         new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
         setRequestMethod("get");
         setRequestURI("/index.html");
@@ -109,8 +109,8 @@ public class HTTPServerTest {
     }
 
     @Test
-    public void checkRequestMethodsTest() throws InvalidPortException, InvalidPathToCurrentFileException,
-            IOException, NotAllowedMethodException, InvalidHttpVersionException, InvalidPartsHTTPVersionException {
+    public void checkRequestMethodsTest() throws InvalidPortException, IOException, NotAllowedMethodException,
+            InvalidHttpVersionException, InvalidPartsHTTPVersionException {
         new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
 
         Assert.assertEquals(checkRequestURI("/index.html"), "/index.html");

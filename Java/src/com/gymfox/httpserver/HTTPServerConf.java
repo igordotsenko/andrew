@@ -3,6 +3,7 @@ package com.gymfox.httpserver;
 import com.gymfox.communication.IPv4Address;
 
 import java.io.File;
+import java.io.IOException;
 
 import static com.gymfox.httpserver.HTTPServerUtils.validatePath;
 import static com.gymfox.httpserver.HTTPServerUtils.validatePort;
@@ -12,7 +13,7 @@ public class HTTPServerConf {
     private final int configPort;
     private final File configRootDirectory;
 
-    public HTTPServerConf(IPv4Address address, int port, File root_dir) throws HTTPServerUtils.InvalidPortException, HTTPServerUtils.InvalidPathToCurrentFileException {
+    public HTTPServerConf(IPv4Address address, int port, File root_dir) throws HTTPServerUtils.InvalidPortException, IOException {
         validatePort(port);
         validatePath(root_dir);
 
@@ -35,7 +36,6 @@ public class HTTPServerConf {
 
     @Override
     public String toString() {
-
         return "Configuration file:\n" +
                 "address " + getAddress() + "\n" +
                 "port " + getPort() + "\n" +

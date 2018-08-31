@@ -29,12 +29,6 @@ final class HTTPServerUtils {
         }
     }
 
-    public static class InvalidPathToCurrentFileException extends Exception {
-        public InvalidPathToCurrentFileException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
     public static class NotAllowedMethodException extends Exception {
         public NotAllowedMethodException(String errorMessage) {
             super(errorMessage);
@@ -63,14 +57,14 @@ final class HTTPServerUtils {
         Runnable r = () -> {
             try {
                 httpServer.start();
-            } catch (IOException e) {
+            } catch (IOException | HttpServerIsRunningException e) {
                 e.printStackTrace();
             }
         };
 
         ExecutorService t = Executors.newFixedThreadPool(1);
         t.execute(r);
-        Thread.sleep(15000);
+        Thread.sleep(20000);
     }
 
     public static void closeSocket(Socket clientSocket) {
@@ -88,15 +82,15 @@ final class HTTPServerUtils {
         return configFile;
     }
 
-    static void validatePath(File file) throws InvalidPathToCurrentFileException {
-        if ( !file.exists() ) {
-            throw new InvalidPathToCurrentFileException(String.format("File \"%s\" isn't exist", file.getName()));
+    static void validatePath(File file) throws IOException {
+        if ( !file.exists() && !file.isDirectory() ) {
+            throw new IOException(String.format("File \"%s\" isn't exist", file.getName()));
         }
     }
 
     static void validatePort(int port) throws InvalidPortException {
         if ( port < MIN_SYSTEM_PORT_VALUE || port > MAX_SYSTEM_PORT_VALUE ) {
-            throw new InvalidPortException(String.format("%d is invalid port. Value beetwen %d and %d is expected",
+            throw new InvalidPortException(String.format("%d is invalid port. Value between %d and %d is expected",
                         port, MIN_SYSTEM_PORT_VALUE, MAX_SYSTEM_PORT_VALUE));
         }
     }
@@ -138,7 +132,7 @@ final class HTTPServerUtils {
     }
 
     static void validateParts(String[] httpVersionParts) throws InvalidPartsHTTPVersionException {
-        if ( httpVersionParts.length > 2 ) {
+        if ( httpVersionParts.length != 2 ) {
             throw new InvalidPartsHTTPVersionException(String.format("Invalid HTTP version parts. Expected 2, but " +
                     "found %d", httpVersionParts.length));
         }

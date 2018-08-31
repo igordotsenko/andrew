@@ -29,7 +29,7 @@ final class HTTPCreateRequest {
         requestToString();
     }
 
-    static String checkRequestURI(String requestURI) throws InvalidPathToCurrentFileException {
+    static String checkRequestURI(String requestURI) throws IOException {
         String checkedURI = checkSplitURI(requestURI);
 
         validateRequestURI(checkedURI);
@@ -48,11 +48,11 @@ final class HTTPCreateRequest {
         return splitURI;
     }
 
-    static void validateRequestURI(String requestURI) throws InvalidPathToCurrentFileException {
+    static void validateRequestURI(String requestURI) throws IOException {
         File fileRequestURI = new File(httpServerConf.getRootDirectory() + "/" + requestURI);
 
         if ( !fileRequestURI.exists() ) {
-            throw new InvalidPathToCurrentFileException("404 not found");
+            throw new IOException("404 not found");
         }
     }
 

@@ -19,17 +19,16 @@ public class HTTPServer {
     private volatile boolean isRunning;
     static HTTPServerConf httpServerConf;
 
-    public HTTPServer() throws IOException, InvalidPathToCurrentFileException, InvalidPortException {
+    public HTTPServer() throws IOException, InvalidPortException {
         this(CONFIG_FILE);
     }
 
-    public HTTPServer(File pathToConfigFile) throws IOException, InvalidPathToCurrentFileException,
-            InvalidPortException {
+    public HTTPServer(File pathToConfigFile) throws IOException, InvalidPortException {
         validatePath(pathToConfigFile);
         httpServerConf = ConfigSerializer.getConfig(pathToConfigFile);
     }
 
-    public void start() throws IOException {
+    public void start() throws IOException, HttpServerIsRunningException {
         runHttpServer();
 
         while (isRunning()) {
@@ -64,13 +63,9 @@ public class HTTPServer {
         }
     }
 
-    private void runHttpServer() throws IOException {
+    private void runHttpServer() throws IOException, HttpServerIsRunningException {
         if ( isRunning() ) {
-            try {
-                throw new HttpServerIsRunningException("Server is already running");
-            } catch (HttpServerIsRunningException e) {
-                e.printStackTrace();
-            }
+            throw new HttpServerIsRunningException("Server is already running");
         }
 
         isRunning = true;
@@ -115,14 +110,12 @@ public class HTTPServer {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException,
-            HTTPServerUtils.InvalidPathToCurrentFileException, HTTPServerUtils.InvalidPortException, FileIsEmptyException {
+            HTTPServerUtils.InvalidPortException, FileIsEmptyException {
         File configFile = validateIsNotEmpty(new File(args[0]));
 
         HTTPServer httpServer = new HTTPServer(configFile);
 
         startServer(httpServer);
         httpServer.stopHttpServer();
-
-        System.exit(0);
     }
 }
