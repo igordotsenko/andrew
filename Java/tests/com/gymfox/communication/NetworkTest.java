@@ -6,122 +6,80 @@ import org.junit.Assert;
 public class NetworkTest {
     @Test ( expected = IllegalArgumentException.class )
     public void validateGraterMaskTest() {
-        Network network = new Network(new IPv4Address("192.168.0.0"), 33);
+        new Network(new IPv4Address("192.168.0.0"), 33);
     }
 
     @Test ( expected = IllegalArgumentException.class )
     public void validateLessMaskTest() {
-        Network network = new Network(new IPv4Address("192.168.0.0"), -16);
+        new Network(new IPv4Address("192.168.0.0"), -16);
     }
 
     @Test
     public void getNetworkTest() {
-        Network net1 = new Network(new IPv4Address("192.168.0.13"), 19);
-        Network net2 = new Network(new IPv4Address("192.168.0.13"), 20);
-        Network net3 = new Network(new IPv4Address("192.168.0.13"), 21);
-        Network net4 = new Network(new IPv4Address("192.168.0.13"), 22);
-        Network net5 = new Network(new IPv4Address("192.168.0.13"), 23);
-        Network net6 = new Network(new IPv4Address("192.168.0.13"), 24);
-        Network net7 = new Network(new IPv4Address("192.168.0.13"), 25);
-        Network net8 = new Network(new IPv4Address("192.168.0.13"), 26);
-        Network net9 = new Network(new IPv4Address("192.168.0.13"), 27);
-        Network net10 = new Network(new IPv4Address("192.168.0.13"), 28);
-        Network net11 = new Network(new IPv4Address("192.168.0.13"), 29);
-        Network net12 = new Network(new IPv4Address("192.168.0.13"), 30);
-
-        Assert.assertEquals("192.168.0.0/19", net1.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/20", net2.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/21", net3.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/22", net4.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/23", net5.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/24", net6.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/25", net7.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/26", net8.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/27", net9.getNetworkAsString());
-        Assert.assertEquals("192.168.0.0/28", net10.getNetworkAsString());
-        Assert.assertEquals("192.168.0.8/29", net11.getNetworkAsString());
-        Assert.assertEquals("192.168.0.12/30", net12.getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/19", new Network(new IPv4Address("192.168.0.13"), 19).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/20", new Network(new IPv4Address("192.168.0.13"), 20).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/21", new Network(new IPv4Address("192.168.0.13"), 21).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/22", new Network(new IPv4Address("192.168.0.13"), 22).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/23", new Network(new IPv4Address("192.168.0.13"), 23).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/24", new Network(new IPv4Address("192.168.0.13"), 24).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/25", new Network(new IPv4Address("192.168.0.13"), 25).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/26", new Network(new IPv4Address("192.168.0.13"), 26).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/27", new Network(new IPv4Address("192.168.0.13"), 27).getNetworkAsString());
+        Assert.assertEquals("192.168.0.0/28", new Network(new IPv4Address("192.168.0.13"), 28).getNetworkAsString());
+        Assert.assertEquals("192.168.0.8/29", new Network(new IPv4Address("192.168.0.13"), 29).getNetworkAsString());
+        Assert.assertEquals("192.168.0.12/30", new Network(new IPv4Address("192.168.0.13"), 30).getNetworkAsString());
     }
 
     @Test
     public void getAddressTest() {
-        Network net1 = new Network(new IPv4Address("192.168.0.1"), 24);
-        Network net2 = new Network(new IPv4Address("192.168.0.253"), 0);
-        Network net3 = new Network(new IPv4Address("127.12.45.22"), 25);
-        Network net4 = new Network(new IPv4Address("189.163.15.0"));
-
-        Assert.assertEquals("192.168.0.0", net1.getNetworkAddress().getIpString());
-        Assert.assertEquals("0.0.0.0", net2.getNetworkAddress().getIpString());
-        Assert.assertEquals("127.12.45.0", net3.getNetworkAddress().getIpString());
-        Assert.assertEquals("189.163.15.0", net4.getNetworkAddress().getIpString());
+        Assert.assertEquals("192.168.0.0", new Network(new IPv4Address("192.168.0.1"), 24).getNetworkAddress().getIpString());
+        Assert.assertEquals("0.0.0.0", new Network(new IPv4Address("192.168.0.253"), 0).getNetworkAddress().getIpString());
+        Assert.assertEquals("127.12.45.0", new Network(new IPv4Address("127.12.45.22"), 25).getNetworkAddress().getIpString());
+        Assert.assertEquals("189.163.15.0", new Network(new IPv4Address("189.163.15.0")).getNetworkAddress().getIpString());
     }
 
     @Test
     public void getMaskStringTest() {
-        Network net1 = new Network(new IPv4Address("192.168.0.13"), 19);
-        Network net2 = new Network(new IPv4Address("192.168.0.13"), 20);
-        Network net3 = new Network(new IPv4Address("192.168.0.13"), 21);
-        Network net4 = new Network(new IPv4Address("192.168.0.13"), 22);
-        Network net5 = new Network(new IPv4Address("192.168.0.13"), 23);
-        Network net6 = new Network(new IPv4Address("192.168.0.13"), 24);
-        Network net7 = new Network(new IPv4Address("192.168.0.13"), 25);
-        Network net8 = new Network(new IPv4Address("192.168.0.13"), 26);
-        Network net9 = new Network(new IPv4Address("192.168.0.13"), 27);
-        Network net10 = new Network(new IPv4Address("192.168.0.13"), 28);
-        Network net11 = new Network(new IPv4Address("192.168.0.13"), 29);
-        Network net12 = new Network(new IPv4Address("192.168.0.13"), 30);
-
-        Assert.assertEquals("255.255.224.0", net1.getMaskAsString());
-        Assert.assertEquals("255.255.240.0", net2.getMaskAsString());
-        Assert.assertEquals("255.255.248.0", net3.getMaskAsString());
-        Assert.assertEquals("255.255.252.0", net4.getMaskAsString());
-        Assert.assertEquals("255.255.254.0", net5.getMaskAsString());
-        Assert.assertEquals("255.255.255.0", net6.getMaskAsString());
-        Assert.assertEquals("255.255.255.128", net7.getMaskAsString());
-        Assert.assertEquals("255.255.255.192", net8.getMaskAsString());
-        Assert.assertEquals("255.255.255.224", net9.getMaskAsString());
-        Assert.assertEquals("255.255.255.240", net10.getMaskAsString());
-        Assert.assertEquals("255.255.255.248", net11.getMaskAsString());
-        Assert.assertEquals("255.255.255.252", net12.getMaskAsString());
+        Assert.assertEquals("255.255.224.0", new Network(new IPv4Address("192.168.0.13"), 19).getMaskAsString());
+        Assert.assertEquals("255.255.240.0", new Network(new IPv4Address("192.168.0.13"), 20).getMaskAsString());
+        Assert.assertEquals("255.255.248.0", new Network(new IPv4Address("192.168.0.13"), 21).getMaskAsString());
+        Assert.assertEquals("255.255.252.0", new Network(new IPv4Address("192.168.0.13"), 22).getMaskAsString());
+        Assert.assertEquals("255.255.254.0", new Network(new IPv4Address("192.168.0.13"), 23).getMaskAsString());
+        Assert.assertEquals("255.255.255.0", new Network(new IPv4Address("192.168.0.13"), 24).getMaskAsString());
+        Assert.assertEquals("255.255.255.128", new Network(new IPv4Address("192.168.0.13"), 25).getMaskAsString());
+        Assert.assertEquals("255.255.255.192", new Network(new IPv4Address("192.168.0.13"), 26).getMaskAsString());
+        Assert.assertEquals("255.255.255.224", new Network(new IPv4Address("192.168.0.13"), 27).getMaskAsString());
+        Assert.assertEquals("255.255.255.240", new Network(new IPv4Address("192.168.0.13"), 28).getMaskAsString());
+        Assert.assertEquals("255.255.255.248", new Network(new IPv4Address("192.168.0.13"), 29).getMaskAsString());
+        Assert.assertEquals("255.255.255.252", new Network(new IPv4Address("192.168.0.13"), 30).getMaskAsString());
     }
 
     @Test
     public void getBroadcastAddressTest() {
-        Network net1 = new Network(new IPv4Address("192.168.0.13"), 24);
-        Network net2 = new Network(new IPv4Address("192.168.0.13"), 25);
-        Network net3 = new Network(new IPv4Address("192.168.0.153"), 25);
-        Network net4 = new Network(new IPv4Address("127.12.45.22"), 25);
-        Network net5 = new Network(new IPv4Address("192.168.0.0"), 32);
-
-        Assert.assertEquals("192.168.0.255", net1.getBroadcastAddress().getIpString());
-        Assert.assertEquals("192.168.0.127", net2.getBroadcastAddress().getIpString());
-        Assert.assertEquals("192.168.0.255", net3.getBroadcastAddress().getIpString());
-        Assert.assertEquals("127.12.45.127", net4.getBroadcastAddress().getIpString());
-        Assert.assertEquals("192.168.0.0", net5.getBroadcastAddress().getIpString());
+        Assert.assertEquals("192.168.0.255", new Network(new IPv4Address("192.168.0.13"), 24).getBroadcastAddress().getIpString());
+        Assert.assertEquals("192.168.0.127", new Network(new IPv4Address("192.168.0.13"), 25).getBroadcastAddress().getIpString());
+        Assert.assertEquals("192.168.0.255", new Network(new IPv4Address("192.168.0.153"), 25).getBroadcastAddress().getIpString());
+        Assert.assertEquals("127.12.45.127", new Network(new IPv4Address("127.12.45.22"), 25).getBroadcastAddress().getIpString());
+        Assert.assertEquals("192.168.0.0", new Network(new IPv4Address("192.168.0.0"), 32).getBroadcastAddress().getIpString());
     }
 
     @Test
     public void getFirstUsableAddress() {
-        Network net1 = new Network(new IPv4Address("192.168.0.0"), 24);
-        Network net2 = new Network(new IPv4Address("192.168.0.13"), 25);
-        Network net3 = new Network(new IPv4Address("192.168.0.153"), 25);
-        Network net4 = new Network(new IPv4Address("127.12.45.165"), 25);
-
-        Assert.assertEquals("192.168.0.1", net1.getFirstUsableAddress().getIpString());
-        Assert.assertEquals("192.168.0.1", net2.getFirstUsableAddress().getIpString());
-        Assert.assertEquals("192.168.0.129", net3.getFirstUsableAddress().getIpString());
-        Assert.assertEquals("127.12.45.129", net4.getFirstUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.1", new Network(new IPv4Address("192.168.0.0"), 24).getFirstUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.1", new Network(new IPv4Address("192.168.0.13"), 25).getFirstUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.129", new Network(new IPv4Address("192.168.0.153"), 25).getFirstUsableAddress().getIpString());
+        Assert.assertEquals("127.12.45.129", new Network(new IPv4Address("127.12.45.165"), 25).getFirstUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.1", new Network(new IPv4Address("192.168.0.1"), 31).getFirstUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.2", new Network(new IPv4Address("192.168.0.1"), 32).getFirstUsableAddress().getIpString());
     }
 
     @Test
     public void getLastUsableAddress() {
-        Network net1 = new Network(new IPv4Address("192.168.0.0"), 24);
-        Network net2 = new Network(new IPv4Address("192.168.0.13"), 25);
-        Network net3 = new Network(new IPv4Address("192.168.0.153"), 25);
-
-        Assert.assertEquals("192.168.0.254", net1.getLastUsableAddress().getIpString());
-        Assert.assertEquals("192.168.0.126", net2.getLastUsableAddress().getIpString());
-        Assert.assertEquals("192.168.0.254", net3.getLastUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.254", new Network(new IPv4Address("192.168.0.0"), 24).getLastUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.126", new Network(new IPv4Address("192.168.0.13"), 25).getLastUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.254", new Network(new IPv4Address("192.168.0.153"), 25).getLastUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.0", new Network(new IPv4Address("192.168.0.1"), 31).getLastUsableAddress().getIpString());
+        Assert.assertEquals("192.168.0.0", new Network(new IPv4Address("192.168.0.1"), 32).getLastUsableAddress().getIpString());
     }
 
     @Test
@@ -141,38 +99,29 @@ public class NetworkTest {
         Assert.assertFalse(net1.contains(ip4));
         Assert.assertFalse(net1.contains(ip5));
         Assert.assertTrue(net2.contains(ip1));
+        Assert.assertTrue(net2.contains(ip2));
+        Assert.assertTrue(net2.contains(ip3));
+        Assert.assertTrue(net2.contains(ip4));
+        Assert.assertTrue(net2.contains(ip5));
     }
 
     @Test
     public void isPublicTest() {
-        Network net1 = new Network(new IPv4Address("10.0.0.0"), 24);
-        Network net2 = new Network(new IPv4Address("172.16.0.0"), 24);
-        Network net3 = new Network(new IPv4Address("192.168.0.0"), 24);
-        Network net4 = new Network(new IPv4Address("189.128.13.25"), 24);
-        Network net5 = new Network(new IPv4Address("127.12.45.22"), 25);
-
-        Assert.assertFalse(net1.isPublic());
-        Assert.assertFalse(net2.isPublic());
-        Assert.assertFalse(net3.isPublic());
-        Assert.assertTrue(net4.isPublic());
-        Assert.assertTrue(net5.isPublic());
+        Assert.assertFalse(new Network(new IPv4Address("10.0.0.0"), 24).isPublic());
+        Assert.assertFalse(new Network(new IPv4Address("172.16.0.0"), 24).isPublic());
+        Assert.assertFalse(new Network(new IPv4Address("192.168.0.0"), 24).isPublic());
+        Assert.assertTrue(new Network(new IPv4Address("189.128.13.25"), 24).isPublic());
+        Assert.assertTrue(new Network(new IPv4Address("127.12.45.22"), 25).isPublic());
     }
 
     @Test
     public void getTotalHostsTest() {
-        Network net1 = new Network(new IPv4Address("192.168.0.0"), 8);
-        Network net2 = new Network(new IPv4Address("192.168.0.0"), 16);
-        Network net3 = new Network(new IPv4Address("192.168.0.0"), 24);
-        Network net4 = new Network(new IPv4Address("192.168.0.0"), 29);
-        Network net5 = new Network(new IPv4Address("192.168.0.0"), 30);
-        Network net6 = new Network(new IPv4Address("192.168.0.0"), 31);
-
-        Assert.assertEquals(16777214, net1.getTotalHosts());
-        Assert.assertEquals(65534, net2.getTotalHosts());
-        Assert.assertEquals(254, net3.getTotalHosts());
-        Assert.assertEquals(6, net4.getTotalHosts());
-        Assert.assertEquals(2, net5.getTotalHosts());
-        Assert.assertEquals(0, net6.getTotalHosts());
+        Assert.assertEquals(16777214, new Network(new IPv4Address("192.168.0.0"), 8).getTotalHosts());
+        Assert.assertEquals(65534, new Network(new IPv4Address("192.168.0.0"), 16).getTotalHosts());
+        Assert.assertEquals(254, new Network(new IPv4Address("192.168.0.0"), 24).getTotalHosts());
+        Assert.assertEquals(6, new Network(new IPv4Address("192.168.0.0"), 29).getTotalHosts());
+        Assert.assertEquals(2, new Network(new IPv4Address("192.168.0.0"), 30).getTotalHosts());
+        Assert.assertEquals(0, new Network(new IPv4Address("192.168.0.0"), 31).getTotalHosts());
     }
 
     @Test
@@ -194,7 +143,6 @@ public class NetworkTest {
 
     @Test ( expected = IllegalArgumentException.class )
     public void invalidSubnetsMaskTest() {
-        Network net = new Network(new IPv4Address("172.16.0.0"), 32);
-        Network[] subnet = net.getSubnets();
+        new Network(new IPv4Address("172.16.0.0"), 32).getSubnets();
     }
 }

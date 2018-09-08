@@ -1,61 +1,47 @@
 package com.gymfox.communication;
 
+import java.util.Optional;
+
 public class Route {
     private final Network network;
     private final String interfaceName;
     private final int metric;
-    private final String routeAsString;
     private IPv4Address gateway;
+    private String routeAsString;
 
-    public static class InvalidGatewayException extends IllegalArgumentException{
-        public InvalidGatewayException(String errorMessage) {
-            super(errorMessage);
-        }
+    public Route(Network network, String interfaceName, int metric) throws Exceptions.InvalidGatewayException {
+        this.network = network;
+        this.interfaceName = interfaceName;
+        this.metric = metric;
     }
 
-    public Route(Network network, String interfaceName, int metric, IPv4Address gateway) throws InvalidGatewayException {
+    public Route(Network network, String interfaceName, int metric, IPv4Address gateway) throws Exceptions.InvalidGatewayException {
+        this(network, interfaceName, metric);
         validate(network.getNetworkAddress(), gateway);
-        this.network = network;
-        this.interfaceName = interfaceName;
-        this.metric = metric;
         this.gateway = gateway;
-        this.routeAsString = routeToString();
-    }
-
-    public Route(Network network, String interfaceName, int metric) {
-        this.network = network;
-        this.interfaceName = interfaceName;
-        this.metric = metric;
-        this.routeAsString = routeToString();
     }
 
     private String routeToString() {
-        StringBuffer out = new StringBuffer();
 
-        out.append("net: " + getNetworkAddress().getNetworkAsString() + ", ");
-
-        if ( gateway != null ) {
-            out.append("gateway: " + getGateway().getIpString() + ", ");
-        }
-
-        out.append("interface: " + getInterfaceName() + ", metric: " + getMetric());
-
-        return out.toString();
+        return String.format("net: %s, %sinterface: %s, metric: %s", getNetworkAddress()
+                        .getNetworkAsString(), getGateway().map(gateway -> "gateway: " + gateway.getIpString() + ", ")
+                        .orElse(""),
+                getInterfaceName(), getMetric());
     }
 
-    private void validate(IPv4Address netAddres, IPv4Address gateway) throws InvalidGatewayException {
-        if ( netAddres.equals(gateway) ) {
-            throw new InvalidGatewayException("Net address and gateway are equals");
+    private void validate(IPv4Address netAddress, IPv4Address gateway) throws Exceptions.InvalidGatewayException {
+        if ( netAddress.equals(gateway) ) {
+            throw new Exceptions.InvalidGatewayException("Net address and gateway are equals");
         }
     }
 
     @Override
     public String toString() {
-        return routeAsString;
+        return routeAsString == null ? routeAsString = routeToString() : routeAsString;
     }
 
-    public IPv4Address getGateway() {
-        return gateway;
+    public Optional<IPv4Address> getGateway() {
+        return Optional.ofNullable(gateway);
     }
 
     public String getInterfaceName() {
