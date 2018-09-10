@@ -3,7 +3,6 @@ package com.gymfox.communication;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
-import org.junit.AfterClass;
 
 import java.util.Set;
 import java.util.TreeSet;
@@ -56,10 +55,5 @@ public class RouterTest {
         router.removeRoute(route);
 
         Assert.assertEquals("0.0.0.0/0", router.getRouteForAddress(new IPv4Address("147.25.36.19")).getNetworkAddress().getNetworkAsString());
-    }
-
-    @AfterClass
-    public static void tearDownRouters() {
-        routes.clear();
     }
 }
