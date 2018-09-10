@@ -43,29 +43,30 @@ public class Utils {
         return newIpAsLong;
     }
 
-    static void validateOctetsCount(String[] splitOctets) {
+    static void validateOctetsCount(String[] splitOctets) throws InvalidOctetsCountException {
         if ( splitOctets.length != OCTETS_COUNT ) {
             throw new InvalidOctetsCountException(String.format("%d octets are expected, but found %d",
                     OCTETS_COUNT, splitOctets.length));
         }
     }
 
-    static void validateOctetValue(long octetsNumbers) {
+    static void validateOctetValue(long octetsNumbers) throws InvalidValueInOctetsException {
         if ( octetsNumbers < MIN_OCTETS_VALUE || octetsNumbers > MAX_OCTETS_VALUE ) {
-            throw new InvalidValueInOctetsException(String.format("%d octet is incorrect. Expected less than %d.",
-                    octetsNumbers, MAX_OCTETS_VALUE));
+            throw new InvalidValueInOctetsException(String.format("%d octet is incorrect.", octetsNumbers));
         }
     }
 
-    static void validateLongValue(long address) {
+    static void validateLongValue(long address) throws InvalidValueInOctetsException {
         if ( address > LONG_MAX_IP || address < 0 ) {
-            throw new InvalidValueInOctetsException(String.format("%d value is wrong.", address));
+            throw new InvalidValueInOctetsException(String.format("Expected address value in the range 0 to %d, but " +
+                            "got %d.", LONG_MAX_IP, address));
         }
     }
 
-    static void validateMask(int maskLength) {
+    static void validateMask(int maskLength) throws InvalidMaskValueException {
         if ( maskLength < MIN_MASK_VALUE || maskLength > MAX_MASK_VALUE ) {
-            throw new InvalidMaskValueException("Invalid Mask");
+            throw new InvalidMaskValueException(String.format("Expected %d mask length in the range %d to %d, but got %d.",
+                    MIN_MASK_VALUE, MAX_MASK_VALUE, maskLength));
         }
     }
 

@@ -33,11 +33,11 @@ public class IPv4Address {
     }
 
     public boolean lessThan(IPv4Address address) {
-        return this.getIpLong() <= address.getIpLong();
+        return this.getIpLong() < address.getIpLong();
     }
 
     public boolean greaterThan(IPv4Address address) {
-        return this.getIpLong() >= address.getIpLong();
+        return this.getIpLong() > address.getIpLong();
     }
 
     public String getIpString() {

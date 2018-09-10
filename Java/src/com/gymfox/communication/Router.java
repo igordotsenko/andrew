@@ -1,13 +1,13 @@
 package com.gymfox.communication;
 
 import java.util.Comparator;
-import java.util.Optional;
+import java.util.Set;
 import java.util.TreeSet;
 
 public class Router {
-    private TreeSet<Route> routes = new TreeSet<Route>(new RouteComparator());
+    private Set<Route> routes = new TreeSet<>(new RouteComparator());
 
-    public Router(TreeSet<Route> newRoutes) {
+    public Router(Set<Route> newRoutes) {
         addDefaultRoute();
 
         this.routes.addAll(newRoutes);
@@ -21,12 +21,12 @@ public class Router {
         routes.add(route);
     }
 
-    public Optional<Route> getRouteForAddress(IPv4Address address) {
-        return routes.stream().filter(route -> route.getNetworkAddress().contains(address)).findFirst();
+    public Route getRouteForAddress(IPv4Address address) {
+        return routes.stream().filter(route -> route.getNetworkAddress().contains(address)).findFirst().get();
     }
 
-    public TreeSet<Route> getRoutes() {
-        return routes;
+    public Set<Route> getRoutes() {
+        return new TreeSet<>(routes);
     }
 
     public void removeRoute(Route route) {

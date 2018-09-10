@@ -5,7 +5,7 @@ import org.junit.Assert;
 
 public class NetworkTest {
     @Test ( expected = IllegalArgumentException.class )
-    public void validateGraterMaskTest() {
+    public void validateGreaterMaskTest() {
         new Network(new IPv4Address("192.168.0.0"), 33);
     }
 
@@ -15,7 +15,7 @@ public class NetworkTest {
     }
 
     @Test
-    public void getNetworkTest() {
+    public void getNetworkAsStringTest() {
         Assert.assertEquals("192.168.0.0/19", new Network(new IPv4Address("192.168.0.13"), 19).getNetworkAsString());
         Assert.assertEquals("192.168.0.0/20", new Network(new IPv4Address("192.168.0.13"), 20).getNetworkAsString());
         Assert.assertEquals("192.168.0.0/21", new Network(new IPv4Address("192.168.0.13"), 21).getNetworkAsString());
@@ -52,6 +52,22 @@ public class NetworkTest {
         Assert.assertEquals("255.255.255.240", new Network(new IPv4Address("192.168.0.13"), 28).getMaskAsString());
         Assert.assertEquals("255.255.255.248", new Network(new IPv4Address("192.168.0.13"), 29).getMaskAsString());
         Assert.assertEquals("255.255.255.252", new Network(new IPv4Address("192.168.0.13"), 30).getMaskAsString());
+    }
+
+    @Test
+    public void getMaskAsLongTest() {
+        Assert.assertEquals(4294959104L, new Network(new IPv4Address("192.168.0.13"), 19).getMaskAsLong());
+        Assert.assertEquals(4294963200L, new Network(new IPv4Address("192.168.0.13"), 20).getMaskAsLong());
+        Assert.assertEquals(4294965248L, new Network(new IPv4Address("192.168.0.13"), 21).getMaskAsLong());
+        Assert.assertEquals(4294966272L, new Network(new IPv4Address("192.168.0.13"), 22).getMaskAsLong());
+        Assert.assertEquals(4294966784L, new Network(new IPv4Address("192.168.0.13"), 23).getMaskAsLong());
+        Assert.assertEquals(4294967040L, new Network(new IPv4Address("192.168.0.13"), 24).getMaskAsLong());
+        Assert.assertEquals(4294967168L, new Network(new IPv4Address("192.168.0.13"), 25).getMaskAsLong());
+        Assert.assertEquals(4294967232L, new Network(new IPv4Address("192.168.0.13"), 26).getMaskAsLong());
+        Assert.assertEquals(4294967264L, new Network(new IPv4Address("192.168.0.13"), 27).getMaskAsLong());
+        Assert.assertEquals(4294967280L, new Network(new IPv4Address("192.168.0.13"), 28).getMaskAsLong());
+        Assert.assertEquals(4294967288L, new Network(new IPv4Address("192.168.0.13"), 29).getMaskAsLong());
+        Assert.assertEquals(4294967292L, new Network(new IPv4Address("192.168.0.13"), 30).getMaskAsLong());
     }
 
     @Test
