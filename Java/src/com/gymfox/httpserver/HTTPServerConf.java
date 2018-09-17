@@ -13,7 +13,7 @@ public class HTTPServerConf {
     private final int configPort;
     private final File configRootDirectory;
 
-    public HTTPServerConf(IPv4Address address, int port, File root_dir) throws HTTPServerUtils.InvalidPortException, IOException {
+    public HTTPServerConf(IPv4Address address, int port, File root_dir) throws IOException {
         validatePort(port);
         validatePath(root_dir);
 

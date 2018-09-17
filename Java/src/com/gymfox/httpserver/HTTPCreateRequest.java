@@ -15,12 +15,11 @@ final class HTTPCreateRequest {
     private static final Map<String, String> requestParameters = new HashMap<>();
     private static String request;
 
-    HTTPCreateRequest(PrintWriter sout, BufferedReader sin) throws
-            IOException {
+    HTTPCreateRequest(PrintWriter sout, BufferedReader sin) throws IOException {
         processingRequest(sout, sin);
     }
 
-    void processingRequest(PrintWriter sout, BufferedReader sin) throws IOException {
+    static void processingRequest(PrintWriter sout, BufferedReader sin) throws IOException {
         sout.println("Enter request: ");
         sout.flush();
 

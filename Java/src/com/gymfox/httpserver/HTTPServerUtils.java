@@ -2,7 +2,10 @@ package com.gymfox.httpserver;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.ProtocolException;
 import java.net.Socket;
+import java.net.SocketException;
+import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
@@ -17,37 +20,37 @@ final class HTTPServerUtils {
 
     private HTTPServerUtils() {}
 
-    public static class FileIsEmptyException extends Exception {
+    public static class FileIsEmptyException extends NoSuchFileException {
         public FileIsEmptyException(String errorMessage) {
             super(errorMessage);
         }
     }
 
-    public static class InvalidPortException extends Exception {
+    public static class InvalidPortException extends SocketException {
         public InvalidPortException(String errorMessage) {
             super(errorMessage);
         }
     }
 
-    public static class NotAllowedMethodException extends Exception {
+    public static class NotAllowedMethodException extends ProtocolException {
         public NotAllowedMethodException(String errorMessage) {
             super(errorMessage);
         }
     }
 
-    public static class InvalidHttpVersionException extends Exception {
+    public static class InvalidHttpVersionException extends ProtocolException {
         public InvalidHttpVersionException(String errorMessage) {
             super(errorMessage);
         }
     }
 
-    public static class HttpServerIsRunningException extends Exception {
+    public static class HttpServerIsRunningException extends SocketException {
         public HttpServerIsRunningException(String errorMessage) {
             super(errorMessage);
         }
     }
 
-    public static class InvalidPartsHTTPVersionException extends Throwable {
+    public static class InvalidPartsHTTPVersionException extends ProtocolException {
         public InvalidPartsHTTPVersionException(String errorMessage) {
             super(errorMessage);
         }
@@ -57,7 +60,7 @@ final class HTTPServerUtils {
         Runnable r = () -> {
             try {
                 httpServer.start();
-            } catch (IOException | HttpServerIsRunningException e) {
+            } catch (IOException e) {
                 e.printStackTrace();
             }
         };
