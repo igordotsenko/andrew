@@ -1,6 +1,11 @@
 package com.gymfox.httpserver;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -9,8 +14,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.gymfox.httpserver.HTTPCreateRequest.*;
-import static com.gymfox.httpserver.HTTPCreateResponse.createResponse;
-import static com.gymfox.httpserver.HTTPCreateResponse.getResponse;
+import static com.gymfox.httpserver.HTTPCreateResponse.*;
 import static com.gymfox.httpserver.HTTPServerUtils.*;
 
 public class HTTPServer {
@@ -35,7 +39,7 @@ public class HTTPServer {
             Socket socket = serverSocket.accept();
             pool.execute(() -> {
                 try (PrintWriter sout = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
-                    BufferedReader sin = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
+                     BufferedReader sin = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                     System.out.println("Client has been connected");
 
                     while (isRunning()) {
