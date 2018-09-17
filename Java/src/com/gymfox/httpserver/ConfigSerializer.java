@@ -10,13 +10,12 @@ import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import static com.gymfox.httpserver.HTTPServerUtils.InvalidPortException;
 import static com.gymfox.httpserver.HTTPServerUtils.validatePath;
 
 final class ConfigSerializer {
     private ConfigSerializer() {}
 
-    static HTTPServerConf getConfig(File path) throws IOException, InvalidPortException {
+    static HTTPServerConf getConfig(File path) throws IOException {
         validatePath(path);
 
         Map<String, String> config;
