@@ -109,7 +109,7 @@ public class HTTPServer {
                 getResponse();
     }
 
-    public static void main(String[] args) throws IOException, InterruptedException, FileIsEmptyException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         File configFile = validateIsNotEmpty(new File(args[0]));
 
         HTTPServer httpServer = new HTTPServer(configFile);
