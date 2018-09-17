@@ -1,6 +1,6 @@
 package com.gymfox.httpserver;
 
-import com.gymfox.communication.IPv4Address;
+import com.gymfox.communication.Exceptions;
 import com.gymfox.httpserver.HTTPServerUtils.*;
 import org.junit.Test;
 import org.junit.Assert;
@@ -19,23 +19,23 @@ public class HTTPServerTest {
         validateIsNotEmpty(new File(pathToConf + "EmptyFileTest.conf"));
     }
 
-    @Test ( expected = IPv4Address.InvalidValueInOctetsException.class )
-    public void validateAddressTest() throws IOException, InvalidPortException {
+    @Test ( expected = Exceptions.InvalidValueInOctetsException.class )
+    public void validateAddressTest() throws IOException {
         new HTTPServer(new File(pathToConf + "validateAddressTest.conf"));
     }
 
     @Test ( expected = HTTPServerUtils.InvalidPortException.class )
-    public void validatePortTest() throws IOException, InvalidPortException {
+    public void validatePortTest() throws IOException {
         new HTTPServer(new File(pathToConf + "validatePortTest.conf"));
     }
 
     @Test ( expected = IOException.class )
-    public void validatePathTest() throws IOException, InvalidPortException {
+    public void validatePathTest() throws IOException {
         new HTTPServer(new File(pathToConf + "validatePathTest.conf"));
     }
 
     @Test ( expected = IOException.class )
-    public void validateConfigFile() throws IOException, InvalidPortException {
+    public void validateConfigFile() throws IOException {
         new HTTPServer(new File(pathToConf + "ExistConfigFile.conf"));
         new HTTPServer(new File("httpDoesNotExist.conf"));
     }
@@ -81,7 +81,7 @@ public class HTTPServerTest {
     }
 
     @Test
-    public void getHTTPServerConfigTest() throws InvalidPortException, IOException {
+    public void getHTTPServerConfigTest() throws IOException {
         HTTPServer httpServer = new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
         Assert.assertEquals(httpServer.getHttpServerConf().getAddress(), "127.0.0.1");
         Assert.assertEquals(httpServer.getHttpServerConf().getPort(), 80);
@@ -94,8 +94,7 @@ public class HTTPServerTest {
     }
 
     @Test
-    public void setRequestMethodsTest() throws InvalidPortException, IOException, NotAllowedMethodException,
-            InvalidHttpVersionException, InvalidPartsHTTPVersionException {
+    public void setRequestMethodsTest() throws IOException {
         new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
         setRequestMethod("get");
         setRequestURI("/index.html");
@@ -109,8 +108,7 @@ public class HTTPServerTest {
     }
 
     @Test
-    public void checkRequestMethodsTest() throws InvalidPortException, IOException, NotAllowedMethodException,
-            InvalidHttpVersionException, InvalidPartsHTTPVersionException {
+    public void checkRequestMethodsTest() throws IOException {
         new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
 
         Assert.assertEquals(checkRequestURI("/index.html"), "/index.html");
