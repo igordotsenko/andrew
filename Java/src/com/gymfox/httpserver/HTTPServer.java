@@ -43,7 +43,7 @@ public class HTTPServer {
                     System.out.println("Client has been connected");
 
                     while (isRunning()) {
-                        processingRequest(sout, sin);
+                        new HTTPCreateRequest(sout, sin);
 
                         HttpURLConnection connection = (HttpURLConnection) new URL(getURL()).openConnection();
 

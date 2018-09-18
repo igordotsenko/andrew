@@ -19,7 +19,7 @@ final class HTTPCreateRequest {
         processingRequest(sout, sin);
     }
 
-    static void processingRequest(PrintWriter sout, BufferedReader sin) throws IOException {
+    void processingRequest(PrintWriter sout, BufferedReader sin) throws IOException {
         sout.println("Enter request: ");
         sout.flush();
 
