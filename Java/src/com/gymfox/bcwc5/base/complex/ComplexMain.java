@@ -1,10 +1,9 @@
+package com.gymfox.bcwc5.base.complex;
+
 import java.util.Scanner;
 
-/**
- * Created by andrew on 22.11.16.
- */
 public class ComplexMain {
-    public static void main(String[] args) throws CloneNotSupportedException {
+    public static void main(String[] args) {
         Scanner scan = new Scanner(System.in);
         double x,y;
 

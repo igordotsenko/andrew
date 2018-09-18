@@ -1,8 +1,5 @@
-import java.util.Vector;
+package com.gymfox.bcwc5.base.complex;
 
-/**
- * Created by andrew on 18.11.16.
- */
 public class Complex implements Cloneable{
     private double real;
     private double imaginary;
