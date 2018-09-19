@@ -1,18 +1,27 @@
 package com.gymfox.httpserver;
 
 import com.gymfox.communication.Exceptions;
-import com.gymfox.httpserver.HTTPServerUtils.*;
-import org.junit.Test;
 import org.junit.Assert;
+import org.junit.BeforeClass;
+import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
 
 import static com.gymfox.httpserver.HTTPCreateRequest.*;
+import static com.gymfox.httpserver.HTTPServerExceptions.*;
 import static com.gymfox.httpserver.HTTPServerUtils.*;
 
 public class HTTPServerTest {
-    private String pathToConf = "tests/com/gymfox/httpserver/configuration/";
+    private static final String pathToConf = "tests/com/gymfox/httpserver/configuration/";
+    private static HTTPServer httpServerTest;
+    private static HTTPCreateRequest request;
+
+    @BeforeClass
+    public static void setUpHTTPServer() throws IOException {
+        httpServerTest = new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
+        request = new HTTPCreateRequest();
+    }
 
     @Test ( expected = FileIsEmptyException.class )
     public void fileIsEmptyException() throws FileIsEmptyException {
@@ -24,7 +33,7 @@ public class HTTPServerTest {
         new HTTPServer(new File(pathToConf + "validateAddressTest.conf"));
     }
 
-    @Test ( expected = HTTPServerUtils.InvalidPortException.class )
+    @Test ( expected = HTTPServerExceptions.InvalidPortException.class )
     public void validatePortTest() throws IOException {
         new HTTPServer(new File(pathToConf + "validatePortTest.conf"));
     }
@@ -81,36 +90,32 @@ public class HTTPServerTest {
     }
 
     @Test
-    public void getHTTPServerConfigTest() throws IOException {
-        HTTPServer httpServer = new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
-        Assert.assertEquals(httpServer.getHttpServerConf().getAddress(), "127.0.0.1");
-        Assert.assertEquals(httpServer.getHttpServerConf().getPort(), 80);
-        Assert.assertEquals(httpServer.getHttpServerConf().getRootDirectory().toString(), "/var/www/localhost");
-        Assert.assertEquals(httpServer.getHttpServerConf().toString(),
-                "Configuration file:\n" +
-                "address 127.0.0.1\n" +
-                "port 80\n" +
-                "root_dir /var/www/localhost\n\n");
+    public void getHTTPServerConfigTest() {
+        Assert.assertEquals(httpServerTest.getHttpServerConf().getAddress(), "127.0.0.1");
+        Assert.assertEquals(httpServerTest.getHttpServerConf().getPort(), 80);
+        Assert.assertEquals(httpServerTest.getHttpServerConf().getRootDirectory().toString(), "/var/www/localhost");
+        Assert.assertEquals(httpServerTest.getHttpServerConf().toString(), "Configuration file:\n\t" +
+                "address 127.0.0.1\n\t" +
+                "port 80\n\t" +
+                "root_dir /var/www/localhost\n");
     }
 
     @Test
     public void setRequestMethodsTest() throws IOException {
-        new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
-        setRequestMethod("get");
-        setRequestURI("/index.html");
-        setRequestHTTPVersion("http/1.1");
-        requestToString();
+        request.setRequestMethod("get");
+        request.setRequestURI("/index.html");
+        request.setRequestHTTPVersion("http/1.1");
+        request.requestToString();
 
-        Assert.assertEquals(getRequestMethod(), "GET");
-        Assert.assertEquals(getRequestURI(), "/index.html");
-        Assert.assertEquals(getHttpVersion(), "HTTP/1.1");
-        Assert.assertEquals(getRequest(), "Request: \n\tGET /index.html HTTP/1.1\n\tHost: localhost\n");
+        Assert.assertEquals(request.getRequestMethod(), "GET");
+        Assert.assertEquals(request.getRequestURI(), "/index.html");
+        Assert.assertEquals(request.getHttpVersion(), "HTTP/1.1");
+        Assert.assertEquals(getRequest(), "URL:\n" +
+                "\thttp://localhost/index.html\nRequest:\n\tGET /index.html HTTP/1.1\n\tHost: localhost\n");
     }
 
     @Test
     public void checkRequestMethodsTest() throws IOException {
-        new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
-
         Assert.assertEquals(checkRequestURI("/index.html"), "/index.html");
         Assert.assertEquals(checkRequestMethod("get"), "GET");
         Assert.assertEquals(checkHttpVersion("HTTP/1.0"), "HTTP/1.0");

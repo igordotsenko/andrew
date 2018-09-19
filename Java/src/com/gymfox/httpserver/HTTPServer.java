@@ -13,12 +13,14 @@ import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.gymfox.httpserver.HTTPCreateRequest.*;
-import static com.gymfox.httpserver.HTTPCreateResponse.*;
+import static com.gymfox.httpserver.HTTPCreateRequest.getRequest;
+import static com.gymfox.httpserver.HTTPCreateResponse.createResponse;
+import static com.gymfox.httpserver.HTTPCreateResponse.getResponse;
 import static com.gymfox.httpserver.HTTPServerUtils.*;
+import static com.gymfox.httpserver.HTTPServerExceptions.HttpServerIsRunningException;
 
 public class HTTPServer {
-    private final ExecutorService pool = Executors.newFixedThreadPool(1);
+    private final ExecutorService pool = Executors.newFixedThreadPool(2);
     private volatile ServerSocket serverSocket;
     private volatile boolean isRunning;
     static HTTPServerConf httpServerConf;
@@ -27,12 +29,12 @@ public class HTTPServer {
         this(CONFIG_FILE);
     }
 
-    public HTTPServer(File pathToConfigFile) throws IOException {
+    HTTPServer(File pathToConfigFile) throws IOException {
         validatePath(pathToConfigFile);
         httpServerConf = ConfigSerializer.getConfig(pathToConfigFile);
     }
 
-    public void start() throws IOException {
+    void start() throws IOException {
         runHttpServer();
 
         while (isRunning()) {
@@ -43,11 +45,11 @@ public class HTTPServer {
                     System.out.println("Client has been connected");
 
                     while (isRunning()) {
-                        new HTTPCreateRequest(sout, sin);
+                        HTTPCreateRequest request = new HTTPCreateRequest(sout, sin);
 
-                        HttpURLConnection connection = (HttpURLConnection) new URL(getURL()).openConnection();
+                        HttpURLConnection connection = (HttpURLConnection) new URL(request.getURL()).openConnection();
 
-                        connection.setRequestMethod(getRequestMethod());
+                        connection.setRequestMethod(request.getRequestMethod());
 
                         if ( connection.getResponseCode() == HttpURLConnection.HTTP_OK ) {
                             createResponse(connection);
@@ -78,7 +80,7 @@ public class HTTPServer {
         System.out.println("HTTP sever has been started");
     }
 
-    public void stopHttpServer() throws IOException {
+    private void stopHttpServer() throws IOException {
         if (isRunning()) {
             isRunning = false;
             serverSocket.close();
@@ -88,29 +90,17 @@ public class HTTPServer {
         }
     }
 
-    public static String getHost() {
-        return httpServerConf.getRootDirectory().getName();
-    }
-
-    public String getURL() {
-        return "http://" + getHost() + getRequestURI() + "\n";
-    }
-
-    public boolean isRunning() {
+    private boolean isRunning() {
         return isRunning;
     }
 
-    public HTTPServerConf getHttpServerConf() {
+    HTTPServerConf getHttpServerConf() {
         return httpServerConf;
     }
 
     @Override
     public String toString() {
-        return String.valueOf(getHttpServerConf()) +
-                "URL:\n\t" +
-                getURL() +
-                getRequest() +
-                getResponse();
+        return getHttpServerConf() + getRequest() + getResponse();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {

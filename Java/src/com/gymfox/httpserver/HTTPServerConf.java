@@ -7,6 +7,7 @@ import java.io.IOException;
 
 import static com.gymfox.httpserver.HTTPServerUtils.validatePath;
 import static com.gymfox.httpserver.HTTPServerUtils.validatePort;
+import static com.gymfox.httpserver.HTTPServer.httpServerConf;
 
 public class HTTPServerConf {
     private final IPv4Address configAddress;
@@ -34,11 +35,15 @@ public class HTTPServerConf {
         return configRootDirectory;
     }
 
+    static String getHost() {
+        return httpServerConf.getRootDirectory().getName();
+    }
+
     @Override
     public String toString() {
         return "Configuration file:\n" +
-                "address " + getAddress() + "\n" +
-                "port " + getPort() + "\n" +
-                "root_dir " + getRootDirectory() + "\n\n";
+                "\taddress " + getAddress() + "\n" +
+                "\tport " + getPort() + "\n" +
+                "\troot_dir " + getRootDirectory() + "\n";
     }
 }

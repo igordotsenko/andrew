@@ -2,61 +2,24 @@ package com.gymfox.httpserver;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.ProtocolException;
 import java.net.Socket;
-import java.net.SocketException;
-import java.nio.file.NoSuchFileException;
 import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.gymfox.httpserver.HTTPServerExceptions.*;
+
 final class HTTPServerUtils {
-    public static final int MIN_SYSTEM_PORT_VALUE = 0;
-    public static final int MAX_SYSTEM_PORT_VALUE = 65536;
-    public static final List<Double> VALID_HTTP_VERSIONS = Arrays.asList(0.9, 1.0, 1.1, 2.0);
+    private static final int MIN_SYSTEM_PORT_VALUE = 0;
+    private static final int MAX_SYSTEM_PORT_VALUE = 65536;
+    private static final List<Double> VALID_HTTP_VERSIONS = Arrays.asList(0.9, 1.0, 1.1, 2.0);
     static final String INDEX_HTML = "index.html";
     static final File CONFIG_FILE = new File("http.conf");
 
     private HTTPServerUtils() {}
 
-    public static class FileIsEmptyException extends NoSuchFileException {
-        public FileIsEmptyException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    public static class InvalidPortException extends SocketException {
-        public InvalidPortException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    public static class NotAllowedMethodException extends ProtocolException {
-        public NotAllowedMethodException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    public static class InvalidHttpVersionException extends ProtocolException {
-        public InvalidHttpVersionException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    public static class HttpServerIsRunningException extends SocketException {
-        public HttpServerIsRunningException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    public static class InvalidPartsHTTPVersionException extends ProtocolException {
-        public InvalidPartsHTTPVersionException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    public static void startServer(HTTPServer httpServer) throws InterruptedException {
+    static void startServer(HTTPServer httpServer) throws InterruptedException {
         Runnable r = () -> {
             try {
                 httpServer.start();
@@ -70,7 +33,7 @@ final class HTTPServerUtils {
         Thread.sleep(20000);
     }
 
-    public static void closeSocket(Socket clientSocket) {
+    static void closeSocket(Socket clientSocket) {
         try {
             clientSocket.close();
         } catch (IOException e) {
