@@ -11,6 +11,7 @@ import java.io.IOException;
 import static com.gymfox.httpserver.HTTPCreateRequest.*;
 import static com.gymfox.httpserver.HTTPServerExceptions.*;
 import static com.gymfox.httpserver.HTTPServerUtils.*;
+import static com.gymfox.httpserver.ConfigSerializer.getConfig;
 
 public class HTTPServerTest {
     private static final String pathToConf = "tests/com/gymfox/httpserver/configuration/";
@@ -72,6 +73,11 @@ public class HTTPServerTest {
     @Test ( expected = IOException.class )
     public void validateRequestURITest() throws IOException {
         validateRequestURI("/findex.html");
+    }
+
+    @Test ( expected = RuntimeException.class )
+    public void getConfigTest() throws IOException {
+        getConfig(new File(pathToConf + "ToMuchWords.conf"));
     }
 
     @Test
