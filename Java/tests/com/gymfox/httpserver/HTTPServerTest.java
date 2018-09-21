@@ -76,8 +76,13 @@ public class HTTPServerTest {
     }
 
     @Test ( expected = RuntimeException.class )
-    public void getConfigTest() throws IOException {
+    public void getConfigToMuchWordsTest() throws IOException {
         getConfig(new File(pathToConf + "ToMuchWords.conf"));
+    }
+
+    @Test ( expected = RuntimeException.class )
+    public void getConfigNotEnoughWordsTest() throws IOException {
+        getConfig(new File(pathToConf + "NotEnoughWords.conf"));
     }
 
     @Test
