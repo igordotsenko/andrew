@@ -8,10 +8,10 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static com.gymfox.httpserver.ConfigSerializer.getConfig;
 import static com.gymfox.httpserver.HTTPCreateRequest.*;
 import static com.gymfox.httpserver.HTTPServerExceptions.*;
 import static com.gymfox.httpserver.HTTPServerUtils.*;
-import static com.gymfox.httpserver.ConfigSerializer.getConfig;
 
 public class HTTPServerTest {
     private static final String pathToConf = "tests/com/gymfox/httpserver/configuration/";
@@ -25,7 +25,7 @@ public class HTTPServerTest {
     }
 
     @Test ( expected = FileIsEmptyException.class )
-    public void fileIsEmptyException() throws FileIsEmptyException {
+    public void fileIsEmptyExceptionTest() throws FileIsEmptyException {
         validateIsNotEmpty(new File(pathToConf + "EmptyFileTest.conf"));
     }
 
@@ -45,7 +45,7 @@ public class HTTPServerTest {
     }
 
     @Test ( expected = IOException.class )
-    public void validateConfigFile() throws IOException {
+    public void validateConfigFileTest() throws IOException {
         new HTTPServer(new File(pathToConf + "ExistConfigFile.conf"));
         new HTTPServer(new File("httpDoesNotExist.conf"));
     }
