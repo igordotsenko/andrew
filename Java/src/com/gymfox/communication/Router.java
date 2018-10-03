@@ -22,7 +22,10 @@ public class Router {
     }
 
     public Route getRouteForAddress(IPv4Address address) {
-        return routes.stream().filter(route -> route.getNetworkAddress().contains(address)).findFirst().get();
+        return routes.stream().
+                filter(route -> route.getNetworkAddress().contains(address)).
+                findFirst().
+                get();
     }
 
     public Set<Route> getRoutes() {

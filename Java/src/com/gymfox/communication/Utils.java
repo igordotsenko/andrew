@@ -52,7 +52,8 @@ public class Utils {
 
     static void validateOctetValue(long octetsNumbers) throws InvalidValueInOctetsException {
         if ( octetsNumbers < MIN_OCTETS_VALUE || octetsNumbers > MAX_OCTETS_VALUE ) {
-            throw new InvalidValueInOctetsException(String.format("%d octet is incorrect.", octetsNumbers));
+            throw new InvalidValueInOctetsException(String.format("%d octet is incorrect. Octets numbers should be in" +
+                            " range from %d to %d.", octetsNumbers, MIN_OCTETS_VALUE, MAX_OCTETS_VALUE));
         }
     }
 

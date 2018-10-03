@@ -64,7 +64,8 @@ public class Network {
 
         /**
          * Calculate total hosts for this network.
-         * First, calculate the difference between MAX_MASK_VALUE nad maskAsInt.
+         * First, calculate the difference between MAX_MASK_VALUE and maskAsInt.
+         * This difference is needed for bitwise left shift operator.
          * Then, use the bitwise left shift operator to get all hosts in this network.
          * And the last, we take away two reserved address to get hosts, that we can use in our network.
          */
