@@ -8,20 +8,28 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static com.gymfox.httpserver.ConfigSerializer.getConfig;
-import static com.gymfox.httpserver.HTTPCreateRequest.*;
+import static com.gymfox.httpserver.ConfigSerializer.getHTTPConfig;
 import static com.gymfox.httpserver.HTTPServerExceptions.*;
 import static com.gymfox.httpserver.HTTPServerUtils.*;
 
 public class HTTPServerTest {
     private static final String pathToConf = "tests/com/gymfox/httpserver/configuration/";
+    private static final String mimeTypeFile = "mime.types";
     private static HTTPServer httpServerTest;
-    private static HTTPCreateRequest request;
 
     @BeforeClass
     public static void setUpHTTPServer() throws IOException {
-        httpServerTest = new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"));
-        request = new HTTPCreateRequest();
+        httpServerTest = new HTTPServer(new File(pathToConf + "allConfigIsOk.conf"), new File(mimeTypeFile));
+    }
+
+    @Test ( expected = InvalidArgumentsCountException.class )
+    public void tooMuchArgumentsCountExceptionTest() throws InvalidArgumentsCountException {
+        validateArgumentsCount(new String[] {"", "", "", "", "", "", "", "", "", ""});
+    }
+
+    @Test ( expected = InvalidArgumentsCountException.class )
+    public void notMuchArgumentsCountExceptionTest() throws InvalidArgumentsCountException {
+        validateArgumentsCount(new String[] {});
     }
 
     @Test ( expected = FileIsEmptyException.class )
@@ -31,23 +39,23 @@ public class HTTPServerTest {
 
     @Test ( expected = Exceptions.InvalidValueInOctetsException.class )
     public void validateAddressTest() throws IOException {
-        new HTTPServer(new File(pathToConf + "validateAddressTest.conf"));
+        new HTTPServer(new File(pathToConf + "validateAddressTest.conf"), new File(mimeTypeFile));
     }
 
     @Test ( expected = HTTPServerExceptions.InvalidPortException.class )
     public void validatePortTest() throws IOException {
-        new HTTPServer(new File(pathToConf + "validatePortTest.conf"));
+        new HTTPServer(new File(pathToConf + "validatePortTest.conf"), new File(mimeTypeFile));
     }
 
     @Test ( expected = IOException.class )
     public void validatePathTest() throws IOException {
-        new HTTPServer(new File(pathToConf + "validatePathTest.conf"));
+        new HTTPServer(new File(pathToConf + "validatePathTest.conf"), new File(mimeTypeFile));
     }
 
     @Test ( expected = IOException.class )
     public void validateConfigFileTest() throws IOException {
-        new HTTPServer(new File(pathToConf + "ExistConfigFile.conf"));
-        new HTTPServer(new File("httpDoesNotExist.conf"));
+        new HTTPServer(new File(pathToConf + "ExistConfigFile.conf"), new File(mimeTypeFile));
+        new HTTPServer(new File("httpDoesNotExist.conf"), new File(mimeTypeFile));
     }
 
     @Test ( expected = NotAllowedMethodException.class )
@@ -77,12 +85,17 @@ public class HTTPServerTest {
 
     @Test ( expected = RuntimeException.class )
     public void getConfigToMuchWordsTest() throws IOException {
-        getConfig(new File(pathToConf + "ToMuchWords.conf"));
+        getHTTPConfig(new File(pathToConf + "ToMuchWords.conf"));
     }
 
     @Test ( expected = RuntimeException.class )
     public void getConfigNotEnoughWordsTest() throws IOException {
-        getConfig(new File(pathToConf + "NotEnoughWords.conf"));
+        getHTTPConfig(new File(pathToConf + "NotEnoughWords.conf"));
+    }
+
+    @Test
+    public void checkArgumentsTest() throws IOException {
+        Assert.assertEquals(new File(pathToConf + "allConfigIsOk.conf"), checkArguments(new File(pathToConf + "allConfigIsOk.conf")));
     }
 
     @Test
@@ -102,27 +115,21 @@ public class HTTPServerTest {
 
     @Test
     public void getHTTPServerConfigTest() {
-        Assert.assertEquals(httpServerTest.getHttpServerConf().getAddress(), "127.0.0.1");
-        Assert.assertEquals(httpServerTest.getHttpServerConf().getPort(), 80);
-        Assert.assertEquals(httpServerTest.getHttpServerConf().getRootDirectory().toString(), "/var/www/localhost");
-        Assert.assertEquals(httpServerTest.getHttpServerConf().toString(), "Configuration file:\n\t" +
+        Assert.assertEquals(httpServerTest.getHttpServerConf(), "Configuration file:\n\t" +
                 "address 127.0.0.1\n\t" +
                 "port 80\n\t" +
                 "root_dir /var/www/localhost\n");
     }
 
     @Test
-    public void setRequestMethodsTest() throws IOException {
-        request.setRequestMethod("get");
-        request.setRequestURI("/index.html");
-        request.setRequestHTTPVersion("http/1.1");
-        request.requestToString();
+    public void creationRequestTest() {
+        HTTPRequest request = new HTTPRequest("GET", "/index.html", "HTTP/1.1");
 
-        Assert.assertEquals(request.getRequestMethod(), "GET");
-        Assert.assertEquals(request.getRequestURI(), "/index.html");
-        Assert.assertEquals(request.getHttpVersion(), "HTTP/1.1");
-        Assert.assertEquals(getRequest(), "URL:\n" +
-                "\thttp://localhost/index.html\nRequest:\n\tGET /index.html HTTP/1.1\n\tHost: localhost\n");
+        Assert.assertEquals(request.toString(), "URL:\n" +
+                "\thttp://localhost/index.html\n" +
+                "Request:\n" +
+                "\tGET /index.html HTTP/1.1\n" +
+                "\tHost: localhost\n");
     }
 
     @Test

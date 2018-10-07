@@ -6,32 +6,34 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
-import java.net.HttpURLConnection;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.net.URL;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
-import static com.gymfox.httpserver.HTTPCreateRequest.getRequest;
-import static com.gymfox.httpserver.HTTPCreateResponse.createResponse;
-import static com.gymfox.httpserver.HTTPCreateResponse.getResponse;
-import static com.gymfox.httpserver.HTTPServerUtils.*;
 import static com.gymfox.httpserver.HTTPServerExceptions.HttpServerIsRunningException;
+import static com.gymfox.httpserver.HTTPServerUtils.*;
 
 public class HTTPServer {
     private final ExecutorService pool = Executors.newFixedThreadPool(2);
+    private final String httpServerConfAsString;
+    private final String mimeTypeFileAsString;
     private volatile ServerSocket serverSocket;
     private volatile boolean isRunning;
+
     static HTTPServerConf httpServerConf;
+    static HTTPMimeTypes mimeTypeFile;
 
     public HTTPServer() throws IOException {
-        this(CONFIG_FILE);
+        this(CONFIG_FILE, MIME_TYPES);
     }
 
-    HTTPServer(File pathToConfigFile) throws IOException {
-        validatePath(pathToConfigFile);
-        httpServerConf = ConfigSerializer.getConfig(pathToConfigFile);
+    HTTPServer(File pathToConfigFile, File pathToMimeTypeFile) throws IOException {
+        httpServerConf = ConfigSerializer.getHTTPConfig(pathToConfigFile);
+        mimeTypeFile = ConfigSerializer.getMimeTypes(pathToMimeTypeFile);
+
+        this.httpServerConfAsString = httpServerConf.HTTPServerConfToString();
+        this.mimeTypeFileAsString = mimeTypeFile.extensionToString();
     }
 
     void start() throws IOException {
@@ -45,20 +47,13 @@ public class HTTPServer {
                     System.out.println("Client has been connected");
 
                     while (isRunning()) {
-                        HTTPCreateRequest request = new HTTPCreateRequest(sout, sin);
+                        HTTPTransformer httpTransformer = new HTTPTransformer();
+                        HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler();
 
-                        HttpURLConnection connection = (HttpURLConnection) new URL(request.getURL()).openConnection();
+                        HTTPRequest request = httpTransformer.readHTTPRequest(sin);
+                        HTTPResponse response = httpRequestHandler.handleRequest(request);
 
-                        connection.setRequestMethod(request.getRequestMethod());
-
-                        if ( connection.getResponseCode() == HttpURLConnection.HTTP_OK ) {
-                            createResponse(connection);
-                        }
-
-                        sout.println(getResponse());
-                        sout.flush();
-
-                        connection.disconnect();
+                        httpTransformer.writeHTTPResponse(response, sout);
                     }
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -94,19 +89,26 @@ public class HTTPServer {
         return isRunning;
     }
 
-    HTTPServerConf getHttpServerConf() {
-        return httpServerConf;
+    String getHttpServerConf() {
+        return httpServerConfAsString;
+    }
+
+    public String getMimeType() {
+        return mimeTypeFileAsString;
     }
 
     @Override
     public String toString() {
-        return getHttpServerConf() + getRequest() + getResponse();
+        return getHttpServerConf() + "\n" + getMimeType();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        File configFile = validateIsNotEmpty(new File(args[0]));
+        validateArgumentsCount(args);
 
-        HTTPServer httpServer = new HTTPServer(configFile);
+        File configFile = checkArguments(new File(args[0]));
+        File mimeTypeFile = checkArguments(new File(args[1]));
+
+        HTTPServer httpServer = new HTTPServer(configFile, mimeTypeFile);
 
         startServer(httpServer);
         httpServer.stopHttpServer();
