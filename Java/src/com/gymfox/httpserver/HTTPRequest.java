@@ -1,23 +1,21 @@
 package com.gymfox.httpserver;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.gymfox.httpserver.HTTPServer.httpServerConf;
 
-final class HTTPRequest {
-    private final Map<String, String> requestParameters = new HashMap<>();
+public final class HTTPRequest {
+    private String method;
+    private String uri;
+    private String protocolVersion;
     private String request;
 
-    HTTPRequest(String method, String URI, String protocol) {
-        requestParameters.put("method", method);
-        requestParameters.put("uri", URI);
-        requestParameters.put("version", protocol);
-
+    public HTTPRequest(String method, String uri, String protocolVersion) {
+        this.method = method;
+        this.uri = uri;
+        this.protocolVersion = protocolVersion;
         requestToString();
     }
 
-    void requestToString() {
+    public void requestToString() {
         request = "URL:\n\t" + getURL() +
                 "Request:\n\t" +
                 getRequestMethod() + " " +
@@ -26,27 +24,27 @@ final class HTTPRequest {
                 "\tHost: " + getHost() + "\n";
     }
 
-    String getRequestMethod() {
-        return requestParameters.get("method");
+    public String getRequestMethod() {
+        return method;
     }
 
-    String getRequestURI() {
-        return requestParameters.get("uri");
+    public String getRequestURI() {
+        return uri;
     }
 
-    String getRequestHttpVersion() {
-        return requestParameters.get("version");
+    public String getRequestHttpVersion() {
+        return protocolVersion;
     }
 
-    String getHost() {
+    public String getHost() {
         return httpServerConf.getRootDirectory().getName();
     }
 
-    String getHostPaths() {
+    public String getHostPaths() {
         return httpServerConf.getRootDirectory().getAbsolutePath() + getRequestURI();
     }
 
-    String getURL() {
+    public String getURL() {
         return "http://" + getHost() + getRequestURI() + "\n";
     }
 

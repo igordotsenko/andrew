@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 final class ConfigSerializer {
-    private static int VALID_LINES_COUNT = 2;
+    private final static int VALID_LINES_COUNT = 2;
     private ConfigSerializer() {}
 
     static HTTPServerConf getHTTPConfig(File path) throws IOException {

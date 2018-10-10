@@ -9,16 +9,17 @@ public class HTTPMimeTypes {
         this.mimeTypes = mimeTypes;
     }
 
-    public String extensionToString() {
-        return String.valueOf(mimeTypes);
+    @Override
+    public String toString() {
+        return mimeTypes.toString();
     }
 
     public String getMimeFormat(String file) {
         return mimeTypes.get(getFileExtension(file));
     }
 
-    public static String getFileExtension(String file) {
-        String[] fileExtension = file.split("\\.");
+    public static String getFileExtension(String fileName) {
+        String[] fileExtension = fileName.split("\\.");
 
         return fileExtension[fileExtension.length - 1];
     }
