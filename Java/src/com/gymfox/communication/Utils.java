@@ -53,14 +53,14 @@ public class Utils {
     static void validateOctetValue(long octetsNumbers) throws InvalidValueInOctetsException {
         if ( octetsNumbers < MIN_OCTETS_VALUE || octetsNumbers > MAX_OCTETS_VALUE ) {
             throw new InvalidValueInOctetsException(String.format("%d octet is incorrect. Octets numbers should be in" +
-                    " range from %d to %d.", octetsNumbers, MIN_OCTETS_VALUE, MAX_OCTETS_VALUE));
+                            " range from %d to %d.", octetsNumbers, MIN_OCTETS_VALUE, MAX_OCTETS_VALUE));
         }
     }
 
     static void validateLongValue(long address) throws InvalidValueInOctetsException {
         if ( address > LONG_MAX_IP || address < 0 ) {
             throw new InvalidValueInOctetsException(String.format("Expected address value in the range 0 to %d, but " +
-                    "got %d.", LONG_MAX_IP, address));
+                            "got %d.", LONG_MAX_IP, address));
         }
     }
 
