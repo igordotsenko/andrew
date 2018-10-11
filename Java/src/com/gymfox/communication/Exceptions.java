@@ -12,4 +12,16 @@ public class Exceptions {
             super(errorMessage);
         }
     }
+
+    public static class InvalidMaskValueException extends IllegalArgumentException {
+        public InvalidMaskValueException(String errorMesage) {
+            super(errorMesage);
+        }
+    }
+
+    public static class InvalidGatewayException extends IllegalArgumentException {
+        public InvalidGatewayException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
 }
