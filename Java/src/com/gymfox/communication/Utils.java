@@ -60,7 +60,7 @@ public class Utils {
     static void validateLongValue(long address) throws InvalidValueInOctetsException {
         if ( address > LONG_MAX_IP || address < 0 ) {
             throw new InvalidValueInOctetsException(String.format("Expected address value in the range 0 to %d, but " +
-                            "got %d.", LONG_MAX_IP, address));
+                    "got %d.", LONG_MAX_IP, address));
         }
     }
 
@@ -70,4 +70,5 @@ public class Utils {
                     MIN_MASK_VALUE, MAX_MASK_VALUE, maskLength));
         }
     }
+
 }
