@@ -24,14 +24,8 @@ class HTTPServerExceptions {
         }
     }
 
-    static class NotAllowedMethodException extends ProtocolException {
-        NotAllowedMethodException(String errorMessage) {
-            super(errorMessage);
-        }
-    }
-
-    static class InvalidHttpVersionException extends ProtocolException {
-        InvalidHttpVersionException(String errorMessage) {
+    static class InvalidHTTPVersionException extends ProtocolException {
+        InvalidHTTPVersionException(String errorMessage) {
             super(errorMessage);
         }
     }
@@ -47,4 +41,17 @@ class HTTPServerExceptions {
             super(errorMessage);
         }
     }
+
+    static class FileNameIsNullOrEmptyException extends NoSuchFileException {
+        public FileNameIsNullOrEmptyException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
+
+    static class InvalidRequestParametersCountException extends Throwable {
+        public InvalidRequestParametersCountException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
+
 }

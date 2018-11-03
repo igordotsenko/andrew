@@ -12,37 +12,44 @@ import java.util.stream.Stream;
 
 final class ConfigSerializer {
     private final static int VALID_LINES_COUNT = 2;
+
     private ConfigSerializer() {}
 
     static HTTPServerConf getHTTPConfig(File path) throws IOException {
         Map<String, String> config;
 
-        try (Stream<String> stream = Files.lines(Paths.get(String.valueOf(path)))) {
-            config = stream
-                    .map(lines -> lines.split("[\\s]++"))
-                    .peek(ConfigSerializer::validateConfigFileLines)
-                    .collect(Collectors.toMap(lines->lines[0], lines->lines[1]));
+        try (Stream<String> lines = Files.lines(Paths.get(String.valueOf(path)))) {
+            config = readFile(lines);
         }
 
-        return new HTTPServerConf(new IPv4Address(config.get("address")),
-                Integer.parseInt(config.get("port")), new File(config.get("root_dir")));
+        return new HTTPServerConf(new IPv4Address(config.getOrDefault("address", "127.0.0.1")),
+                Integer.parseInt(config.getOrDefault("port", String.valueOf(80))),
+                new File(config.getOrDefault("root_dir", "/var/www/localhost/")),
+                Integer.parseInt(config.getOrDefault("pool_size", String.valueOf(2))),
+                new File(config.getOrDefault("mime_types", "/mime.types")));
     }
 
     static HTTPMimeTypes getMimeTypes(File path) throws IOException {
         Map<String, String> mimeTypes;
 
-        try (Stream<String> stream = Files.lines(Paths.get(String.valueOf(path)))) {
-            mimeTypes = stream
-                    .map(lines -> lines.split("[\\s]++"))
-                    .collect(Collectors.toMap(lines->lines[0], lines->lines[1]));
+        try (Stream<String> lines = Files.lines(Paths.get(String.valueOf(path)))) {
+            mimeTypes = readFile(lines);
         }
 
         return new HTTPMimeTypes(mimeTypes);
     }
 
-    private static void validateConfigFileLines(String[] lines) {
+    private static Map<String, String> readFile(Stream<String> lines) {
+            return lines
+                    .map(line -> line.split("[\\s]{2,}"))
+                    .peek(ConfigSerializer::validateConfigFileLine)
+                    .collect(Collectors.toMap(line->line[0], line->line[1]));
+
+    }
+
+    private static void validateConfigFileLine(String[] lines) {
         if ( lines.length != VALID_LINES_COUNT ) {
-            throw new RuntimeException(String.format("Invalid parameters count. Expected %d, but found %d",
+            throw new RuntimeException(String.format("Invalid parameters count. Expected %d, but found %d.",
                     VALID_LINES_COUNT, lines.length));
         }
     }

@@ -1,57 +1,126 @@
 package com.gymfox.httpserver;
 
-import java.time.Instant;
-import java.time.ZoneOffset;
-import java.time.format.DateTimeFormatter;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
-final class HTTPResponse {
-    private static String RESPONSE_CODE_OK = "OK 200";
-    private String httpVersion;
-    private String contentType;
+public final class HTTPResponse {
+    public enum ResponseHeaders {
+        HOST("Host"),
+        ALLOWED_METHODS("Allowed"),
+        CONNECTION("Connection"),
+        CONTENT_LENGTH("Content-length"),
+        CONTENT_TYPE("Content-type"),
+        DATE("Date");
+
+        String headerName;
+
+        ResponseHeaders(String headerName) {
+            this.headerName = headerName;
+        }
+
+        public String getHeaderName() {
+            return headerName;
+        }
+    }
+
+    private final String httpVersion;
+    private final String statusCode;
+    private final Map<ResponseHeaders, String> headerSets;
+    private final String responseBody;
     private String response;
-    private long contentSize;
-    private String content;
 
-    HTTPResponse(String requestHTTPVersion, long httpContentSize, String httpContentType, String httpContent) {
-        this.httpVersion = requestHTTPVersion;
-        this.contentSize = httpContentSize;
-        this.contentType = httpContentType;
-        this.content = httpContent;
+    public static class ResponseBuilder {
+        private String httpVersion;
+        private String statusCode;
+        private EnumMap<ResponseHeaders, String> headerSets = new EnumMap<>(ResponseHeaders.class);
+        private String responseBody;
+
+        public ResponseBuilder() {}
+
+        public ResponseBuilder addHTTPVersion(String httpVersion) {
+            this.httpVersion =  httpVersion;
+
+            return self();
+        }
+
+        public ResponseBuilder addStatusCode(String statusCode) {
+            this.statusCode = statusCode;
+
+            return self();
+        }
+
+        public ResponseBuilder addHeader(ResponseHeaders responseHeader, String responseValue) {
+            headerSets.put(responseHeader, responseValue);
+
+            return self();
+        }
+
+        public ResponseBuilder addBody(String responseBody) {
+            this.responseBody = responseBody;
+
+            return self();
+        }
+
+        private ResponseBuilder self() {
+            return this;
+        }
+
+        public HTTPResponse build() {
+            return new HTTPResponse(this);
+        }
     }
 
-    void createResponse() {
-        response = "Response:\n\t" +
-                getHttpVersion() + " " + RESPONSE_CODE_OK + "\n\t" +
-                "Connection: close" + "\r\n\t" +
-                "Content-length: " + getContentSize() + "\r\n\t" +
-                "Content-type: " + getContentType() + "\r\n\t" +
-                "Date: " + getServerCurrentTime() + "\r\n" +
-                getContent();
+    private HTTPResponse(ResponseBuilder responseBuilder) {
+        this.httpVersion = responseBuilder.httpVersion;
+        this.statusCode = responseBuilder.statusCode;
+        this.headerSets = responseBuilder.headerSets;
+        this.responseBody = responseBuilder.responseBody;
     }
 
-    public String getHttpVersion() {
+    public String buildResponse() {
+                return getHTTPVersion() + " " + getStatusCode() + "\n" +
+                        headerSets.entrySet()
+                        .stream()
+                        .map(Map.Entry::getValue)
+                        .collect(Collectors.joining("\n")) + "\n" +
+                        getResponseBody();
+    }
+
+    public String sendResponse() {
+        return response == null ? response = buildResponse() : response;
+    }
+
+    public String getHTTPVersion() {
         return httpVersion;
     }
 
+    public String getStatusCode() {
+        return statusCode;
+    }
+
+    public String getHost() {
+        return headerSets.getOrDefault(ResponseHeaders.HOST, "");
+    }
+
+    public String getAllowedMethod() {
+        return headerSets.getOrDefault(ResponseHeaders.ALLOWED_METHODS, "");
+    }
+
+    public String getConnection() {
+        return headerSets.getOrDefault(ResponseHeaders.CONNECTION, "");
+    }
+
+    public String getContentLength() {
+        return headerSets.getOrDefault(ResponseHeaders.CONTENT_LENGTH,"");
+    }
+
     public String getContentType() {
-        return contentType;
+        return headerSets.getOrDefault(ResponseHeaders.CONTENT_TYPE, "");
     }
 
-    public long getContentSize() {
-        return contentSize;
-    }
-
-    public String getServerCurrentTime() {
-        return DateTimeFormatter.RFC_1123_DATE_TIME
-                .withZone(ZoneOffset.UTC)
-                .format(Instant.now());
-    }
-
-    public String getContent() {
-        return content;
-    }
-
-    String getResponse() {
-        return response;
+    public String getResponseBody() {
+        return Optional.ofNullable(responseBody).orElse("");
     }
 }

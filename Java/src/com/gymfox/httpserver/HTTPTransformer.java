@@ -4,27 +4,32 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.PrintWriter;
 
-import static com.gymfox.httpserver.HTTPServerUtils.*;
+import static com.gymfox.httpserver.HTTPServerExceptions.InvalidRequestParametersCountException;
+import static com.gymfox.httpserver.HTTPServerUtils.validateRequestParameters;
 
-public class HTTPTransformer {
+public final class HTTPTransformer {
     private static final int REQUEST_METHOD = 0;
     private static final int REQUEST_URI = 1;
     private static final int REQUEST_PROTOCOL = 2;
 
-    HTTPTransformer() {}
+    public HTTPTransformer() {}
 
-    HTTPRequest readHTTPRequest(BufferedReader bufferedReader) throws IOException {
-        String[] inputRequest = (bufferedReader.readLine()).split(" ");
+    public HTTPRequest readHTTPRequest(BufferedReader bufferedReader, HTTPServerConf serverConf) throws IOException,
+            InvalidRequestParametersCountException {
+        String[] inputRequest = checkRequestParameters(bufferedReader.readLine().split(" "));
 
-        return new HTTPRequest(checkRequestMethod(inputRequest[REQUEST_METHOD]),
-                checkRequestURI(inputRequest[REQUEST_URI]),
-                checkHttpVersion(inputRequest[REQUEST_PROTOCOL]));
+        return new HTTPRequest(inputRequest[REQUEST_METHOD], inputRequest[REQUEST_URI],
+                inputRequest[REQUEST_PROTOCOL], serverConf);
     }
 
-    void writeHTTPResponse(HTTPResponse httpResponse, PrintWriter printWriter) {
-        httpResponse.createResponse();
+    public String[] checkRequestParameters(String[] parameters) throws InvalidRequestParametersCountException {
+        validateRequestParameters(parameters);
 
-        printWriter.println(httpResponse.getResponse());
+        return parameters;
+    }
+
+    public void writeHTTPResponse(HTTPResponse httpResponse, PrintWriter printWriter) {
+        printWriter.println(httpResponse.sendResponse());
         printWriter.flush();
     }
 }

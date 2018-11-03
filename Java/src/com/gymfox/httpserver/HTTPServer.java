@@ -12,31 +12,28 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.gymfox.httpserver.HTTPServerExceptions.HttpServerIsRunningException;
+import static com.gymfox.httpserver.HTTPServerExceptions.InvalidRequestParametersCountException;
 import static com.gymfox.httpserver.HTTPServerUtils.*;
 
 public class HTTPServer {
-    private final ExecutorService pool = Executors.newFixedThreadPool(2);
-    private final String httpServerConfAsString;
-    private final String mimeTypeFileAsString;
+    private final ExecutorService pool;
+    private final HTTPServerConf httpServerConf;
+    static HTTPMimeTypes mimeTypeFile;
+
     private volatile ServerSocket serverSocket;
     private volatile boolean isRunning;
 
-    static HTTPServerConf httpServerConf;
-    static HTTPMimeTypes mimeTypeFile;
-
     public HTTPServer() throws IOException {
-        this(CONFIG_FILE, MIME_TYPES);
+        this(CONFIG_FILE);
     }
 
-    HTTPServer(File pathToConfigFile, File pathToMimeTypeFile) throws IOException {
+    HTTPServer(File pathToConfigFile) throws IOException {
         httpServerConf = ConfigSerializer.getHTTPConfig(pathToConfigFile);
-        mimeTypeFile = ConfigSerializer.getMimeTypes(pathToMimeTypeFile);
-
-        this.httpServerConfAsString = httpServerConf.HTTPServerConfToString();
-        this.mimeTypeFileAsString = mimeTypeFile.extensionToString();
+        mimeTypeFile = ConfigSerializer.getMimeTypes(httpServerConf.getConfigMimeTypes());
+        pool = Executors.newFixedThreadPool(httpServerConf.getPoolSize());
     }
 
-    void start() throws IOException {
+    public void start() throws IOException {
         runHttpServer();
 
         while (isRunning()) {
@@ -46,16 +43,15 @@ public class HTTPServer {
                      BufferedReader sin = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                     System.out.println("Client has been connected");
 
-                    while (isRunning()) {
+                    if (isRunning()) {
                         HTTPTransformer httpTransformer = new HTTPTransformer();
-                        HTTPRequestHandler httpRequestHandler = new HTTPRequestHandler();
 
-                        HTTPRequest request = httpTransformer.readHTTPRequest(sin);
-                        HTTPResponse response = httpRequestHandler.handleRequest(request);
+                        HTTPRequest request = httpTransformer.readHTTPRequest(sin, httpServerConf);
+                        HTTPResponse response = new HTTPRequestHandler().handleRequest(request);
 
                         httpTransformer.writeHTTPResponse(response, sout);
                     }
-                } catch (IOException e) {
+                } catch (IOException | InvalidRequestParametersCountException e) {
                     e.printStackTrace();
                 } finally {
                     closeSocket(socket);
@@ -75,7 +71,7 @@ public class HTTPServer {
         System.out.println("HTTP sever has been started");
     }
 
-    private void stopHttpServer() throws IOException {
+    public void stopHttpServer() throws IOException {
         if (isRunning()) {
             isRunning = false;
             serverSocket.close();
@@ -89,26 +85,29 @@ public class HTTPServer {
         return isRunning;
     }
 
-    String getHttpServerConf() {
-        return httpServerConfAsString;
+    public HTTPServerConf getHttpServerConf() {
+        return httpServerConf;
     }
 
-    public String getMimeType() {
-        return mimeTypeFileAsString;
+    String getHTTPServerConfAsString() {
+        return httpServerConf.toString();
+    }
+
+    public String getMimeTypeAsString() {
+        return mimeTypeFile.toString();
     }
 
     @Override
     public String toString() {
-        return getHttpServerConf() + "\n" + getMimeType();
+        return getHTTPServerConfAsString() + "\n" + getMimeTypeAsString();
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
         validateArgumentsCount(args);
 
         File configFile = checkArguments(new File(args[0]));
-        File mimeTypeFile = checkArguments(new File(args[1]));
 
-        HTTPServer httpServer = new HTTPServer(configFile, mimeTypeFile);
+        HTTPServer httpServer = new HTTPServer(configFile);
 
         startServer(httpServer);
         httpServer.stopHttpServer();

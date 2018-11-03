@@ -1,27 +1,29 @@
 package com.gymfox.httpserver;
 
-import static com.gymfox.httpserver.HTTPServer.httpServerConf;
+import java.io.IOException;
+
+import static com.gymfox.httpserver.HTTPServerUtils.checkHTTPVersion;
 
 public final class HTTPRequest {
     private String method;
     private String uri;
     private String protocolVersion;
-    private String request;
+    private String host;
+    private HTTPServerConf config;
+    private String requestStringRepresentation;
 
-    public HTTPRequest(String method, String uri, String protocolVersion) {
-        this.method = method;
-        this.uri = uri;
-        this.protocolVersion = protocolVersion;
-        requestToString();
+    public HTTPRequest(String method, String inputURI, String protocolVersion, HTTPServerConf conf) throws
+            IOException {
+        this.method = method.toUpperCase();
+        this.uri = inputURI;
+        this.protocolVersion = checkHTTPVersion(protocolVersion);
+        this.config = conf;
+        this.host = config.getConfigHost();
     }
 
-    public void requestToString() {
-        request = "URL:\n\t" + getURL() +
-                "Request:\n\t" +
-                getRequestMethod() + " " +
-                getRequestURI() + " " +
-                getRequestHttpVersion() + "\n" +
-                "\tHost: " + getHost() + "\n";
+    public String requestToString() {
+        return getRequestMethod() + " " + getRequestURI() + " " + getRequestHTTPVersion() + "\n" +
+                 "Host: " + getHost();
     }
 
     public String getRequestMethod() {
@@ -32,24 +34,20 @@ public final class HTTPRequest {
         return uri;
     }
 
-    public String getRequestHttpVersion() {
+    public String getRequestHTTPVersion() {
         return protocolVersion;
     }
 
     public String getHost() {
-        return httpServerConf.getRootDirectory().getName();
+        return host;
     }
 
-    public String getHostPaths() {
-        return httpServerConf.getRootDirectory().getAbsolutePath() + getRequestURI();
-    }
-
-    public String getURL() {
-        return "http://" + getHost() + getRequestURI() + "\n";
+    public HTTPServerConf getConfig() {
+        return config;
     }
 
     @Override
     public String toString() {
-        return request;
+        return requestStringRepresentation == null ? requestStringRepresentation = requestToString() : requestStringRepresentation;
     }
 }
