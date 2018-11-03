@@ -27,7 +27,7 @@ public class HTTPServer {
         this(CONFIG_FILE);
     }
 
-    HTTPServer(File pathToConfigFile) throws IOException {
+    public HTTPServer(File pathToConfigFile) throws IOException {
         httpServerConf = ConfigSerializer.getHTTPConfig(pathToConfigFile);
         mimeTypeFile = ConfigSerializer.getMimeTypes(httpServerConf.getConfigMimeTypes());
         pool = Executors.newFixedThreadPool(httpServerConf.getPoolSize());
