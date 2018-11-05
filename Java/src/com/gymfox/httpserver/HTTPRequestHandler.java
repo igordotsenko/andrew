@@ -8,13 +8,14 @@ import java.time.Instant;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.gymfox.httpserver.HTTPResponse.ResponseHeaders.*;
 import static com.gymfox.httpserver.HTTPServer.mimeTypeFile;
 
 public final class HTTPRequestHandler {
-    private static final List<String> allowedMethodsList = Arrays.asList("GET", "POST");
+    private static final List<String> allowedMethodsList = Collections.unmodifiableList(Arrays.asList("GET", "POST"));
 
     public enum CodeResponse {
         OK_CODE(200, "OK"),
