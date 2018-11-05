@@ -12,12 +12,11 @@ public final class HTTPRequest {
     private HTTPServerConf config;
     private String requestStringRepresentation;
 
-    public HTTPRequest(String method, String inputURI, String protocolVersion, HTTPServerConf conf) throws
-            IOException {
+    public HTTPRequest(String method, String inputURI, String protocolVersion, HTTPServerConf config) throws IOException {
         this.method = method.toUpperCase();
         this.uri = inputURI;
         this.protocolVersion = checkHTTPVersion(protocolVersion);
-        this.config = conf;
+        this.config = config;
         this.host = config.getConfigHost();
     }
 
