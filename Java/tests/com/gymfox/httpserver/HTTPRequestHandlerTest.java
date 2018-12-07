@@ -7,9 +7,9 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.OK_CODE;
-import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.BAD_REQUEST_CODE;
+import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.METHOD_NOT_ALLOWED;
 import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.NOT_FOUND_CODE;
+import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.OK_CODE;
 
 public class HTTPRequestHandlerTest {
     private static HTTPServer httpServer;
@@ -19,44 +19,30 @@ public class HTTPRequestHandlerTest {
     @BeforeClass
     public static void setUpHTTPServer() throws IOException {
         httpServer = new HTTPServer(new File("http.conf"));
-        httpRequestHandler = new HTTPRequestHandler();
+        httpRequestHandler = new HTTPRequestHandler(httpServer.getHttpServerConf());
     }
 
     @Test
     public void checkOkRequestParametersTest() throws IOException {
-        httpRequest = new HTTPRequest("get", "/", "http/2.0", httpServer.getHttpServerConf());
-        File fullPath = URIHandler.processingRequestURI(httpRequest.getConfig().getRootDirectory(), httpRequest.getRequestURI());
+        httpRequest = new HTTPRequest("get", "/", "http/2.0", "localhost");
 
-        Assert.assertEquals(OK_CODE, httpRequestHandler.checkRequestParameters(httpRequest, fullPath));
+        Assert.assertEquals(OK_CODE.getCodeStatus() + " " + OK_CODE.getCodeName(),
+                httpRequestHandler.handleRequest(httpRequest).getStatusCode());
     }
 
     @Test
     public void checkBadRequestParametersTest() throws IOException {
-        httpRequest = new HTTPRequest("gat", "/", "http/2.0", httpServer.getHttpServerConf());
-        File fullPath = URIHandler.processingRequestURI(httpRequest.getConfig().getRootDirectory(), httpRequest.getRequestURI());
+        httpRequest = new HTTPRequest("gat", "/", "http/2.0", "localhost");
 
-        Assert.assertEquals(BAD_REQUEST_CODE, httpRequestHandler.checkRequestParameters(httpRequest, fullPath));
+        Assert.assertEquals(METHOD_NOT_ALLOWED.getCodeStatus() + " " + METHOD_NOT_ALLOWED.getCodeName(),
+                httpRequestHandler.handleRequest(httpRequest).getStatusCode());
     }
 
     @Test
     public void checkNotFoundRequestParametersTest() throws IOException {
-        httpRequest = new HTTPRequest("get", "/findex", "http/2.0", httpServer.getHttpServerConf());
-        File fullPath = URIHandler.processingRequestURI(httpRequest.getConfig().getRootDirectory(), httpRequest.getRequestURI());
+        httpRequest = new HTTPRequest("get", "/findex", "http/2.0", "localhost");
 
-        Assert.assertEquals(NOT_FOUND_CODE, httpRequestHandler.checkRequestParameters(httpRequest, fullPath));
-    }
-
-    @Test
-    public void isOkStatusTest() {
-        Assert.assertTrue(httpRequestHandler.isOkStatus(OK_CODE));
-        Assert.assertFalse(httpRequestHandler.isOkStatus(BAD_REQUEST_CODE));
-        Assert.assertFalse(httpRequestHandler.isOkStatus(NOT_FOUND_CODE));
-    }
-
-    @Test
-    public void isBadRequestStatusTest() {
-        Assert.assertFalse(httpRequestHandler.isBadRequestStatus(OK_CODE));
-        Assert.assertTrue(httpRequestHandler.isBadRequestStatus(BAD_REQUEST_CODE));
-        Assert.assertFalse(httpRequestHandler.isBadRequestStatus(NOT_FOUND_CODE));
+        Assert.assertEquals(NOT_FOUND_CODE.getCodeStatus() + " " + NOT_FOUND_CODE.getCodeName(),
+                httpRequestHandler.handleRequest(httpRequest).getStatusCode());
     }
 }

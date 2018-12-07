@@ -6,29 +6,41 @@ import java.io.File;
 import java.io.IOException;
 
 import static com.gymfox.httpserver.HTTPServerUtils.validatePath;
-import static com.gymfox.httpserver.HTTPServerUtils.validatePort;
+import static com.gymfox.httpserver.HTTPServerExceptions.InvalidPortException;
 
 public class HTTPServerConf implements HTTPTransformerConfig {
-    private final IPv4Address configAddress;
+    private static final int MIN_SYSTEM_PORT_VALUE = 0;
+    private static final int MAX_SYSTEM_PORT_VALUE = 65536;
+    private final IPv4Address address;
     private final int configPort;
-    private final File configRootDirectory;
-    private final int configPoolSize;
-    private final File configMimeTypes;
+    private final File rootDirectory;
+    private final int threadPoolSize;
+    private final File supportedMimeTypesConfigurationFile;
+    private final HTTPMimeTypes mimeTypes;
     private String configFileStringRepresentation;
 
-    public HTTPServerConf(IPv4Address address, int port, File root_dir, int poolSize, File mimeTypes) throws IOException {
+    public HTTPServerConf(IPv4Address address, int port, File rootDir, int poolSize,
+                          File supportedMimeTypesConfigurationFile) throws IOException {
         validatePort(port);
-        validatePath(root_dir);
+        validatePath(rootDir);
 
-        this.configAddress = address;
+        this.address = address;
         this.configPort = port;
-        this.configRootDirectory = root_dir;
-        this.configPoolSize = poolSize;
-        this.configMimeTypes = mimeTypes;
+        this.rootDirectory = rootDir;
+        this.threadPoolSize = poolSize;
+        this.mimeTypes = ConfigSerializer.getMimeTypes(supportedMimeTypesConfigurationFile);
+        this.supportedMimeTypesConfigurationFile = supportedMimeTypesConfigurationFile;
+    }
+
+    static void validatePort(int port) throws InvalidPortException {
+        if ( port < MIN_SYSTEM_PORT_VALUE || port > MAX_SYSTEM_PORT_VALUE ) {
+            throw new InvalidPortException(String.format("%d is invalid port. Value between %d and %d is expected",
+                    port, MIN_SYSTEM_PORT_VALUE, MAX_SYSTEM_PORT_VALUE));
+        }
     }
 
     public String getAddress() {
-        return configAddress.getIpString();
+        return address.getIpString();
     }
 
     public int getPort() {
@@ -36,15 +48,19 @@ public class HTTPServerConf implements HTTPTransformerConfig {
     }
 
     public File getRootDirectory() {
-        return configRootDirectory;
+        return rootDirectory;
     }
 
     public int getPoolSize() {
-        return configPoolSize;
+        return threadPoolSize;
     }
 
     public File getConfigMimeTypes() {
-        return configMimeTypes;
+        return supportedMimeTypesConfigurationFile;
+    }
+
+    public HTTPMimeTypes getMimeTypes() {
+        return mimeTypes;
     }
 
     @Override

@@ -7,42 +7,43 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
-import static com.gymfox.httpserver.HTTPServer.mimeTypeFile;
-import static com.gymfox.httpserver.HTTPServerExceptions.FileNameIsNullOrEmptyException;
-import static com.gymfox.httpserver.HTTPServerUtils.validateFileName;
+import static com.gymfox.httpserver.HTTPServerExceptions.FileNotFoundException;
+import static com.gymfox.httpserver.HTTPMimeTypes.validateFileName;
 
 public class HTTPMimeTypesTest {
     private static final String httpServerConf = "http.conf";
+    private static HTTPServer httpServer;
     @BeforeClass
     public static void setUpHTTPServer() throws IOException {
-        new HTTPServer(new File(httpServerConf));
+       httpServer = new HTTPServer(new File(httpServerConf));
     }
 
     @Test
-    public void getMimeFormatTest() throws FileNameIsNullOrEmptyException {
-        Assert.assertEquals("text/html; charset=UTF-8", mimeTypeFile.getMimeFormat("index.html"));
-        Assert.assertEquals("text/css", mimeTypeFile.getMimeFormat("style.css"));
-        Assert.assertEquals("application/x-javascript", mimeTypeFile.getMimeFormat("scenario.js"));
-        Assert.assertEquals("image/jpeg", mimeTypeFile.getMimeFormat("image.jpeg"));
-        Assert.assertEquals("image/jpeg", mimeTypeFile.getMimeFormat("background.jpg"));
-        Assert.assertEquals("image/png", mimeTypeFile.getMimeFormat("icon.png"));
-        Assert.assertEquals("application/octet-stream", mimeTypeFile.getMimeFormat("reset_button.exe"));
-        Assert.assertEquals("application/octet-stream", mimeTypeFile.getMimeFormat("/someText"));
-        Assert.assertEquals("application/octet-stream", mimeTypeFile.getMimeFormat("someText"));
+    public void getMimeFormatTest() throws FileNotFoundException {
+        Assert.assertEquals("text/html; charset=UTF-8", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("index.html"));
+        Assert.assertEquals("text/css", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("style.css"));
+        Assert.assertEquals("application/x-javascript", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("scenario.js"));
+        Assert.assertEquals("image/jpeg", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("image.jpeg"));
+        Assert.assertEquals("image/jpeg", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("background.jpg"));
+        Assert.assertEquals("image/png", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("icon.png"));
+        Assert.assertEquals("application/octet-stream", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("reset_button.exe"));
+        Assert.assertEquals("application/octet-stream", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("/someText"));
+        Assert.assertEquals("application/octet-stream", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("/someText."));
+        Assert.assertEquals("application/octet-stream", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("someText"));
     }
 
-    @Test ( expected = FileNameIsNullOrEmptyException.class )
-    public void validateNullFileNameTest() throws FileNameIsNullOrEmptyException {
+    @Test ( expected = FileNotFoundException.class )
+    public void validateNullFileNameTest() throws FileNotFoundException {
         validateFileName(null);
     }
 
-    @Test ( expected = FileNameIsNullOrEmptyException.class )
-    public void validateEmptyFileNameTest() throws FileNameIsNullOrEmptyException {
+    @Test ( expected = FileNotFoundException.class )
+    public void validateEmptyFileNameTest() throws FileNotFoundException {
         validateFileName("");
     }
 
-    @Test ( expected = FileNameIsNullOrEmptyException.class )
-    public void validateFileNameWithSpacesTest() throws FileNameIsNullOrEmptyException {
+    @Test ( expected = FileNotFoundException.class )
+    public void validateFileNameWithSpacesTest() throws FileNotFoundException {
         validateFileName("                  ");
     }
 }

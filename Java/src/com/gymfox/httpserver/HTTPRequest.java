@@ -1,28 +1,74 @@
 package com.gymfox.httpserver;
 
 import java.io.IOException;
+import java.util.Arrays;
+import java.util.List;
 
-import static com.gymfox.httpserver.HTTPServerUtils.checkHTTPVersion;
+import static com.gymfox.httpserver.HTTPServerExceptions.InvalidHTTPVersionException;
+import static com.gymfox.httpserver.HTTPServerExceptions.InvalidPartsHTTPVersionException;
 
 public final class HTTPRequest {
-    private String method;
-    private String uri;
-    private String protocolVersion;
-    private String host;
-    private HTTPServerConf config;
+    private static final List<Double> VALID_HTTP_VERSIONS = Arrays.asList(0.9, 1.0, 1.1, 2.0);
+    private static final int PROTOCOL_PARTS = 2;
+    private static final String PROTOCOL_NAME = "HTTP";
+    private final String method;
+    private final String uri;
+    private final String protocolVersion;
+    private final String host;
     private String requestStringRepresentation;
 
-    public HTTPRequest(String method, String inputURI, String protocolVersion, HTTPServerConf config) throws IOException {
+    public HTTPRequest(String method, String inputURI, String protocolVersion, String host) throws IOException {
         this.method = method.toUpperCase();
         this.uri = inputURI;
         this.protocolVersion = checkHTTPVersion(protocolVersion);
-        this.config = config;
-        this.host = config.getConfigHost();
+        this.host = host;
+    }
+
+    static String checkHTTPVersion(String requestHttpVersion) throws InvalidHTTPVersionException,
+            InvalidPartsHTTPVersionException {
+        String newRequestHttpVersion = requestHttpVersion.toUpperCase();
+        validateRequestHttpVersion(newRequestHttpVersion);
+
+        return newRequestHttpVersion;
+    }
+
+    static void validateRequestHttpVersion(String requestHttpVersion) throws InvalidHTTPVersionException,
+            InvalidPartsHTTPVersionException {
+        String[] httpVersionParts = requestHttpVersion.split("/");
+        validateParts(httpVersionParts);
+
+        double httpVersion = Double.parseDouble(httpVersionParts[1]);
+
+        validateProtocolName(httpVersionParts[0]);
+        validateProtocolVersion(httpVersion);
+    }
+
+    static void validateProtocolName(String httpName) throws InvalidHTTPVersionException {
+        if ( !httpName.equals(PROTOCOL_NAME) ) {
+            throw new InvalidHTTPVersionException("Invalid protocol name");
+        }
+    }
+
+    static void validateProtocolVersion(Double httpVersion) throws InvalidHTTPVersionException {
+        if ( !VALID_HTTP_VERSIONS.contains(httpVersion) ) {
+            throw new InvalidHTTPVersionException("Invalid protocol version");
+        }
+    }
+
+    static void validateParts(String[] httpVersionParts) throws InvalidPartsHTTPVersionException {
+        if ( httpVersionParts.length != PROTOCOL_PARTS) {
+            throw new InvalidPartsHTTPVersionException(String.format("Invalid HTTP version parts. Expected %d, but found %d",
+                    PROTOCOL_PARTS, httpVersionParts.length));
+        }
     }
 
     public String requestToString() {
         return getRequestMethod() + " " + getRequestURI() + " " + getRequestHTTPVersion() + "\n" +
-                 "Host: " + getHost();
+                "Host: " + getHost();
+    }
+
+    public String getHost() {
+        return host;
     }
 
     public String getRequestMethod() {
@@ -35,14 +81,6 @@ public final class HTTPRequest {
 
     public String getRequestHTTPVersion() {
         return protocolVersion;
-    }
-
-    public String getHost() {
-        return host;
-    }
-
-    public HTTPServerConf getConfig() {
-        return config;
     }
 
     @Override

@@ -1,13 +1,11 @@
 package com.gymfox.httpserver;
 
-import java.util.EnumMap;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public final class HTTPResponse {
     public enum ResponseHeaders {
-        HOST("Host"),
         ALLOWED_METHODS("Allowed"),
         CONNECTION("Connection"),
         CONTENT_LENGTH("Content-length"),
@@ -27,14 +25,14 @@ public final class HTTPResponse {
 
     private final String httpVersion;
     private final String statusCode;
-    private final Map<ResponseHeaders, String> headerSets;
+    private final Map<ResponseHeaders, String> headers;
     private final String responseBody;
     private String response;
 
     public static class ResponseBuilder {
         private String httpVersion;
         private String statusCode;
-        private EnumMap<ResponseHeaders, String> headerSets = new EnumMap<>(ResponseHeaders.class);
+        private Map<ResponseHeaders, String> headers = new HashMap<>();
         private String responseBody;
 
         public ResponseBuilder() {}
@@ -52,7 +50,7 @@ public final class HTTPResponse {
         }
 
         public ResponseBuilder addHeader(ResponseHeaders responseHeader, String responseValue) {
-            headerSets.put(responseHeader, responseValue);
+            headers.put(responseHeader, responseHeader.getHeaderName() + ": " + responseValue);
 
             return self();
         }
@@ -75,52 +73,38 @@ public final class HTTPResponse {
     private HTTPResponse(ResponseBuilder responseBuilder) {
         this.httpVersion = responseBuilder.httpVersion;
         this.statusCode = responseBuilder.statusCode;
-        this.headerSets = responseBuilder.headerSets;
+        this.headers = responseBuilder.headers;
         this.responseBody = responseBuilder.responseBody;
     }
 
     public String buildResponse() {
-                return getHTTPVersion() + " " + getStatusCode() + "\n" +
-                        headerSets.entrySet()
-                        .stream()
-                        .map(Map.Entry::getValue)
-                        .collect(Collectors.joining("\n")) + "\n" +
-                        getResponseBody();
+                return getHTTPVersion().map(httpVersion -> httpVersion + " ").orElse("") + getStatusCode() + "\n" +
+                        buildHeaders() +
+                        getResponseBody().map(lines -> "\n" + lines).orElse("");
     }
 
-    public String sendResponse() {
+    private String buildHeaders() {
+        return String.join("\n", headers.values());
+    }
+
+    public String getFullResponse() {
         return response == null ? response = buildResponse() : response;
     }
 
-    public String getHTTPVersion() {
-        return httpVersion;
+    public Optional<String> getHeader(ResponseHeaders headerName) {
+        return Optional.ofNullable(headers)
+                .map(header -> header.get(headerName));
+    }
+
+    public Optional<String> getHTTPVersion() {
+        return Optional.ofNullable(httpVersion);
     }
 
     public String getStatusCode() {
         return statusCode;
     }
 
-    public String getHost() {
-        return headerSets.getOrDefault(ResponseHeaders.HOST, "");
-    }
-
-    public String getAllowedMethod() {
-        return headerSets.getOrDefault(ResponseHeaders.ALLOWED_METHODS, "");
-    }
-
-    public String getConnection() {
-        return headerSets.getOrDefault(ResponseHeaders.CONNECTION, "");
-    }
-
-    public String getContentLength() {
-        return headerSets.getOrDefault(ResponseHeaders.CONTENT_LENGTH,"");
-    }
-
-    public String getContentType() {
-        return headerSets.getOrDefault(ResponseHeaders.CONTENT_TYPE, "");
-    }
-
-    public String getResponseBody() {
-        return Optional.ofNullable(responseBody).orElse("");
+    public Optional<String> getResponseBody() {
+        return Optional.ofNullable(responseBody);
     }
 }

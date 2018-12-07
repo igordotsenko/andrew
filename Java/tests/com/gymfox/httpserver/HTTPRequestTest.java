@@ -7,9 +7,11 @@ import org.junit.Test;
 import java.io.File;
 import java.io.IOException;
 
+import static com.gymfox.httpserver.HTTPRequest.checkHTTPVersion;
+import static com.gymfox.httpserver.HTTPRequest.validateParts;
+import static com.gymfox.httpserver.HTTPRequest.validateRequestHttpVersion;
 import static com.gymfox.httpserver.HTTPServerExceptions.InvalidHTTPVersionException;
 import static com.gymfox.httpserver.HTTPServerExceptions.InvalidPartsHTTPVersionException;
-import static com.gymfox.httpserver.HTTPServerUtils.*;
 
 public class HTTPRequestTest {
     private static final String httpServerConf = "http.conf";
@@ -19,7 +21,7 @@ public class HTTPRequestTest {
     @BeforeClass
     public static void setUpHTTPServer() throws IOException {
         httpServer = new HTTPServer(new File(httpServerConf));
-        request = new HTTPRequest( "get", "/index.html", "HTTP/1.1", httpServer.getHttpServerConf());
+        request = new HTTPRequest( "get", "/index.html", "HTTP/1.1", "localhost");
     }
 
     @Test
@@ -32,11 +34,14 @@ public class HTTPRequestTest {
 
     @Test
     public void processingRequestTest() throws IOException {
-        Assert.assertEquals("/", new HTTPRequest( "get", "/", "http/1.1", httpServer.getHttpServerConf()).getRequestURI());
-        Assert.assertEquals("/findex.html", new HTTPRequest( "get", "/findex.html", "http/1.1", httpServer.getHttpServerConf()).getRequestURI());
-        Assert.assertEquals("/style.css", new HTTPRequest( "get", "/style.css", "http/1.1", httpServer.getHttpServerConf()).getRequestURI());
-        Assert.assertEquals("/test/", new HTTPRequest( "get", "/test/", "http/1.1", httpServer.getHttpServerConf()).getRequestURI());
-        Assert.assertEquals("/test/style.css", new HTTPRequest( "get", "/test/style.css", "http/1.1", httpServer.getHttpServerConf()).getRequestURI());
+        Assert.assertEquals("/", new HTTPRequest( "get", "/", "http/1.1", "localhost").getRequestURI());
+        Assert.assertEquals("/findex.html", new HTTPRequest( "get", "/findex.html", "http/1.1", "localhost")
+                .getRequestURI());
+        Assert.assertEquals("/style.css", new HTTPRequest( "get", "/style.css", "http/1.1", "localhost")
+                .getRequestURI());
+        Assert.assertEquals("/test/", new HTTPRequest( "get", "/test/", "http/1.1", "localhost").getRequestURI());
+        Assert.assertEquals("/test/style.css", new HTTPRequest( "get", "/test/style.css", "http/1.1", "localhost")
+                .getRequestURI());
     }
 
     @Test
@@ -58,7 +63,7 @@ public class HTTPRequestTest {
     @Test
     public void requestStringRepresentaion() throws IOException {
         Assert.assertEquals("GET / HTTP/1.1\nHost: localhost",
-                (new HTTPRequest("get", "/", "http/1.1", httpServer.getHttpServerConf())).toString());
+                (new HTTPRequest("get", "/", "http/1.1", "localhost")).toString());
     }
 
     @Test ( expected = InvalidHTTPVersionException.class )

@@ -42,16 +42,27 @@ class HTTPServerExceptions {
         }
     }
 
-    static class FileNameIsNullOrEmptyException extends NoSuchFileException {
-        public FileNameIsNullOrEmptyException(String errorMessage) {
+    static class MethodIsNotAllowedException extends Exception {
+        public MethodIsNotAllowedException(String errorMessage) {
             super(errorMessage);
         }
     }
 
-    static class InvalidRequestParametersCountException extends Throwable {
-        public InvalidRequestParametersCountException(String errorMessage) {
+    static class NotFoundException extends Exception {
+        public NotFoundException(String errorMessage) {
             super(errorMessage);
         }
     }
 
+    static class FileNotFoundException extends NoSuchFileException {
+        public FileNotFoundException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
+
+    static class MalformedRequestException extends Throwable {
+        public MalformedRequestException(String errorMessage) {
+            super(errorMessage);
+        }
+    }
 }

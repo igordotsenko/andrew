@@ -1,23 +1,23 @@
 package com.gymfox.httpserver;
 
-import org.junit.Assert;
+import com.gymfox.httpserver.HTTPServerExceptions.MalformedRequestException;
 import org.junit.Test;
 
-import java.util.Arrays;
+import static com.gymfox.httpserver.HTTPTransformer.validateLength;
 
 public class HTTPTransformerTest {
     @Test
-    public void checkRequestParametersTest() throws HTTPServerExceptions.InvalidRequestParametersCountException {
-        Assert.assertEquals("[get, /, http/1.1]",
-                Arrays.toString(new HTTPTransformer().checkRequestParameters(new String[]{"get", "/", "http/1.1"})));
-        Assert.assertEquals("[get, /index.html, http/1.1]",
-                Arrays.toString(new HTTPTransformer().checkRequestParameters(new String[]{"get", "/index.html", "http/1.1"})));
-        Assert.assertEquals("[get, /test/, http/1.1]",
-                Arrays.toString(new HTTPTransformer().checkRequestParameters(new String[]{"get", "/test/", "http/1.1"})));
+    public void validateRequestParametersTest() throws MalformedRequestException {
+        validateLength(new String[]{"get", "/index.html", "http/1.1"});
     }
 
-    @Test(expected = HTTPServerExceptions.InvalidRequestParametersCountException.class)
-    public void invalidParametersCountTest() throws HTTPServerExceptions.InvalidRequestParametersCountException {
-        new HTTPTransformer().checkRequestParameters(new String[]{"get", "/", "test", "http/1.1"});
+    @Test ( expected = MalformedRequestException.class )
+    public void tooMuchRequestParametersTest() throws MalformedRequestException {
+        validateLength(new String[]{"get", "/index.html", "http/1.1", "localhost", "Don't", "Stop", "Me", "Now"});
+    }
+
+    @Test ( expected = MalformedRequestException.class )
+    public void notEnoughRequestParametersTest() throws MalformedRequestException {
+        validateLength(new String[]{"get"});
     }
 }

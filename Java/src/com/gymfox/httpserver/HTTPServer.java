@@ -8,18 +8,28 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.BAD_REQUEST_CODE;
+import static com.gymfox.httpserver.HTTPServerExceptions.*;
+import static com.gymfox.httpserver.HTTPServerExceptions.FileIsEmptyException;
 import static com.gymfox.httpserver.HTTPServerExceptions.HttpServerIsRunningException;
-import static com.gymfox.httpserver.HTTPServerExceptions.InvalidRequestParametersCountException;
-import static com.gymfox.httpserver.HTTPServerUtils.*;
+import static com.gymfox.httpserver.HTTPServerExceptions.InvalidArgumentsCountException;
+import static com.gymfox.httpserver.HTTPServerUtils.CONFIG_FILE;
+import static com.gymfox.httpserver.HTTPServerUtils.closeSocket;
+import static com.gymfox.httpserver.HTTPServerUtils.startServer;
+import static com.gymfox.httpserver.HTTPServerUtils.validatePath;
 
 public class HTTPServer {
-    private final ExecutorService pool;
+    private static final int ARGUMENTS_COUNT = 1;
+    private static final HTTPResponse badResponse =
+            new HTTPResponse.ResponseBuilder().addStatusCode(BAD_REQUEST_CODE.getCodeStatus() + " " + BAD_REQUEST_CODE.getCodeName()).build();
+    private final ExecutorService threadExecutor;
     private final HTTPServerConf httpServerConf;
-    static HTTPMimeTypes mimeTypeFile;
-
+    private final HTTPTransformer httpTransformer;
+    private final HTTPRequestHandler requestHandler;
     private volatile ServerSocket serverSocket;
     private volatile boolean isRunning;
 
@@ -29,8 +39,9 @@ public class HTTPServer {
 
     public HTTPServer(File pathToConfigFile) throws IOException {
         httpServerConf = ConfigSerializer.getHTTPConfig(pathToConfigFile);
-        mimeTypeFile = ConfigSerializer.getMimeTypes(httpServerConf.getConfigMimeTypes());
-        pool = Executors.newFixedThreadPool(httpServerConf.getPoolSize());
+        threadExecutor = Executors.newFixedThreadPool(httpServerConf.getPoolSize());
+        httpTransformer = new HTTPTransformer(httpServerConf);
+        requestHandler = new HTTPRequestHandler(httpServerConf);
     }
 
     public void start() throws IOException {
@@ -38,25 +49,37 @@ public class HTTPServer {
 
         while (isRunning()) {
             Socket socket = serverSocket.accept();
-            pool.execute(() -> {
+            threadExecutor.execute(() -> {
                 try (PrintWriter sout = new PrintWriter(new OutputStreamWriter(socket.getOutputStream()));
                      BufferedReader sin = new BufferedReader(new InputStreamReader(socket.getInputStream()))) {
                     System.out.println("Client has been connected");
 
                     if (isRunning()) {
-                        HTTPTransformer httpTransformer = new HTTPTransformer();
-
-                        HTTPRequest request = httpTransformer.readHTTPRequest(sin, httpServerConf);
-                        HTTPResponse response = new HTTPRequestHandler().handleRequest(request);
-
-                        httpTransformer.writeHTTPResponse(response, sout);
+                        try {
+                            HTTPRequest request = httpTransformer.readHTTPRequest(sin);
+                            HTTPResponse response = requestHandler.handleRequest(request);
+                            httpTransformer.writeHTTPResponse(response, sout);
+                        } catch (MalformedRequestException e) {
+                            httpTransformer.writeHTTPResponse(badResponse, sout);
+                            e.printStackTrace();
+                        }
                     }
-                } catch (IOException | InvalidRequestParametersCountException e) {
+                } catch (IOException e) {
                     e.printStackTrace();
                 } finally {
                     closeSocket(socket);
                 }
             });
+        }
+    }
+
+    private Optional<HTTPRequest> readRequest(BufferedReader sin) throws IOException {
+        try {
+            return Optional.of(httpTransformer.readHTTPRequest(sin));
+        } catch (MalformedRequestException e) {
+            e.printStackTrace();
+
+            return Optional.empty();
         }
     }
 
@@ -75,7 +98,7 @@ public class HTTPServer {
         if (isRunning()) {
             isRunning = false;
             serverSocket.close();
-            pool.shutdown();
+            threadExecutor.shutdown();
 
             System.out.println("HTTP Server has been closed");
         }
@@ -89,17 +112,33 @@ public class HTTPServer {
         return httpServerConf;
     }
 
-    String getHTTPServerConfAsString() {
+    public String getHTTPServerConfAsString() {
         return httpServerConf.toString();
-    }
-
-    public String getMimeTypeAsString() {
-        return mimeTypeFile.toString();
     }
 
     @Override
     public String toString() {
-        return getHTTPServerConfAsString() + "\n" + getMimeTypeAsString();
+        return getHTTPServerConfAsString() + "\n";
+    }
+
+    static File checkArguments(File inputArgumentFile) throws IOException {
+        validatePath(inputArgumentFile);
+        validateIsNotEmpty(inputArgumentFile);
+
+        return inputArgumentFile;
+    }
+
+    static void validateIsNotEmpty(File configFile) throws FileIsEmptyException {
+        if ( configFile.length() == 0 ) {
+            throw new FileIsEmptyException("File doesn't have any parameters.");
+        }
+    }
+
+    static void validateArgumentsCount(String[] args) throws InvalidArgumentsCountException {
+        if ( args.length != ARGUMENTS_COUNT ) {
+            throw new InvalidArgumentsCountException(String.format("Invalid arguments counts. Expected %d, but found " +
+                    "%d.", ARGUMENTS_COUNT, args.length));
+        }
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
