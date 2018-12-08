@@ -29,9 +29,12 @@ public final class HTTPMimeTypes {
         validateFileName(fileName);
 
         return Stream.of(fileName)
-                .map(extension -> mimeTypes.getOrDefault(extension.substring(extension.lastIndexOf(DOT) + NEXT_SYMBOL),
-                        UNKNOWN_EXTENSION))
+                .map(name -> getExtension(fileName))
                 .collect(Collectors.joining());
+    }
+
+    public String getExtension(String fileName) {
+        return mimeTypes.getOrDefault(fileName.substring(fileName.lastIndexOf(DOT) + NEXT_SYMBOL), UNKNOWN_EXTENSION);
     }
 
     static void validateFileName(String fileName) throws FileNotFoundException {

@@ -23,10 +23,7 @@ final class ConfigSerializer {
     private ConfigSerializer() {}
 
     static HTTPServerConf getHTTPConfig(File configFile) throws IOException {
-        Map<String, String> configurationNameToValue;
-        try (Stream<String> lines = Files.lines(Paths.get(configFile.getAbsolutePath()))) {
-            configurationNameToValue = readFile(lines);
-        }
+        Map<String, String> configurationNameToValue = readFile(configFile);
 
         return new HTTPServerConf(new IPv4Address(configurationNameToValue.getOrDefault("address", DEFAULT_ADDRESS)),
                 getIntValueFromConfigFile(configurationNameToValue, "port").orElse(DEFAULT_PORT),
@@ -43,21 +40,19 @@ final class ConfigSerializer {
     }
 
     static HTTPMimeTypes getMimeTypes(File configFile) throws IOException {
-        Map<String, String> mimeTypes;
-
-        try (Stream<String> lines = Files.lines(Paths.get(configFile.getAbsolutePath()))) {
-            mimeTypes = readFile(lines);
-        }
+        Map<String, String> mimeTypes = readFile(configFile);
 
         return new HTTPMimeTypes(mimeTypes);
     }
 
-    private static Map<String, String> readFile(Stream<String> lines) {
+    private static Map<String, String> readFile(File configFile) throws IOException {
+        try (Stream<String> lines = Files.lines(Paths.get(configFile.getAbsolutePath()))) {
 
             return lines
                     .map(line -> line.split("[\\s]{2,}"))
                     .peek(ConfigSerializer::validateConfigFileLine)
-                    .collect(Collectors.toMap(line->line[0], line->line[1]));
+                    .collect(Collectors.toMap(line -> line[0], line -> line[1]));
+        }
     }
 
     private static void validateConfigFileLine(String[] lines) {
