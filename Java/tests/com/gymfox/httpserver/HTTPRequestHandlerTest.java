@@ -10,6 +10,7 @@ import java.io.IOException;
 import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.METHOD_NOT_ALLOWED;
 import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.NOT_FOUND_CODE;
 import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.OK_CODE;
+import static com.gymfox.httpserver.HTTPRequestHandler.getFilePathByUri;
 
 public class HTTPRequestHandlerTest {
     private static HTTPServer httpServer;
@@ -44,5 +45,16 @@ public class HTTPRequestHandlerTest {
 
         Assert.assertEquals(NOT_FOUND_CODE.getCodeStatus() + " " + NOT_FOUND_CODE.getCodeName(),
                 httpRequestHandler.handleRequest(httpRequest).getStatusCode());
+    }
+
+    @Test
+    public void processingRequestURITest() {
+        File directory = httpServer.getHttpServerConf().getRootDirectory();
+
+        org.testng.Assert.assertEquals("/var/www/localhost/index.html", getFilePathByUri(directory,"/").getAbsolutePath());
+        org.testng.Assert.assertEquals("/var/www/localhost/index.html", getFilePathByUri(directory,"/index.html").getAbsolutePath());
+        org.testng.Assert.assertEquals("/var/www/localhost/test/style.css", getFilePathByUri(directory,"/test/style.css").getAbsolutePath());
+        org.testng.Assert.assertEquals("/var/www/localhost/test", getFilePathByUri(directory,"/test/").getAbsolutePath());
+        org.testng.Assert.assertEquals("/var/www/localhost/fakeFile.html", getFilePathByUri(directory,"/fakeFile.html").getAbsolutePath());
     }
 }

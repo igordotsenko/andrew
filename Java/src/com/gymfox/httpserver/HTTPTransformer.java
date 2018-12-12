@@ -11,19 +11,19 @@ public final class HTTPTransformer {
     private static final int REQUEST_METHOD = 0;
     private static final int REQUEST_URI = 1;
     private static final int REQUEST_PROTOCOL = 2;
-    private static final String SPACE = " ";
     private static final int REQUEST_PARAMETERS_COUNT = 3;
-    private final HTTPTransformerConfig httpServerConf;
+    private static final String INPUT_PARTS_DELIMITER = " ";
+    private final HTTPTransformerConfig httpTransformerConfig;
 
-    public HTTPTransformer(HTTPServerConf httpServerConf) {
-        this.httpServerConf = httpServerConf;
+    public HTTPTransformer(HTTPTransformerConfig httpTransformerConfig) {
+        this.httpTransformerConfig = httpTransformerConfig;
     }
 
     public HTTPRequest readHTTPRequest(BufferedReader bufferedReader) throws IOException, MalformedRequestException {
-            String[] inputRequest = checkRequestParameters(bufferedReader.readLine().split(SPACE));
+            String[] inputRequestParts = checkRequestParameters(bufferedReader.readLine().split(INPUT_PARTS_DELIMITER));
 
-            return new HTTPRequest(inputRequest[REQUEST_METHOD], inputRequest[REQUEST_URI],
-                    inputRequest[REQUEST_PROTOCOL], httpServerConf.getConfigHost());
+            return new HTTPRequest(inputRequestParts[REQUEST_METHOD], inputRequestParts[REQUEST_URI],
+                    inputRequestParts[REQUEST_PROTOCOL], httpTransformerConfig.getConfigHost());
     }
 
     private String[] checkRequestParameters(String[] requestLine) throws MalformedRequestException {
@@ -35,7 +35,7 @@ public final class HTTPTransformer {
     static void validateLength(String[] requestLength) throws MalformedRequestException {
         if ( requestLength.length != REQUEST_PARAMETERS_COUNT ) {
             throw new MalformedRequestException(String.format(BAD_REQUEST_CODE.getCodeStatus() +
-                            " " + BAD_REQUEST_CODE.getCodeName() +
+                            INPUT_PARTS_DELIMITER + BAD_REQUEST_CODE.getCodeName() +
                             ". Invalid request parameters count. Expected %d, but found %d",
                     REQUEST_PARAMETERS_COUNT, requestLength.length));
         }

@@ -23,8 +23,9 @@ import static com.gymfox.httpserver.HTTPServerExceptions.MethodIsNotAllowedExcep
 import static com.gymfox.httpserver.HTTPServerExceptions.NotFoundException;
 
 public final class HTTPRequestHandler  {
-    static final List<String> allowedMethodsList = Collections.unmodifiableList(Arrays.asList("GET", "POST"));
+    private static final String INDEX_HTML = "index.html";
     private final HTTPServerConf httpServerConf;
+    static final List<String> allowedMethodsList = Collections.unmodifiableList(Arrays.asList("GET", "POST"));
 
     public enum CodeResponse {
         OK_CODE(200, "OK"),
@@ -55,7 +56,7 @@ public final class HTTPRequestHandler  {
 
     public HTTPResponse handleRequest(HTTPRequest httpRequest) throws IOException {
         HTTPResponse.ResponseBuilder responseBuilder = new HTTPResponse.ResponseBuilder();
-        File requestedFile = URIUtils.processingRequestURI(httpServerConf.getRootDirectory(), httpRequest.getRequestURI());
+        File requestedFile = getFilePathByUri(httpServerConf.getRootDirectory(), httpRequest.getRequestURI());
 
         try {
             validateMethods(httpRequest.getRequestMethod());
@@ -78,6 +79,16 @@ public final class HTTPRequestHandler  {
         }
 
         return responseBuilder.build();
+    }
+
+    static File getFilePathByUri(File rootDir, String inputURI) {
+        File requestURI = new File(rootDir + inputURI);
+
+        if ( requestURI.equals(rootDir) ) {
+            return new File(requestURI + "/" + INDEX_HTML);
+        }
+
+        return requestURI;
     }
 
     public void setResponseCode(HTTPResponse.ResponseBuilder responseBuilder, CodeResponse status, String protocol) {

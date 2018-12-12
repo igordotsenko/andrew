@@ -40,7 +40,7 @@ public class HTTPServer {
     public HTTPServer(File pathToConfigFile) throws IOException {
         httpServerConf = ConfigSerializer.getHTTPConfig(pathToConfigFile);
         threadExecutor = Executors.newFixedThreadPool(httpServerConf.getPoolSize());
-        httpTransformer = new HTTPTransformer(httpServerConf);
+        httpTransformer = new HTTPTransformer(httpServerConf.getHttpTransformerConfig());
         requestHandler = new HTTPRequestHandler(httpServerConf);
     }
 
