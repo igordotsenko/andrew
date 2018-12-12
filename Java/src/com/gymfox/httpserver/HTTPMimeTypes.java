@@ -1,8 +1,6 @@
 package com.gymfox.httpserver;
 
 import java.util.Map;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 import static com.gymfox.httpserver.HTTPServerExceptions.FileNotFoundException;
 
@@ -28,9 +26,7 @@ public final class HTTPMimeTypes {
     public String getMimeFormat(String fileName) throws FileNotFoundException {
         validateFileName(fileName);
 
-        return Stream.of(fileName)
-                .map(name -> getExtension(fileName))
-                .collect(Collectors.joining());
+        return getExtension(fileName);
     }
 
     public String getExtension(String fileName) {
