@@ -40,9 +40,7 @@ final class ConfigSerializer {
     }
 
     static HTTPMimeTypes getMimeTypes(File configFile) throws IOException {
-        Map<String, String> mimeTypes = readFile(configFile);
-
-        return new HTTPMimeTypes(mimeTypes);
+        return new HTTPMimeTypes(readFile(configFile));
     }
 
     private static Map<String, String> readFile(File configFile) throws IOException {
