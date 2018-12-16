@@ -8,7 +8,7 @@ import java.io.IOException;
 import static com.gymfox.httpserver.HTTPServerUtils.validatePath;
 import static com.gymfox.httpserver.HTTPServerExceptions.InvalidPortException;
 
-public class HTTPServerConf {
+public class HTTPServerConf implements HTTPTransformerConfig {
     private static final int MIN_SYSTEM_PORT_VALUE = 0;
     private static final int MAX_SYSTEM_PORT_VALUE = 65536;
     private final IPv4Address address;
@@ -17,7 +17,6 @@ public class HTTPServerConf {
     private final int threadPoolSize;
     private final File supportedMimeTypesConfigurationFile;
     private final HTTPMimeTypes mimeTypes;
-    private final HTTPTransformerConfig httpTransformerConfig;
     private String configFileStringRepresentation;
 
     public HTTPServerConf(IPv4Address address, int port, File rootDir, int poolSize,
@@ -30,7 +29,6 @@ public class HTTPServerConf {
         this.rootDirectory = rootDir;
         this.threadPoolSize = poolSize;
         this.mimeTypes = ConfigSerializer.getMimeTypes(supportedMimeTypesConfigurationFile);
-        this.httpTransformerConfig = rootDir::getName;
         this.supportedMimeTypesConfigurationFile = supportedMimeTypesConfigurationFile;
     }
 
@@ -49,22 +47,25 @@ public class HTTPServerConf {
         return configPort;
     }
 
-    public File getRootDirectory() {
-        return rootDirectory;
-    }
-
     public int getPoolSize() {
         return threadPoolSize;
-    }
-
-    public HTTPTransformerConfig getHttpTransformerConfig() {
-        return httpTransformerConfig;
     }
 
     public File getConfigMimeTypes() {
         return supportedMimeTypesConfigurationFile;
     }
 
+    @Override
+    public File getRootDirectory() {
+        return rootDirectory;
+    }
+
+    @Override
+    public String getConfigHost() {
+        return null;
+    }
+
+    @Override
     public HTTPMimeTypes getMimeTypes() {
         return mimeTypes;
     }

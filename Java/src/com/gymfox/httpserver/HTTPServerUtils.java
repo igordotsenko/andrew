@@ -7,6 +7,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 public final class HTTPServerUtils {
+    static final String INPUT_PARTS_DELIMITER = " ";
     static final File CONFIG_FILE = new File("http.conf");
 
     private HTTPServerUtils() {}

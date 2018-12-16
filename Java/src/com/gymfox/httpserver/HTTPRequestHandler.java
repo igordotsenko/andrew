@@ -21,10 +21,11 @@ import static com.gymfox.httpserver.HTTPResponse.ResponseHeaders.CONTENT_TYPE;
 import static com.gymfox.httpserver.HTTPResponse.ResponseHeaders.DATE;
 import static com.gymfox.httpserver.HTTPServerExceptions.MethodIsNotAllowedException;
 import static com.gymfox.httpserver.HTTPServerExceptions.NotFoundException;
+import static com.gymfox.httpserver.HTTPServerUtils.INPUT_PARTS_DELIMITER;
 
 public final class HTTPRequestHandler  {
-    private static final String INDEX_HTML = "index.html";
-    private final HTTPServerConf httpServerConf;
+    private static final String INDEX_HTML = "/index.html";
+    private final HTTPTransformerConfig httpServerConf;
     static final List<String> allowedMethodsList = Collections.unmodifiableList(Arrays.asList("GET", "POST"));
 
     public enum CodeResponse {
@@ -50,7 +51,7 @@ public final class HTTPRequestHandler  {
         }
     }
 
-    HTTPRequestHandler(HTTPServerConf httpServerConf) {
+    HTTPRequestHandler(HTTPTransformerConfig httpServerConf) {
         this.httpServerConf = httpServerConf;
     }
 
@@ -85,7 +86,7 @@ public final class HTTPRequestHandler  {
         File requestURI = new File(rootDir + inputURI);
 
         if ( requestURI.equals(rootDir) ) {
-            return new File(requestURI + "/" + INDEX_HTML);
+            return new File(requestURI + INDEX_HTML);
         }
 
         return requestURI;
@@ -93,7 +94,7 @@ public final class HTTPRequestHandler  {
 
     public void setResponseCode(HTTPResponse.ResponseBuilder responseBuilder, CodeResponse status, String protocol) {
         responseBuilder.addHTTPVersion(protocol);
-        responseBuilder.addStatusCode(status.getCodeStatus() + " " + status.getCodeName());
+        responseBuilder.addStatusCode(status);
         responseBuilder.addHeader(ALLOWED_METHODS, allowedMethodsList.toString());
         responseBuilder.addHeader(CONNECTION, "Closed");
         responseBuilder.addHeader(DATE, getServerCurrentTime());
@@ -115,14 +116,14 @@ public final class HTTPRequestHandler  {
 
     private void validateMethods(String method) throws MethodIsNotAllowedException {
         if ( !allowedMethodsList.contains(method) ) {
-            throw new MethodIsNotAllowedException(METHOD_NOT_ALLOWED.getCodeStatus() + " " +
+            throw new MethodIsNotAllowedException(METHOD_NOT_ALLOWED.getCodeStatus() + INPUT_PARTS_DELIMITER +
                     METHOD_NOT_ALLOWED.getCodeName());
         }
     }
 
     private void validatePath(File requestPath) throws NotFoundException {
         if (!requestPath.exists() || requestPath.isDirectory()) {
-            throw new NotFoundException(NOT_FOUND_CODE.getCodeStatus() + " " + NOT_FOUND_CODE.getCodeName());
+            throw new NotFoundException(NOT_FOUND_CODE.getCodeStatus() + INPUT_PARTS_DELIMITER + NOT_FOUND_CODE.getCodeName());
         }
     }
 }

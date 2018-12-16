@@ -6,13 +6,13 @@ import java.io.PrintWriter;
 
 import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.BAD_REQUEST_CODE;
 import static com.gymfox.httpserver.HTTPServerExceptions.MalformedRequestException;
+import static com.gymfox.httpserver.HTTPServerUtils.INPUT_PARTS_DELIMITER;
 
 public final class HTTPTransformer {
     private static final int REQUEST_METHOD = 0;
     private static final int REQUEST_URI = 1;
     private static final int REQUEST_PROTOCOL = 2;
     private static final int REQUEST_PARAMETERS_COUNT = 3;
-    private static final String INPUT_PARTS_DELIMITER = " ";
     private final HTTPTransformerConfig httpTransformerConfig;
 
     public HTTPTransformer(HTTPTransformerConfig httpTransformerConfig) {

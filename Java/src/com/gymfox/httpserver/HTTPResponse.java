@@ -4,6 +4,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 
+import static com.gymfox.httpserver.HTTPRequestHandler.*;
+import static com.gymfox.httpserver.HTTPServerUtils.INPUT_PARTS_DELIMITER;
+
 public final class HTTPResponse {
     public enum ResponseHeaders {
         ALLOWED_METHODS("Allowed"),
@@ -43,8 +46,8 @@ public final class HTTPResponse {
             return self();
         }
 
-        public ResponseBuilder addStatusCode(String statusCode) {
-            this.statusCode = statusCode;
+        public ResponseBuilder addStatusCode(CodeResponse statusCode) {
+            this.statusCode = statusCode.getCodeStatus() + INPUT_PARTS_DELIMITER + statusCode.getCodeName();
 
             return self();
         }

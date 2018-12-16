@@ -1,5 +1,7 @@
 package com.gymfox.httpserver;
 
+import com.gymfox.httpserver.HTTPResponse.ResponseBuilder;
+
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.IOException;
@@ -13,10 +15,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import static com.gymfox.httpserver.HTTPRequestHandler.CodeResponse.BAD_REQUEST_CODE;
-import static com.gymfox.httpserver.HTTPServerExceptions.*;
 import static com.gymfox.httpserver.HTTPServerExceptions.FileIsEmptyException;
 import static com.gymfox.httpserver.HTTPServerExceptions.HttpServerIsRunningException;
 import static com.gymfox.httpserver.HTTPServerExceptions.InvalidArgumentsCountException;
+import static com.gymfox.httpserver.HTTPServerExceptions.MalformedRequestException;
 import static com.gymfox.httpserver.HTTPServerUtils.CONFIG_FILE;
 import static com.gymfox.httpserver.HTTPServerUtils.closeSocket;
 import static com.gymfox.httpserver.HTTPServerUtils.startServer;
@@ -24,8 +26,8 @@ import static com.gymfox.httpserver.HTTPServerUtils.validatePath;
 
 public class HTTPServer {
     private static final int ARGUMENTS_COUNT = 1;
-    private static final HTTPResponse badResponse =
-            new HTTPResponse.ResponseBuilder().addStatusCode(BAD_REQUEST_CODE.getCodeStatus() + " " + BAD_REQUEST_CODE.getCodeName()).build();
+    private static final int EMPTY_LINE = 0;
+    private static final HTTPResponse badResponse = new ResponseBuilder().addStatusCode(BAD_REQUEST_CODE).build();
     private final ExecutorService threadExecutor;
     private final HTTPServerConf httpServerConf;
     private final HTTPTransformer httpTransformer;
@@ -39,8 +41,9 @@ public class HTTPServer {
 
     public HTTPServer(File pathToConfigFile) throws IOException {
         httpServerConf = ConfigSerializer.getHTTPConfig(pathToConfigFile);
+
         threadExecutor = Executors.newFixedThreadPool(httpServerConf.getPoolSize());
-        httpTransformer = new HTTPTransformer(httpServerConf.getHttpTransformerConfig());
+        httpTransformer = new HTTPTransformer(httpServerConf);
         requestHandler = new HTTPRequestHandler(httpServerConf);
     }
 
@@ -129,7 +132,7 @@ public class HTTPServer {
     }
 
     static void validateIsNotEmpty(File configFile) throws FileIsEmptyException {
-        if ( configFile.length() == 0 ) {
+        if ( configFile.length() == EMPTY_LINE ) {
             throw new FileIsEmptyException("File doesn't have any parameters.");
         }
     }
