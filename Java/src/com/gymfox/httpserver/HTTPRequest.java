@@ -2,13 +2,14 @@ package com.gymfox.httpserver;
 
 import java.io.IOException;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static com.gymfox.httpserver.HTTPServerExceptions.InvalidHTTPVersionException;
 import static com.gymfox.httpserver.HTTPServerExceptions.InvalidPartsHTTPVersionException;
 
 public final class HTTPRequest {
-    private static final List<Double> VALID_HTTP_VERSIONS = Arrays.asList(0.9, 1.0, 1.1, 2.0);
+    private static final List<Double> VALID_HTTP_VERSIONS = Collections.unmodifiableList(Arrays.asList(0.9, 1.0, 1.1, 2.0));
     private static final int PROTOCOL_PARTS = 2;
     private static final String PROTOCOL_NAME = "HTTP";
     private final String method;
