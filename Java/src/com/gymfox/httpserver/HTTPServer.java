@@ -10,7 +10,6 @@ import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Optional;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -73,16 +72,6 @@ public class HTTPServer {
                     closeSocket(socket);
                 }
             });
-        }
-    }
-
-    private Optional<HTTPRequest> readRequest(BufferedReader sin) throws IOException {
-        try {
-            return Optional.of(httpTransformer.readHTTPRequest(sin));
-        } catch (MalformedRequestException e) {
-            e.printStackTrace();
-
-            return Optional.empty();
         }
     }
 
