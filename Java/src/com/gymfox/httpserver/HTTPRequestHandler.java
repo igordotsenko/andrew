@@ -26,7 +26,7 @@ import static com.gymfox.httpserver.HTTPServerUtils.INPUT_PARTS_DELIMITER;
 public final class HTTPRequestHandler  {
     private static final String INDEX_HTML = "/index.html";
     private final HTTPTransformerConfig httpServerConf;
-    static final List<String> allowedMethodsList = Collections.unmodifiableList(Arrays.asList("GET", "POST"));
+    private static final List<String> allowedMethodsList = Collections.unmodifiableList(Arrays.asList("GET", "POST"));
 
     public enum CodeResponse {
         OK_CODE(200, "OK"),

@@ -1,25 +1,18 @@
 package com.gymfox.httpserver;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 
-import static com.gymfox.httpserver.HTTPServerExceptions.FileNotFoundException;
 import static com.gymfox.httpserver.HTTPMimeTypes.validateFileName;
+import static com.gymfox.httpserver.HTTPServerExceptions.FileNotFoundException;
 
 public class HTTPMimeTypesTest {
-    private static final String httpServerConf = "http.conf";
-    private static HTTPServer httpServer;
-    @BeforeClass
-    public static void setUpHTTPServer() throws IOException {
-       httpServer = new HTTPServer(new File(httpServerConf));
-    }
 
     @Test
-    public void getMimeFormatTest() throws FileNotFoundException {
+    public void getMimeFormatTest() throws IOException {
+        HTTPServer httpServer = new HTTPServer();
         Assert.assertEquals("text/html; charset=UTF-8", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("index.html"));
         Assert.assertEquals("text/css", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("style.css"));
         Assert.assertEquals("application/x-javascript", httpServer.getHttpServerConf().getMimeTypes().getMimeFormat("scenario.js"));

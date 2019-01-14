@@ -1,31 +1,20 @@
 package com.gymfox.httpserver;
 
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 
 import static com.gymfox.httpserver.HTTPRequest.checkHTTPVersion;
-import static com.gymfox.httpserver.HTTPRequest.validateParts;
 import static com.gymfox.httpserver.HTTPRequest.validateRequestHttpVersion;
 import static com.gymfox.httpserver.HTTPServerExceptions.InvalidHTTPVersionException;
 import static com.gymfox.httpserver.HTTPServerExceptions.InvalidPartsHTTPVersionException;
 
 public class HTTPRequestTest {
-    private static final String httpServerConf = "http.conf";
-    private static HTTPServer httpServer;
-    private static HTTPRequest request;
-
-    @BeforeClass
-    public static void setUpHTTPServer() throws IOException {
-        httpServer = new HTTPServer(new File(httpServerConf));
-        request = new HTTPRequest( "get", "/index.html", "HTTP/1.1", "localhost");
-    }
-
     @Test
-    public void getRequestParametersTest() {
+    public void getRequestParametersTest() throws IOException {
+        HTTPRequest request = new HTTPRequest( "get", "/index.html", "HTTP/1.1", "localhost");
+
         Assert.assertEquals("GET", request.getRequestMethod());
         Assert.assertEquals("/index.html", request.getRequestURI());
         Assert.assertEquals("HTTP/1.1", request.getRequestHTTPVersion());
@@ -82,12 +71,12 @@ public class HTTPRequestTest {
     }
 
     @Test ( expected = InvalidPartsHTTPVersionException.class )
-    public void validatePartsTest() throws InvalidPartsHTTPVersionException {
-        validateParts(new String[]{"HTTP", "1.1", "i", "want", "to", "break", "free"});
+    public void validatePartsTest() throws InvalidHTTPVersionException, InvalidPartsHTTPVersionException {
+        validateRequestHttpVersion("HTTP/1.1/i/want/to/break/free");
     }
 
     @Test ( expected = InvalidPartsHTTPVersionException.class )
-    public void validateNonePartsTest() throws InvalidPartsHTTPVersionException {
-        validateParts(new String[]{});
+    public void validateNonePartsTest() throws InvalidHTTPVersionException, InvalidPartsHTTPVersionException {
+        validateRequestHttpVersion("");
     }
 }

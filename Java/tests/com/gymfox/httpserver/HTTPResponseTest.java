@@ -4,7 +4,6 @@ import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
 
-import java.io.File;
 import java.io.IOException;
 
 import static com.gymfox.httpserver.HTTPResponse.ResponseHeaders.ALLOWED_METHODS;
@@ -17,7 +16,7 @@ public class HTTPResponseTest {
 
     @BeforeClass
     public static void setUpHTTPServer() throws IOException {
-        HTTPServer httpServer = new HTTPServer(new File("http.conf"));
+        HTTPServer httpServer = new HTTPServer();
         httpRequestHandler = new HTTPRequestHandler(httpServer.getHttpServerConf());
     }
 

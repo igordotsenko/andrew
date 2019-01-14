@@ -10,6 +10,8 @@ import static com.gymfox.httpserver.HTTPServerExceptions.InvalidPartsHTTPVersion
 
 public final class HTTPRequest {
     private static final List<Double> VALID_HTTP_VERSIONS = Collections.unmodifiableList(Arrays.asList(0.9, 1.0, 1.1, 2.0));
+    private static final int FIRST_PART = 0;
+    private static final int SECOND_PART = 1;
     private static final int PROTOCOL_PARTS = 2;
     private static final String PROTOCOL_NAME = "HTTP";
     private final String method;
@@ -33,33 +35,32 @@ public final class HTTPRequest {
         return newRequestHttpVersion;
     }
 
-    static void validateRequestHttpVersion(String requestHttpVersion) throws InvalidHTTPVersionException,
-            InvalidPartsHTTPVersionException {
+    static void validateRequestHttpVersion(String requestHttpVersion) throws InvalidHTTPVersionException, InvalidPartsHTTPVersionException {
         String[] httpVersionParts = requestHttpVersion.split("/");
         validateParts(httpVersionParts);
 
-        double httpVersion = Double.parseDouble(httpVersionParts[1]);
+        double httpVersion = Double.parseDouble(httpVersionParts[SECOND_PART]);
 
-        validateProtocolName(httpVersionParts[0]);
+        validateProtocolName(httpVersionParts[FIRST_PART]);
         validateProtocolVersion(httpVersion);
     }
 
-    static void validateProtocolName(String httpName) throws InvalidHTTPVersionException {
+    private static void validateParts(String[] httpVersionParts) throws InvalidPartsHTTPVersionException {
+        if ( httpVersionParts.length != PROTOCOL_PARTS) {
+            throw new InvalidPartsHTTPVersionException(String.format("Invalid HTTP version parts. Expected %d, but found %d",
+                    PROTOCOL_PARTS, httpVersionParts.length));
+        }
+    }
+
+    private static void validateProtocolName(String httpName) throws InvalidHTTPVersionException {
         if ( !httpName.equals(PROTOCOL_NAME) ) {
             throw new InvalidHTTPVersionException("Invalid protocol name");
         }
     }
 
-    static void validateProtocolVersion(Double httpVersion) throws InvalidHTTPVersionException {
+    private static void validateProtocolVersion(Double httpVersion) throws InvalidHTTPVersionException {
         if ( !VALID_HTTP_VERSIONS.contains(httpVersion) ) {
             throw new InvalidHTTPVersionException("Invalid protocol version");
-        }
-    }
-
-    static void validateParts(String[] httpVersionParts) throws InvalidPartsHTTPVersionException {
-        if ( httpVersionParts.length != PROTOCOL_PARTS) {
-            throw new InvalidPartsHTTPVersionException(String.format("Invalid HTTP version parts. Expected %d, but found %d",
-                    PROTOCOL_PARTS, httpVersionParts.length));
         }
     }
 
