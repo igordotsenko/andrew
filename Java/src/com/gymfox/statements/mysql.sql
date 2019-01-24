@@ -18,7 +18,7 @@ CREATE TABLE category (
     PRIMARY KEY(id_category)
 );
 
-INSERT INTO category (category_title) VALUES ('Smartphone'), ('Tabs'), ('TV');
+INSERT INTO category (category_title) VALUES ('Smartphones'), ('Tabs'), ('TV');
 
 CREATE TABLE product (
     id_product INT AUTO_INCREMENT,
