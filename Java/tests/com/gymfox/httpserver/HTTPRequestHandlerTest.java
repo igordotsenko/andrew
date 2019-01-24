@@ -51,10 +51,10 @@ public class HTTPRequestHandlerTest {
     public void processingRequestURITest() {
         File directory = httpServer.getHttpServerConf().getRootDirectory();
 
-        org.testng.Assert.assertEquals("/var/www/localhost/index.html", getFilePathByUri(directory,"/").getAbsolutePath());
-        org.testng.Assert.assertEquals("/var/www/localhost/index.html", getFilePathByUri(directory,"/index.html").getAbsolutePath());
-        org.testng.Assert.assertEquals("/var/www/localhost/test/style.css", getFilePathByUri(directory,"/test/style.css").getAbsolutePath());
-        org.testng.Assert.assertEquals("/var/www/localhost/test", getFilePathByUri(directory,"/test/").getAbsolutePath());
-        org.testng.Assert.assertEquals("/var/www/localhost/fakeFile.html", getFilePathByUri(directory,"/fakeFile.html").getAbsolutePath());
+        Assert.assertEquals("/var/www/localhost/index.html", getFilePathByUri(directory,"/").getAbsolutePath());
+        Assert.assertEquals("/var/www/localhost/index.html", getFilePathByUri(directory,"/index.html").getAbsolutePath());
+        Assert.assertEquals("/var/www/localhost/test/style.css", getFilePathByUri(directory,"/test/style.css").getAbsolutePath());
+        Assert.assertEquals("/var/www/localhost/test", getFilePathByUri(directory,"/test/").getAbsolutePath());
+        Assert.assertEquals("/var/www/localhost/fakeFile.html", getFilePathByUri(directory,"/fakeFile.html").getAbsolutePath());
     }
 }
