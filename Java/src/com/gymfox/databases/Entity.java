@@ -69,7 +69,7 @@ public abstract class Entity {
         db = connection;
     }
 
-    public static void validateConnectionIsNotNull(Connection connection) {
+    private static void validateConnectionIsNotNull(Connection connection) {
         if ( connection == null ) {
             throw new NullPointerException();
         }
@@ -77,6 +77,10 @@ public abstract class Entity {
 
     public final int getId() {
         return id;
+    }
+
+    void setId(int newId) {
+        id = newId;
     }
 
     public final java.util.Date getCreated() {
@@ -113,7 +117,7 @@ public abstract class Entity {
         return getTableByConditions(cls, getChildrenQuery(cls));
     }
 
-    <T extends Entity> String getChildrenQuery(Class<T> cls) {
+    final <T extends Entity> String getChildrenQuery(Class<T> cls) {
         return String.format(CHILDREN_QUERY, getLowerCaseTableName(cls), table);
     }
 
@@ -121,7 +125,7 @@ public abstract class Entity {
         return getTableByConditions(cls, getSiblingsQuery(cls));
     }
 
-    <T extends Entity> String getSiblingsQuery(Class<T> cls) {
+    final <T extends Entity> String getSiblingsQuery(Class<T> cls) {
         String siblingTable = getJoinTableName(getLowerCaseTableName(cls), table);
 
         return String.format(SIBLINGS_QUERY, siblingTable, getLowerCaseTableName(cls), table);
@@ -159,7 +163,7 @@ public abstract class Entity {
         return preparedStatement;
     }
 
-    String getSelectQuery() {
+    final String getSelectQuery() {
         return String.format(SELECT_QUERY, table);
     }
 
@@ -205,7 +209,7 @@ public abstract class Entity {
         }
     }
 
-    String getInsertQuery() {
+    final String getInsertQuery() {
         return String.format(INSERT_QUERY, table, join(fields.keySet()), join(getValuesForInsert()));
     }
 
@@ -231,7 +235,7 @@ public abstract class Entity {
         return getPreparedStatement(getUpdateQuery(), id);
     }
 
-    String getUpdateQuery() {
+    final String getUpdateQuery() {
         return String.format(UPDATE_QUERY, table, getPairForUpdateQuery());
     }
 
@@ -261,7 +265,7 @@ public abstract class Entity {
         return getPreparedStatement(getDeleteQuery(), id);
     }
 
-    String getDeleteQuery() {
+    final String getDeleteQuery() {
         return String.format(DELETE_QUERY, table);
     }
 
@@ -289,7 +293,7 @@ public abstract class Entity {
         return db.createStatement().executeQuery(getListQuery(cls));
     }
 
-    static <T extends Entity> String getListQuery(Class<T> cls) {
+    final static <T extends Entity> String getListQuery(Class<T> cls) {
         return String.format(LIST_QUERY, getLowerCaseTableName(cls));
     }
 

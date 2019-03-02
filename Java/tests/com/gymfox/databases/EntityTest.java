@@ -2,13 +2,11 @@ package com.gymfox.databases;
 
 import com.gymfox.databases.Entity.InvalidIdException;
 import org.junit.Assert;
-import org.junit.BeforeClass;
 import org.junit.Test;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.function.Executable;
 
 import java.sql.Connection;
-import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
@@ -17,14 +15,6 @@ import static com.gymfox.databases.Entity.getListQuery;
 public class EntityTest {
     private static final int FIRST_INDEX_PARAMETER = 1;
     static Connection connection = null;
-
-    @BeforeClass
-    public static void initDatabase() throws ClassNotFoundException, SQLException {
-        Class.forName("org.postgresql.Driver");
-        connection = DriverManager.getConnection("jdbc:postgresql://localhost:5432/orm", "postgres",
-                "13121993");
-        Entity.setDatabase(connection);
-    }
 
     private static String getPreparedStatementByQuery(String query) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -135,9 +125,11 @@ public class EntityTest {
     @Test
     public void invalidIdExceptionTest() {
         new Category(0);
+
         Executable executable = () -> {
             throw new InvalidIdException("Invalid id. Should be more then 0");
         };
+
         Assertions.assertThrows(InvalidIdException.class, executable);
     }
 }
