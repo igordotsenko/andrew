@@ -7,7 +7,7 @@ class User extends Entity {
         super();
     }
 
-    public User(Integer id) {
+    public User(Integer id) throws InvalidIdException {
         super(id);
     }
 

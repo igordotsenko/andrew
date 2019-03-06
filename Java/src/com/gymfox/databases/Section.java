@@ -7,7 +7,7 @@ class Section extends Entity {
         super();
     }
 
-    public Section(Integer id) {
+    public Section(Integer id) throws InvalidIdException {
         super(id);
     }
 

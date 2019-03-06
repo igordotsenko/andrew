@@ -7,7 +7,7 @@ class Category extends Entity {
         super();
     }
 
-    public Category(Integer id) {
+    public Category(Integer id) throws InvalidIdException {
         super(id);
     }
 

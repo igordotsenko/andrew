@@ -7,7 +7,7 @@ class Post extends Entity {
         super();
     }
 
-    public Post(Integer id) {
+    public Post(Integer id) throws InvalidIdException {
         super(id);
     }
 

@@ -8,7 +8,7 @@ class Tag extends Entity {
         super();
     }
 
-    public Tag(Integer id) {
+    public Tag(Integer id) throws InvalidIdException {
         super(id);
     }
 

@@ -47,14 +47,10 @@ public abstract class Entity {
         this.table = getLowerCaseTableName(getClass());
     }
 
-    public Entity(Integer id) {
-        try {
-            validateId(id);
-            this.id = id;
-            this.table = getLowerCaseTableName(getClass());
-        } catch (InvalidIdException e) {
-            e.printStackTrace();
-        }
+    public Entity(Integer id) throws InvalidIdException {
+        validateId(id);
+        this.id = id;
+        this.table = getLowerCaseTableName(getClass());
     }
 
     private void validateId(Integer id) throws InvalidIdException {

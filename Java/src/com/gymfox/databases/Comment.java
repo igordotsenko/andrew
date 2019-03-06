@@ -7,7 +7,7 @@ class Comment extends Entity {
         super();
     }
 
-    public Comment(Integer id) {
+    public Comment(Integer id) throws InvalidIdException {
         super(id);
     }
 

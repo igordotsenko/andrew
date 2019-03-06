@@ -7,7 +7,7 @@ import java.sql.SQLException;
 import static com.gymfox.databases.Entity.setDatabase;
 
 public class Main {
-    public static void main(String[] args) throws SQLException, ClassNotFoundException {
+    public static void main(String[] args) throws SQLException, ClassNotFoundException, Entity.InvalidIdException {
         initDatabase();
         User user = new User(5);
         user.setName("test");
