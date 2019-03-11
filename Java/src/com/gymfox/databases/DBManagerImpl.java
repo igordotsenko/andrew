@@ -28,8 +28,6 @@ public class DBManagerImpl {
         createDatabase();
         connectToDatabase(dbName);
         setDatabase(connection);
-
-        System.out.println(String.format("database %s was created", dbName));
     }
 
     /**
@@ -66,17 +64,17 @@ public class DBManagerImpl {
 
     public void createDatabase() throws SQLException {
         connectToDatabase(DEFAULT_DATABASE);
-
-        Statement statement = connection.createStatement();
-        statement.executeUpdate(String.format(CREATE_QUERY, dbName));
+        createStatement(CREATE_QUERY, dbName);
         connection.close();
     }
 
     public void dropDatabase() throws SQLException {
         connectToDatabase(DEFAULT_DATABASE);
-        Statement statement = connection.createStatement();
-
-        statement.executeUpdate(String.format(DROP_QUERY, dbName));
+        createStatement(DROP_QUERY, dbName);
         connection.close();
+    }
+
+    private void createStatement(String query, String databaseName) throws SQLException {
+        connection.createStatement().executeUpdate(String.format(query, databaseName));
     }
 }
