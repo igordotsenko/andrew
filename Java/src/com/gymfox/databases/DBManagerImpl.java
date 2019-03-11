@@ -1,11 +1,9 @@
 package com.gymfox.databases;
 
-import java.io.BufferedReader;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Scanner;
@@ -13,7 +11,9 @@ import java.util.Scanner;
 import static com.gymfox.databases.Entity.setDatabase;
 
 public class DBManagerImpl {
-    private final static String CREATE_DATABASE  = "CREATE DATABASE ";
+    private final static String CREATE_QUERY  = "CREATE DATABASE \"%1$s\"";
+    private final static String DROP_QUERY    = "DROP DATABASE \"%1$s\"";
+    private String DEFAULT_DATABASE = "postgres";
     private static Connection connection;
 
     private final String dbName;
@@ -22,18 +22,35 @@ public class DBManagerImpl {
         this.dbName = dbName;
     }
 
+    public void initDatabase() throws ClassNotFoundException, SQLException {
+        Class.forName("org.postgresql.Driver");
+
+        createDatabase();
+        connectToDatabase(dbName);
+        setDatabase(connection);
+
+        System.out.println(String.format("database %s was created", dbName));
+    }
+
     /**
-     * Считать файл statements.sql
-     * Создать базу данных.
-     * Создать таблицы базы данных.
+     * if connection is not null - it should be closed;
+     * if connection is closed - we will open it;
      */
+    private void connectToDatabase(String databaseName) throws SQLException {
+        if (connection != null) {
+            connection.close();
+        }
+        connection = DriverManager.getConnection(
+                "jdbc:postgresql://localhost:5432/" + databaseName,
+                "postgres",
+                "13121993");
+    }
 
-    public void importSQL(BufferedReader in) throws SQLException {
-
+    public void importSQL(File in) throws SQLException, FileNotFoundException {
         Scanner s = new Scanner(in);
         s.useDelimiter("(;(\r)?\n)|(--\n)");
 
-        Statement st = connection.createStatement();
+        Statement statement = connection.createStatement();
         while (s.hasNext()) {
             String line = s.next();
             if (line.startsWith("/*!") && line.endsWith("*/")) {
@@ -42,30 +59,24 @@ public class DBManagerImpl {
             }
 
             if (line.trim().length() > 0) {
-                st.execute(line);
+                statement.execute(line);
             }
         }
     }
 
-    private void initDatabase() throws ClassNotFoundException, SQLException {
-        Class.forName("org.postgresql.Driver");
+    public void createDatabase() throws SQLException {
+        connectToDatabase(DEFAULT_DATABASE);
 
-        connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/?",
-                "postgres",
-                "13121993");
-
-        PreparedStatement statement = connection.prepareStatement(CREATE_DATABASE + dbName);
-        statement.executeUpdate();
-
-        setDatabase(connection);
-        System.out.println(String.format("database %s was created", dbName));
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(String.format(CREATE_QUERY, dbName));
+        connection.close();
     }
 
-    public static void main(String[] args) throws IOException, SQLException, ClassNotFoundException {
-        BufferedReader bufferedReader = new BufferedReader(new FileReader(args[0]));
-        DBManagerImpl dbManager = new DBManagerImpl(args[1]);
-        dbManager.initDatabase();
-        dbManager.importSQL(bufferedReader);
+    public void dropDatabase() throws SQLException {
+        connectToDatabase(DEFAULT_DATABASE);
+        Statement statement = connection.createStatement();
+
+        statement.executeUpdate(String.format(DROP_QUERY, dbName));
+        connection.close();
     }
 }
