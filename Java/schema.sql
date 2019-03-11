@@ -69,56 +69,56 @@ ALTER TABLE "comment" ADD "post_id" INTEGER NOT NULL,
 ALTER TABLE "category" ADD "section_id" INTEGER NOT NULL,
     ADD CONSTRAINT "fk_category_section_id" FOREIGN KEY ("section_id") REFERENCES "section" ("section_id");
 
-CREATE OR REPLACE FUNCTION update_section_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-   NEW.section_updated = cast(extract(epoch from now()) as integer);
-   RETURN NEW;
-END;
-$$ language 'plpgsql';
-CREATE TRIGGER "tr_section_updated" BEFORE UPDATE ON "section" FOR EACH ROW EXECUTE PROCEDURE update_section_timestamp();
-
-CREATE OR REPLACE FUNCTION update_user_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-   NEW.user_updated = cast(extract(epoch from now()) as integer);
-   RETURN NEW;
-END;
-$$ language 'plpgsql';
-CREATE TRIGGER "tr_user_updated" BEFORE UPDATE ON "user" FOR EACH ROW EXECUTE PROCEDURE update_user_timestamp();
-
-CREATE OR REPLACE FUNCTION update_category_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-   NEW.category_updated = cast(extract(epoch from now()) as integer);
-   RETURN NEW;
-END;
-$$ language 'plpgsql';
-CREATE TRIGGER "tr_category_updated" BEFORE UPDATE ON "category" FOR EACH ROW EXECUTE PROCEDURE update_category_timestamp();
-
-CREATE OR REPLACE FUNCTION update_post_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-   NEW.post_updated = cast(extract(epoch from now()) as integer);
-   RETURN NEW;
-END;
-$$ language 'plpgsql';
-CREATE TRIGGER "tr_post_updated" BEFORE UPDATE ON "post" FOR EACH ROW EXECUTE PROCEDURE update_post_timestamp();
-
-CREATE OR REPLACE FUNCTION update_tag_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-   NEW.tag_updated = cast(extract(epoch from now()) as integer);
-   RETURN NEW;
-END;
-$$ language 'plpgsql';
-CREATE TRIGGER "tr_tag_updated" BEFORE UPDATE ON "tag" FOR EACH ROW EXECUTE PROCEDURE update_tag_timestamp();
-
-CREATE OR REPLACE FUNCTION update_comment_timestamp()
-RETURNS TRIGGER AS $$
-BEGIN
-   NEW.comment_updated = cast(extract(epoch from now()) as integer);
-   RETURN NEW;
-END;
-$$ language 'plpgsql';
-CREATE TRIGGER "tr_comment_updated" BEFORE UPDATE ON "comment" FOR EACH ROW EXECUTE PROCEDURE update_comment_timestamp();
+--CREATE OR REPLACE FUNCTION update_section_timestamp()
+--RETURNS TRIGGER AS $$
+--BEGIN
+--   NEW.section_updated = cast(extract(epoch from now()) as integer);
+--   RETURN NEW;
+--END;
+--$$ language 'plpgsql';
+--CREATE TRIGGER "tr_section_updated" BEFORE UPDATE ON "section" FOR EACH ROW EXECUTE PROCEDURE update_section_timestamp();
+--
+--CREATE OR REPLACE FUNCTION update_user_timestamp()
+--RETURNS TRIGGER AS $$
+--BEGIN
+--   NEW.user_updated = cast(extract(epoch from now()) as integer);
+--   RETURN NEW;
+--END;
+--$$ language 'plpgsql';
+--CREATE TRIGGER "tr_user_updated" BEFORE UPDATE ON "user" FOR EACH ROW EXECUTE PROCEDURE update_user_timestamp();
+--
+--CREATE OR REPLACE FUNCTION update_category_timestamp()
+--RETURNS TRIGGER AS $$
+--BEGIN
+--   NEW.category_updated = cast(extract(epoch from now()) as integer);
+--   RETURN NEW;
+--END;
+--$$ language 'plpgsql';
+--CREATE TRIGGER "tr_category_updated" BEFORE UPDATE ON "category" FOR EACH ROW EXECUTE PROCEDURE update_category_timestamp();
+--
+--CREATE OR REPLACE FUNCTION update_post_timestamp()
+--RETURNS TRIGGER AS $$
+--BEGIN
+--   NEW.post_updated = cast(extract(epoch from now()) as integer);
+--   RETURN NEW;
+--END;
+--$$ language 'plpgsql';
+--CREATE TRIGGER "tr_post_updated" BEFORE UPDATE ON "post" FOR EACH ROW EXECUTE PROCEDURE update_post_timestamp();
+--
+--CREATE OR REPLACE FUNCTION update_tag_timestamp()
+--RETURNS TRIGGER AS $$
+--BEGIN
+--   NEW.tag_updated = cast(extract(epoch from now()) as integer);
+--   RETURN NEW;
+--END;
+--$$ language 'plpgsql';
+--CREATE TRIGGER "tr_tag_updated" BEFORE UPDATE ON "tag" FOR EACH ROW EXECUTE PROCEDURE update_tag_timestamp();
+--
+--CREATE OR REPLACE FUNCTION update_comment_timestamp()
+--RETURNS TRIGGER AS $$
+--BEGIN
+--   NEW.comment_updated = cast(extract(epoch from now()) as integer);
+--   RETURN NEW;
+--END;
+--$$ language 'plpgsql';
+--CREATE TRIGGER "tr_comment_updated" BEFORE UPDATE ON "comment" FOR EACH ROW EXECUTE PROCEDURE update_comment_timestamp();
