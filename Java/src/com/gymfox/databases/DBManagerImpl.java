@@ -80,7 +80,7 @@ public class DBManagerImpl {
         connection.createStatement().executeUpdate(String.format(query, databaseName));
     }
 
-    static String getPreparedStatement(String query, int id) throws SQLException {
+    String getPreparedStatement(String query, int id) throws SQLException {
         PreparedStatement preparedStatement = connection.prepareStatement(query);
         preparedStatement.setInt(FIRST_INDEX_PARAMETER, id);
 
