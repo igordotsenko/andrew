@@ -1,29 +1,37 @@
 package com.gymfox.databases;
 
+import org.junit.AfterClass;
 import org.junit.BeforeClass;
+import org.junit.runner.RunWith;
+import org.junit.runners.Suite;
 
-import java.sql.Connection;
-import java.sql.DriverManager;
+import java.io.File;
+import java.io.FileNotFoundException;
 import java.sql.SQLException;
-import java.util.HashMap;
-import java.util.Map;
 
-import static com.gymfox.databases.Entity.setDatabase;
+import static org.junit.runners.Suite.*;
 
-public class DBManagerImplTest implements DBManager {
-    private static Map<String, Object> fields = new HashMap<>();
+@RunWith(Suite.class)
+@SuiteClasses({AddDataToDatabaseTest.class,
+        AssertDataFromDatabaseTest.class,
+        DeleteDataFromDatabaseTest.class,
+        EntityTest.class})
+public class DBManagerImplTest {
+    static DBManagerImpl dbManager;
+
     @BeforeClass
-    public static void setUpConnection() throws SQLException, ClassNotFoundException {
-        Class.forName("org.postgresql.Driver");
+    public static void setUpConnection() throws SQLException, ClassNotFoundException, FileNotFoundException {
+        dbManager = new DBManagerImpl("newDatabaseTest");
+        dbManager.initDatabase();
+        dbManager.importSQL(new File("schema.sql"));
 
-        Connection connection = DriverManager.getConnection(
-                "jdbc:postgresql://localhost:5432/orm", "postgres",
-                "13121993");
-        setDatabase(connection);
+        System.out.println("Database has been created.");
     }
 
-    @Override
-    public final Object getColumn(String name) {
-        return "user_" + name;
+    @AfterClass
+    public static void tearDownConnection() throws SQLException {
+        dbManager.dropDatabase();
+
+        System.out.println("Database has been dropped.");
     }
 }
