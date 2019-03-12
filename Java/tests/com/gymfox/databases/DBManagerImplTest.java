@@ -18,6 +18,7 @@ import static org.junit.runners.Suite.*;
         EntityTest.class})
 public class DBManagerImplTest {
     static DBManagerImpl dbManager;
+    static final int FIRST_INDEX = 1;
 
     @BeforeClass
     public static void setUpConnection() throws SQLException, ClassNotFoundException, FileNotFoundException {

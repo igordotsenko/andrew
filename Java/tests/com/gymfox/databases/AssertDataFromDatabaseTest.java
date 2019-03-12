@@ -5,11 +5,11 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
+import static com.gymfox.databases.DBManagerImplTest.FIRST_INDEX;
 import static com.gymfox.databases.Entity.InvalidIdException;
 import static org.junit.Assert.assertEquals;
 
 public class AssertDataFromDatabaseTest {
-    private static final Integer FIRST_INDEX = 1;
     private static User user;
     private static Tag tag;
     private static Section section;
