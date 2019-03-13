@@ -6,7 +6,7 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
-import static com.gymfox.databases.DBManagerImplTest.dbManager;
+import static com.gymfox.databases.ORMTestSuite.dbManager;
 import static com.gymfox.databases.Entity.getListQuery;
 
 public class EntityTest {

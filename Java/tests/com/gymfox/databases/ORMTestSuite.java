@@ -16,7 +16,7 @@ import static org.junit.runners.Suite.*;
         AssertDataFromDatabaseTest.class,
         DeleteDataFromDatabaseTest.class,
         EntityTest.class})
-public class DBManagerImplTest {
+public class ORMTestSuite {
     static DBManagerImpl dbManager;
     static final int FIRST_INDEX = 1;
 

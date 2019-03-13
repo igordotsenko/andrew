@@ -5,7 +5,7 @@ import org.junit.Test;
 
 import java.sql.SQLException;
 
-import static com.gymfox.databases.DBManagerImplTest.FIRST_INDEX;
+import static com.gymfox.databases.ORMTestSuite.FIRST_INDEX;
 import static com.gymfox.databases.Entity.*;
 import static org.junit.Assert.assertNull;
 
