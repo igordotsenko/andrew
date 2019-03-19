@@ -1,5 +1,7 @@
 package com.gymfox.databases;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.lang.reflect.InvocationTargetException;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -65,7 +67,7 @@ public abstract class Entity {
         db = connection;
     }
 
-    private static void validateConnectionIsNotNull(Connection connection) {
+    private static void validateConnectionIsNotNull(@Nullable Connection connection) {
         if ( connection == null ) {
             throw new NullPointerException();
         }
@@ -75,17 +77,11 @@ public abstract class Entity {
         return id;
     }
 
-    void setId(int newId) {
-        id = newId;
-    }
-
     public final java.util.Date getCreated() {
-        load();
         return getDate(CREATED);
     }
 
     public final java.util.Date getUpdated() {
-        load();
         return getDate(UPDATED);
     }
 
@@ -94,10 +90,11 @@ public abstract class Entity {
         return fields.get(table + "_" + name);
     }
 
-    public final <T extends Entity> T getParent(Class<T> cls) {
+    @Nullable
+    public final <T extends Entity> T getParent(Class<T> parentCls) {
         load();
         try {
-            return cls.getConstructor(Integer.class).newInstance(getParentId(cls));
+            return parentCls.getConstructor(Integer.class).newInstance(getParentId(parentCls));
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException | InvocationTargetException e) {
             e.printStackTrace();
         }
@@ -105,34 +102,36 @@ public abstract class Entity {
         return null;
     }
 
-    private <T extends Entity> Integer getParentId(Class<T> cls) {
-        return (Integer) fields.get(getLowerCaseTableName(cls) + ID);
+    private <T extends Entity> Integer getParentId(Class<T> parentIdCls) {
+        return (Integer) fields.get(getLowerCaseTableName(parentIdCls) + ID);
     }
 
-    public final <T extends Entity> List<T> getChildren(Class<T> cls) {
-        return getTableByConditions(cls, getChildrenQuery(cls));
+    public final <T extends Entity> List<T> getChildren(Class<T> childrenCls) {
+        return getTableByConditions(childrenCls, getChildrenQuery(childrenCls));
     }
 
-    final <T extends Entity> String getChildrenQuery(Class<T> cls) {
-        return String.format(CHILDREN_QUERY, getLowerCaseTableName(cls), table);
+    final <T extends Entity> String getChildrenQuery(Class<T> childrenCls) {
+        return String.format(CHILDREN_QUERY, getLowerCaseTableName(childrenCls), table);
     }
 
-    public final <T extends Entity> List<T> getSiblings(Class<T> cls) {
-        return getTableByConditions(cls, getSiblingsQuery(cls));
+    public final <T extends Entity> List<T> getSiblings(Class<T> siblingsCls) {
+        return getTableByConditions(siblingsCls, getSiblingsQuery(siblingsCls));
     }
 
-    final <T extends Entity> String getSiblingsQuery(Class<T> cls) {
-        String siblingTable = getJoinTableName(getLowerCaseTableName(cls), table);
+    final <T extends Entity> String getSiblingsQuery(Class<T> siblingsCls) {
+        String siblingTable = getJoinTableName(getLowerCaseTableName(siblingsCls), table);
 
-        return String.format(SIBLINGS_QUERY, siblingTable, getLowerCaseTableName(cls), table);
+        return String.format(SIBLINGS_QUERY, siblingTable, getLowerCaseTableName(siblingsCls), table);
     }
 
+    @Nullable
     private <T extends Entity> List<T> getTableByConditions(Class<T> cls, String query) {
         try {
             return rowsToEntities(cls, getResultSetByQuery(query));
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -275,12 +274,14 @@ public abstract class Entity {
         update();
     }
 
+    @Nullable
     protected static <T extends Entity> List<T> all(Class<T> cls) {
         try {
             return rowsToEntities(cls, generateResultSet(cls));
         } catch (SQLException e) {
             e.printStackTrace();
         }
+
         return null;
     }
 
@@ -349,6 +350,7 @@ public abstract class Entity {
         }
     }
 
+    @Nullable
     private static <T extends Entity> Entity rowToEntity(Class<T> cls, ResultSet resultSet)
             throws IllegalAccessException, InstantiationException {
         try {
