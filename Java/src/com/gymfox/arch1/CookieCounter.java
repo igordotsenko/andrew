@@ -15,19 +15,22 @@ public class CookieCounter extends HttpServlet {
         try (PrintWriter printWriter = response.getWriter()) {
             response.setContentType("text/html");
 
-            cookieCounterCount(printWriter, request.getSession(), (Integer) request.getSession().getAttribute(COUNT_ATTRIBUTE));
+            printWriter.println(getCookieCount(request));
 
             printWriter.println(REFRESH.getTags());
         }
     }
 
-    private void cookieCounterCount(PrintWriter printWriter, HttpSession session, Integer count) {
+    private Integer getCookieCount(HttpServletRequest request) {
+        HttpSession session = request.getSession();
+        Integer count = (Integer) session.getAttribute("count");
+
         if ( count == null ) {
             count = 1;
             session.setAttribute(COUNT_ATTRIBUTE, count);
         }
         session.setAttribute(COUNT_ATTRIBUTE, count + 1);
 
-        printWriter.println("Count: " + count);
+        return count;
     }
 }
