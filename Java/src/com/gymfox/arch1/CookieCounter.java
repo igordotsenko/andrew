@@ -8,7 +8,7 @@ import java.io.PrintWriter;
 import static com.gymfox.arch1.HtmlTags.REFRESH;
 
 public class CookieCounter extends HttpServlet {
-    private final String COUNT_ATTRIBUTE = "count";
+    private static final String COUNT_ATTRIBUTE = "count";
 
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
